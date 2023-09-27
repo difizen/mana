@@ -1,0 +1,115 @@
+
+@tab-prefix-cls: ~'@{mana-prefix}-tabs';
+
+.@{tab-prefix-cls}-card {
+  > .@{tab-prefix-cls}-nav,
+  > div > .@{tab-prefix-cls}-nav {
+    .@{tab-prefix-cls}-tab {
+      margin: 0;
+      padding: 4px 4px 4px 8px;
+      background-color: var(--mana-tab-inactiveBackground);
+      border-top: none;
+      border-right: 1px solid var(--mana-tab-border);
+      border-bottom: none;
+      // padding: @tabs-card-horizontal-padding;
+      // background: @tabs-card-head-background;
+      // border-top: @border-width-base @border-style-base @border-color-split;
+      // border-bottom: @border-width-base @border-style-base @border-color-split;
+      // border-right: @border-width-base @border-style-base @border-color-split;
+      transition: all @animation-duration-slow @ease-in-out;
+
+      &-active {
+        color: @tabs-card-active-color;
+        // background: @component-background;
+
+        background-color: var(--mana-tab-activeBackground);
+        border-top: 1px solid var(--mana-tab-activeBorder);
+
+        .mana-tabs-tab-btn {
+          color: var(--mana-tab-activeForeground);
+          text-shadow: none;
+        }
+      }
+
+      &-tab-btn {
+        color: var(--mana-tab-inactiveForeground);
+      }
+    }
+
+    .@{tab-prefix-cls}-ink-bar {
+      visibility: hidden;
+    }
+  }
+
+  // ========================== Top & Bottom ==========================
+  &.@{tab-prefix-cls}-top,
+  &.@{tab-prefix-cls}-bottom {
+    > .@{tab-prefix-cls}-nav,
+    > div > .@{tab-prefix-cls}-nav {
+      .@{tab-prefix-cls}-tab + .@{tab-prefix-cls}-tab {
+        margin-left: @tabs-card-gutter;
+      }
+    }
+  }
+
+  &.@{tab-prefix-cls}-top {
+    > .@{tab-prefix-cls}-nav,
+    > div > .@{tab-prefix-cls}-nav {
+      .@{tab-prefix-cls}-tab {
+        border-radius: 0;
+
+        &-active {
+          border-bottom-color: @component-background;
+        }
+      }
+    }
+  }
+  &.@{tab-prefix-cls}-bottom {
+    > .@{tab-prefix-cls}-nav,
+    > div > .@{tab-prefix-cls}-nav {
+      .@{tab-prefix-cls}-tab {
+        border-radius: 0 0 @border-radius-base @border-radius-base;
+
+        &-active {
+          border-top-color: @component-background;
+        }
+      }
+    }
+  }
+
+  // ========================== Left & Right ==========================
+  &.@{tab-prefix-cls}-left,
+  &.@{tab-prefix-cls}-right {
+    > .@{tab-prefix-cls}-nav,
+    > div > .@{tab-prefix-cls}-nav {
+      .@{tab-prefix-cls}-tab + .@{tab-prefix-cls}-tab {
+        margin-top: @tabs-card-gutter;
+      }
+    }
+  }
+
+  &.@{tab-prefix-cls}-left {
+    > .@{tab-prefix-cls}-nav,
+    > div > .@{tab-prefix-cls}-nav {
+      .@{tab-prefix-cls}-tab {
+        border-radius: @border-radius-base 0 0 @border-radius-base;
+
+        &-active {
+          border-right-color: @component-background;
+        }
+      }
+    }
+  }
+  &.@{tab-prefix-cls}-right {
+    > .@{tab-prefix-cls}-nav,
+    > div > .@{tab-prefix-cls}-nav {
+      .@{tab-prefix-cls}-tab {
+        border-radius: 0 @border-radius-base @border-radius-base 0;
+
+        &-active {
+          border-left-color: @component-background;
+        }
+      }
+    }
+  }
+}

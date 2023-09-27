@@ -1,0 +1,53 @@
+{
+  "name": "@difizen/mana-observable",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [
+    "mana",
+    "difizen",
+    "observable"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": {
+        "typings": "./es/index.d.ts",
+        "default": "./es/index.js"
+      },
+      "require": {
+        "typings": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "es",
+    "src"
+  ],
+  "scripts": {
+    "setup": "father build",
+    "build": "father build",
+    "test": ": Note: lint task is delegated to test:* scripts",
+    "test:vitest": "vitest run",
+    "coverage": ": Note: lint task is delegated to coverage:* scripts",
+    "coverage:vitest": "vitest run --coverage",
+    "lint": ": Note: lint task is delegated to lint:* scripts",
+    "lint:eslint": "eslint src",
+    "lint:tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@difizen/mana-common": "^0.0.1",
+    "@difizen/mana-syringe": "^0.0.1",
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0"
+  },
+  "publishConfig": {}
+}

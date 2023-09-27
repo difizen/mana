@@ -1,0 +1,24 @@
+{
+  "name": "@difizen/mana-docs",
+  "private": true,
+  "license": "MIT",
+  "description": "Document site for mana",
+  "scripts": {
+    "prepare": "dumi setup",
+    "start": "dumi dev",
+    "build": "dumi build"
+  },
+  "devDependencies": {
+    "dumi": "^2.2.7",
+    "execa": "^5.1.1"
+  },
+  "engines": {
+    "node": ">=16.20.0"
+  },
+  "packageManager": "pnpm@8.4.0",
+  "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "antd": "^5.8.6",
+    "styled-components": "^6.0.7"
+  }
+}
