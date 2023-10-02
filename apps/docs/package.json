@@ -4,7 +4,6 @@
   "license": "MIT",
   "description": "Document site for mana",
   "scripts": {
-    "prepare": "dumi setup",
     "start": "dumi dev",
     "build": "dumi build"
   },

@@ -313,3 +313,5 @@ _build
 *.pickle
 objects.inv
 .buildinfo
+
+pnpm-lock.yaml
