@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { ApplicationModule } from './application';
 import { CommandModule } from './command';
 import { CommonModule } from './common';
+import { ConfigurationModule } from './configuration';
 import { ContextModule } from './context';
 import { KeybindModule } from './keybinding';
 import { CoreMenuModule } from './menu';
@@ -25,6 +26,7 @@ export * from './theme';
 export * from './toolbar';
 export * from './keybinding';
 export * from './keyboard';
+export * from './configuration';
 
 export const ManaPreset = ManaModule.create().dependOn(
   CommonModule,
@@ -37,6 +39,7 @@ export const ManaPreset = ManaModule.create().dependOn(
   ThemeVariableModule,
   ViewModule,
   KeybindModule,
+  ConfigurationModule,
 );
 
 export const ManaModules = {
@@ -50,4 +53,5 @@ export const ManaModules = {
   ThemeVariable: ThemeVariableModule,
   Context: ContextModule,
   Keybind: KeybindModule,
+  Configuration: ConfigurationModule,
 };
