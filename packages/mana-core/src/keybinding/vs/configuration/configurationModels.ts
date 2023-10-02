@@ -9,8 +9,8 @@ import { objects } from '@difizen/mana-common';
 import type { URI } from '@difizen/mana-common';
 import type { Event } from '@difizen/mana-common';
 
-import { Registry } from '../../registry/common/platform';
-import { getOrSet, ResourceMap, VSDisposable } from '../../utils';
+import { getOrSet, ResourceMap, VSDisposable } from '../../../utils';
+import { Registry } from '../platform';
 
 import {
   addToValueTree,

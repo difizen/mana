@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/unified-signatures */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable default-case */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11,9 +7,9 @@ import { Emitter } from '@difizen/mana-common';
 import type { Event } from '@difizen/mana-common';
 import { singleton } from '@difizen/mana-syringe';
 
-import { Registry } from '../../registry/common/platform';
-import type { IDisposable } from '../../utils/lifecycle';
-import { VSDisposable } from '../../utils/lifecycle';
+import type { IDisposable } from '../../../utils/lifecycle';
+import { VSDisposable } from '../../../utils/lifecycle';
+import { Registry } from '../platform';
 
 import {
   ConfigurationTarget,

@@ -1,9 +1,4 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-/* eslint-disable default-case */
-/* eslint-disable guard-for-in */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12,11 +7,11 @@
 import type { Event, IStringDictionary } from '@difizen/mana-common';
 import { Emitter, types } from '@difizen/mana-common';
 
-import type { IJSONContributionRegistry } from '../../jsonschemas/common/jsonContributionRegistry';
-import { Extensions as JSONExtensions } from '../../jsonschemas/common/jsonContributionRegistry';
-import type { IJSONSchema } from '../../jsonschemas/common/jsonSchema';
-import * as nls from '../../nls';
-import { Registry } from '../../registry/common/platform';
+import * as nls from '../../../nls';
+import type { IJSONContributionRegistry } from '../jsonContributionRegistry';
+import { Extensions as JSONExtensions } from '../jsonContributionRegistry';
+import type { IJSONSchema } from '../jsonSchema';
+import { Registry } from '../platform';
 
 export const Extensions = {
   Configuration: 'base.contributions.configuration',

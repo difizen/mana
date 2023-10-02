@@ -1,8 +1,3 @@
-/* eslint-disable no-multi-assign */
-/* eslint-disable guard-for-in */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable default-case */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12,7 +7,7 @@ import type { Event, IStringDictionary } from '@difizen/mana-common';
 import { objects, types, URI } from '@difizen/mana-common';
 import { Syringe } from '@difizen/mana-syringe';
 
-import { Registry } from '../../registry/common/platform';
+import { Registry } from '../platform';
 
 // import type { IWorkspaceFolder } from 'vs/platform/workspace/common/workspace';
 // import { createDecorator } from 'vs/platform/instantiation/common/instantiation';

@@ -6,9 +6,8 @@
 import type { Event } from '@difizen/mana-common';
 import { Emitter } from '@difizen/mana-common';
 
-import * as platform from '../../registry/common/platform';
-
 import type { IJSONSchema } from './jsonSchema';
+import * as platform from './platform';
 
 export const Extensions = {
   JSONContribution: 'base.contributions.json',

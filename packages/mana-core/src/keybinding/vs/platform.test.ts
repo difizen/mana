@@ -8,7 +8,7 @@ import * as assert from 'assert';
 
 import { types } from '@difizen/mana-common';
 
-import { Registry } from '../../common/platform';
+import { Registry } from './platform';
 
 describe('Platform / Registry', () => {
   test('registry - api', function () {
