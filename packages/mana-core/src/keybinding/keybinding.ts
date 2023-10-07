@@ -35,12 +35,12 @@ export type Keybinding = {
    *
    * @deprecated use `when` closure instead
    */
-  context: string | undefined;
+  context?: string | undefined;
   /**
    * An optional clause defining the condition when the keybinding is active, e.g. based on the current focus.
    * See {@link https://code.visualstudio.com/docs/getstarted/keybindings#_when-clause-contexts} for more details.
    */
-  when: string | undefined;
+  when?: string | undefined;
 
   /**
    * Optional arguments that will be passed to the command when it gets triggered via this keybinding.

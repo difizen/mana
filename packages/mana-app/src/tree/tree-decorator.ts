@@ -155,8 +155,8 @@ export abstract class AbstractTreeDecoratorService implements TreeDecoratorServi
   constructor(decorators: readonly TreeDecorator[]) {
     this.decorators = decorators;
     this.toDispose.push(this.onDidChangeDecorationsEmitter);
-    this.toDispose.pushAll(
-      this.decorators.map((decorator) =>
+    this.toDispose.push(
+      ...this.decorators.map((decorator) =>
         decorator.onDidChangeDecorations(() =>
           this.onDidChangeDecorationsEmitter.fire(undefined),
         ),

@@ -1,6 +1,6 @@
 // import { Modal } from 'antd';
 import { Deferred } from '@difizen/mana-common';
-import type { URI } from '@difizen/mana-common';
+import { URI } from '@difizen/mana-common';
 import { inject, postConstruct, singleton } from '@difizen/mana-syringe';
 
 import { LabelProvider } from '../label';
@@ -171,7 +171,7 @@ export class FileTreeModel extends TreeModelImpl {
   }
 
   async copy(source: URI, target: Readonly<FileStatNode>): Promise<URI> {
-    let targetUri = target.uri.resolve(source.path.base);
+    let targetUri = URI.resolve(target.uri, source.path.base);
     try {
       if (source.path.toString() === target.uri.path.toString()) {
         const parent = await this.fileService.resolve(source.parent);
@@ -196,7 +196,7 @@ export class FileTreeModel extends TreeModelImpl {
   async move(source: TreeNode, target: TreeNode): Promise<URI | undefined> {
     if (DirNode.is(target) && FileStatNode.is(source)) {
       const { name } = source.fileStat;
-      const targetUri = target.uri.resolve(name);
+      const targetUri = URI.resolve(target.uri, name);
       try {
         await this.fileService.move(source.uri, targetUri);
         return targetUri;

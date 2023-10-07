@@ -1,4 +1,4 @@
-import type { URI } from '@difizen/mana-common';
+import { URI } from '@difizen/mana-common';
 
 import type { NavigatableView, NavigatableViewOptions } from './navigatable-types';
 import type { ViewOpenHandlerOptions } from './view-open-handler';
@@ -21,9 +21,9 @@ export abstract class NavigatableViewOpenHandler<
 
   protected serializeUri(uri: URI): string {
     if (uri.scheme === 'file') {
-      return uri.withoutFragment().normalizePath().toString();
+      return URI.withFragment(uri).normalizePath().toString();
     } else {
-      return uri.withoutFragment().toString();
+      return URI.withFragment(uri).toString();
     }
   }
 }

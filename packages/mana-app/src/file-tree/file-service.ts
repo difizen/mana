@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Emitter } from '@difizen/mana-common';
-import type { URI } from '@difizen/mana-common';
+import { URI } from '@difizen/mana-common';
 import { singleton } from '@difizen/mana-syringe';
 
 import type {
@@ -62,32 +62,32 @@ export class FileService {
       return {
         ...defaultFileMeta,
         isDirectory: true,
-        name: resource.displayName,
+        name: resource.path.isRoot ? resource.path.toString() : resource.path.base,
         resource,
         children: [
           {
             ...defaultFileMeta,
             isFile: true,
             name: 'a.sql',
-            resource: resource.resolve('a.sql'),
+            resource: URI.resolve(resource, 'a.sql'),
           },
           {
             ...defaultFileMeta,
             isFile: true,
             name: 'b.py',
-            resource: resource.resolve('b.py'),
+            resource: URI.resolve(resource, 'b.py'),
           },
           {
             ...defaultFileMeta,
             isFile: true,
             name: 'c.ipynb',
-            resource: resource.resolve('c.ipynb'),
+            resource: URI.resolve(resource, 'c.ipynb'),
           },
           {
             ...defaultFileMeta,
             isDirectory: true,
             name: 'dir',
-            resource: resource.resolve('dir'),
+            resource: URI.resolve(resource, 'dir'),
           },
         ],
       };
@@ -101,7 +101,7 @@ export class FileService {
         isFile: true,
         isDirectory: false,
         isSymbolicLink: false,
-        name: resource.displayName,
+        name: resource.path.isRoot ? resource.path.toString() : resource.path.base,
         resource,
       };
     }
@@ -113,32 +113,32 @@ export class FileService {
       isFile: false,
       isDirectory: true,
       isSymbolicLink: false,
-      name: resource.displayName,
+      name: resource.path.isRoot ? resource.path.toString() : resource.path.base,
       resource,
       children: [
         {
           ...defaultFileMeta,
           isFile: true,
           name: 'a.sql',
-          resource: resource.resolve('a.sql'),
+          resource: URI.resolve(resource, 'a.sql'),
         },
         {
           ...defaultFileMeta,
           isFile: true,
           name: 'b.py',
-          resource: resource.resolve('b.py'),
+          resource: URI.resolve(resource, 'b.py'),
         },
         {
           ...defaultFileMeta,
           isFile: true,
           name: 'c.ipynb',
-          resource: resource.resolve('c.ipynb'),
+          resource: URI.resolve(resource, 'c.ipynb'),
         },
         {
           ...defaultFileMeta,
           isDirectory: true,
           name: 'dir',
-          resource: resource.resolve('dir'),
+          resource: URI.resolve(resource, 'dir'),
         },
       ],
     };

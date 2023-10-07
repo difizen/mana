@@ -34,10 +34,10 @@ export class TreeViewDecorator implements Disposable {
 
   @postConstruct()
   protected init(): void {
-    this.toDispose.pushAll([
+    this.toDispose.push(
       this.model.onNodeRefreshed(() => this.updateDecorations()),
       this.model.onExpansionChanged(() => this.updateDecorations()),
-    ]);
+    );
   }
 
   dispose() {

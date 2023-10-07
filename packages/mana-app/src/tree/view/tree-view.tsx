@@ -221,7 +221,7 @@ export class TreeView extends BaseView implements StatefulView {
 
   @postConstruct()
   protected init(): void {
-    this.toDispose.pushAll([
+    this.toDispose.push(
       this.model,
       this.treeViewDecorator,
       this.model.onChanged(() => this.updateRows()),
@@ -238,13 +238,13 @@ export class TreeView extends BaseView implements StatefulView {
       //     }
       //   }
       // }),
-    ]);
+    );
     setTimeout(() => {
       this.updateRows();
       this.treeViewDecorator.updateDecorations();
     });
     if (this.props.globalSelection) {
-      this.toDispose.pushAll([
+      this.toDispose.push(
         this.model.onSelectionChanged(() => {
           if (
             this.container &&
@@ -260,7 +260,7 @@ export class TreeView extends BaseView implements StatefulView {
             this.updateGlobalSelection();
           }
         }),
-      ]);
+      );
     }
     // this.toDispose.push(
     //   this.corePreferences.onPreferenceChanged(preference => {

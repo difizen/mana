@@ -29,11 +29,14 @@ describe('disposable', () => {
         disposeTimes += 1;
       }),
     );
-    collection.pushAll([
+    collection.push(
       Disposable.create(() => {
         disposeTimes += 1;
       }),
-    ]);
+      Disposable.create(() => {
+        disposeTimes += 1;
+      }),
+    );
     const onDisposeDeferred = new Deferred<void>();
     collection.onDispose(() => {
       disposed = true;
@@ -42,7 +45,7 @@ describe('disposable', () => {
     });
     collection.dispose();
     await onDisposeDeferred.promise;
-    assert(disposeTimes === 3);
+    assert(disposeTimes === 4);
   });
 
   it('#Disposable collection error disposable', () => {

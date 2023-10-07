@@ -104,8 +104,8 @@ export const ResizeHandleHorizontal = (props: ResizeHandleProps) => {
     ) {
       return;
     }
-    const prevMinResize = prevEle!.dataset['minResize'] || 0;
-    const nextMinResize = nextEle!.dataset['minResize'] || 0;
+    const prevMinResize = Number(prevEle!.dataset['minResize'] || 0);
+    const nextMinResize = Number(nextEle!.dataset['minResize'] || 0);
     if (prevMinResize || nextMinResize) {
       if (prev * parentWidth <= prevMinResize || next * parentWidth <= nextMinResize) {
         return;

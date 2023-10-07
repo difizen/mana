@@ -35,6 +35,17 @@ export class URI {
     return URI.withPath(this, Path.normalize(this.path));
   }
 
+  get displayName(): string {
+    const base = this.path.base;
+    if (base) {
+      return base;
+    }
+    if (this.path.isRoot) {
+      return this.path.toString();
+    }
+    return '';
+  }
+
   get scheme(): string {
     return this.codeUri.scheme;
   }

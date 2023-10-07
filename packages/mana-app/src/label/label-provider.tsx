@@ -1,5 +1,5 @@
 import type { Event } from '@difizen/mana-common';
-import { URI, Priority, Path } from '@difizen/mana-common';
+import { URI, Priority } from '@difizen/mana-common';
 import { Emitter, Disposable } from '@difizen/mana-common';
 import { ApplicationContribution } from '@difizen/mana-core';
 import type { Contribution } from '@difizen/mana-syringe';

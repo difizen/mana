@@ -1,4 +1,4 @@
-import type { URI } from '@difizen/mana-common';
+import { URI } from '@difizen/mana-common';
 
 import type { FileStat } from './files';
 
@@ -27,6 +27,6 @@ export namespace FileSystemUtils {
       index += 1;
       base = `${name}_${index}${ext}`;
     }
-    return parentUri.resolve(base);
+    return URI.resolve(parentUri, base);
   }
 }
