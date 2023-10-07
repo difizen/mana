@@ -9,7 +9,7 @@
 
     /* code quality */
     "strict": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": false,
     // "noUncheckedIndexedAccess": true,
