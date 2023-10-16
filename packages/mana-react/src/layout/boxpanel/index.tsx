@@ -6,7 +6,7 @@ import { Layout } from '../layout';
 
 import { BoxPanelContext } from './context';
 import { Pane } from './Pane';
-import './style';
+import './styles/index.less';
 
 export interface BoxPanelProps {
   prefixCls?: string| undefined;

@@ -1,20 +1,22 @@
 
+@import '../../styles/variables.less';
+
 @tab-prefix-cls: ~'@{mana-prefix}-tabs';
 
 .@{tab-prefix-cls}-dropdown {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: @text-color;
-  font-size: @font-size-base;
-  font-variant: @font-variant-base;
-  line-height: @line-height-base;
+  color: var(--mana-color-text);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
   list-style: none;
-  font-feature-settings: @font-feature-settings-base;
+  font-feature-settings: 'tnum';
   position: absolute;
   top: -9999px;
   left: -9999px;
-  z-index: @zindex-dropdown;
+  z-index: 1050;
   display: block;
 
   &-hidden {
@@ -24,39 +26,40 @@
   &-menu {
     max-height: 200px;
     margin: 0;
-    padding: @dropdown-edge-child-vertical-padding 0;
+    padding: 4px 0;
     overflow-x: hidden;
     overflow-y: auto;
     text-align: left;
     list-style-type: none;
-    background-color: @dropdown-menu-bg;
+    background-color: var(--mana-color-bg-container);
     background-clip: padding-box;
-    border-radius: @border-radius-base;
+    border-radius: 2px;
     outline: none;
-    box-shadow: @box-shadow-base;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 12%), 0 6px 16px 0 rgba(0, 0, 0, 8%),
+    0 9px 28px 8px rgba(0, 0, 0, 5%);
 
     &-item {
       min-width: 120px;
       margin: 0;
-      padding: @dropdown-vertical-padding @control-padding-horizontal;
+      padding: 5px 12px;
       overflow: hidden;
-      color: @text-color;
+      color: var(--mana-color-text);
       font-weight: normal;
-      font-size: @dropdown-font-size;
-      line-height: @dropdown-line-height;
+      font-size: 14px;
+      line-height: 22px;
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
       transition: all 0.3s;
 
       &:hover {
-        background: @item-hover-bg;
+        background: #f5f5f5;
       }
 
       &-disabled {
         &,
         &:hover {
-          color: @disabled-color;
+          color: var(--mana-text-quaternary);
           background: transparent;
           cursor: not-allowed;
         }

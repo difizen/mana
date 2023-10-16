@@ -1,4 +1,7 @@
 
+@import '../../styles/variables.less';
+
+
 @tab-prefix-cls: ~'@{mana-prefix}-tabs';
 
 .@{tab-prefix-cls}-card {
@@ -11,17 +14,10 @@
       border-top: none;
       border-right: 1px solid var(--mana-tab-border);
       border-bottom: none;
-      // padding: @tabs-card-horizontal-padding;
-      // background: @tabs-card-head-background;
-      // border-top: @border-width-base @border-style-base @border-color-split;
-      // border-bottom: @border-width-base @border-style-base @border-color-split;
-      // border-right: @border-width-base @border-style-base @border-color-split;
-      transition: all @animation-duration-slow @ease-in-out;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 
       &-active {
-        color: @tabs-card-active-color;
-        // background: @component-background;
-
+        color: var(--mana-primary-color);
         background-color: var(--mana-tab-activeBackground);
         border-top: 1px solid var(--mana-tab-activeBorder);
 
@@ -47,7 +43,7 @@
     > .@{tab-prefix-cls}-nav,
     > div > .@{tab-prefix-cls}-nav {
       .@{tab-prefix-cls}-tab + .@{tab-prefix-cls}-tab {
-        margin-left: @tabs-card-gutter;
+        margin-left: 0;
       }
     }
   }
@@ -59,7 +55,7 @@
         border-radius: 0;
 
         &-active {
-          border-bottom-color: @component-background;
+          border-bottom-color: var(--mana-color-bg-container);
         }
       }
     }
@@ -68,10 +64,10 @@
     > .@{tab-prefix-cls}-nav,
     > div > .@{tab-prefix-cls}-nav {
       .@{tab-prefix-cls}-tab {
-        border-radius: 0 0 @border-radius-base @border-radius-base;
+        border-radius: 0 0 2px 2px;
 
         &-active {
-          border-top-color: @component-background;
+          border-top-color: var(--mana-color-bg-container);
         }
       }
     }
@@ -83,7 +79,7 @@
     > .@{tab-prefix-cls}-nav,
     > div > .@{tab-prefix-cls}-nav {
       .@{tab-prefix-cls}-tab + .@{tab-prefix-cls}-tab {
-        margin-top: @tabs-card-gutter;
+        margin-top: 0;
       }
     }
   }
@@ -92,10 +88,10 @@
     > .@{tab-prefix-cls}-nav,
     > div > .@{tab-prefix-cls}-nav {
       .@{tab-prefix-cls}-tab {
-        border-radius: @border-radius-base 0 0 @border-radius-base;
+        border-radius: 2px 0 0 2px;
 
         &-active {
-          border-right-color: @component-background;
+          border-right-color: var(--mana-color-bg-container);
         }
       }
     }
@@ -104,10 +100,10 @@
     > .@{tab-prefix-cls}-nav,
     > div > .@{tab-prefix-cls}-nav {
       .@{tab-prefix-cls}-tab {
-        border-radius: 0 @border-radius-base @border-radius-base 0;
+        border-radius: 0 2px 2px 0;
 
         &-active {
-          border-left-color: @component-background;
+          border-left-color: var(--mana-color-bg-container);
         }
       }
     }

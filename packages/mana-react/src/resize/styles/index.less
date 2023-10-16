@@ -1,4 +1,7 @@
 
+@import '../../styles/variables.less';
+
+
 @resize-prefix-cls: ~'@{mana-prefix}-resize';
 
 .@{resize-prefix-cls} {
@@ -14,7 +17,7 @@
     transition: background-color .1s ease-out;
 
     &:hover {
-      background-color: var(--mana-hoverBorder);
+      background-color: #167cdb;
     }
 
     &:hover.with-color::before {
@@ -43,7 +46,7 @@
     transition: background-color .1s ease-out;
 
     &:hover {
-      background-color: var(--mana-hoverBorder);
+      background-color: #167cdb;
     }
 
     &:hover.with-color::before {
@@ -65,11 +68,11 @@
   }
 
   &-with-color::before {
-    background: var(--editorGroup-border);
+    background: #43484d;
   }
 
   &-active {
-    background-color: var(--mana-hoverBorder);
+    background-color: #167cdb;
   }
 
   &-active.with-color::before {

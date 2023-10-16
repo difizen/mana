@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { MenuContext } from './context';
 
 export const MenuDivider: React.FC = () => {

@@ -2,11 +2,11 @@
 import classnames from 'classnames';
 import * as React from 'react';
 
-import './style';
 import { defaultPrefixCls } from '../constant';
 import type { Layout } from '../layout/layout';
 
 export const RESIZE_LOCK = 'resize-lock';
+import './styles/index.less';
 
 /**
  * 定义在flex模式下，setSize作用于哪一个元素

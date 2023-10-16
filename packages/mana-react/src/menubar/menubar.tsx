@@ -1,6 +1,8 @@
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import * as React from 'react';
+import './styles/index.less';
+import '../menu/styles/index.less';
 
 import { MenubarContext } from './context';
 import { MenubarItem } from './item';

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { MenuContext } from './context';
 import type { MenuItemProps } from './item';
 import { getProps, getContent } from './item';
+import './styles/index.less';
 
 const noop = () => {
   //

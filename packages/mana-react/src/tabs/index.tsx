@@ -6,7 +6,7 @@ import type { EditableConfig } from 'rc-tabs/lib/interface';
 import * as React from 'react';
 
 import { getPrefixCls } from '../util';
-import './styles';
+import './styles/index.less';
 
 export type { TabPaneProps } from 'rc-tabs';
 export type TabsType = 'line' | 'card' | 'editable-card';

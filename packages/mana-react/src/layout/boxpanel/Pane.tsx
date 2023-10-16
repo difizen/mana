@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Layout } from '../layout';
 
 import { BoxPanelContext } from './context';
+import './styles/index.less';
 
 export interface PaneProps {
   flex?: number;

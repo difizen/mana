@@ -3,6 +3,7 @@ import RcDropdown from 'rc-dropdown';
 import type { DropdownProps as RcDropdownProps } from 'rc-dropdown/lib/Dropdown';
 import React from 'react';
 import { forwardRef } from 'react';
+import './styles/index.less';
 
 export type Trigger = 'click' | 'hover' | 'contextMenu';
 export type Placement =

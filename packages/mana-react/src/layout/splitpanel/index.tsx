@@ -5,13 +5,13 @@ import clsx from 'classnames';
 import * as React from 'react';
 
 import { defaultPrefixCls } from '../../constant';
-import type { IResizeHandleDelegate } from '../../resize/resize';
-import { ResizeFlexMode } from '../../resize/resize';
+import type { IResizeHandleDelegate } from '../../resize/index';
+import { ResizeFlexMode } from '../../resize/index';
 import { Layout } from '../layout';
 
 import { SplitPanelContext } from './context';
-import './style';
 import { Pane } from './pane';
+import './styles/index.less';
 
 export interface SplitPanelProps {
   prefixCls?: string;

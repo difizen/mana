@@ -1,9 +1,11 @@
-import * as React from 'react';
 import classNames from 'classnames';
-import { MenuItem } from './item';
-import { MenuDivider } from './divider';
+import * as React from 'react';
+
 import { MenuContext } from './context';
+import { MenuDivider } from './divider';
+import { MenuItem } from './item';
 import { MenuSubMenu } from './submenu';
+import './styles/index.less';
 
 export interface MenuProps {
   prefixCls?: string;
