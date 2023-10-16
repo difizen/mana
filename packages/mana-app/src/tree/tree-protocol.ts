@@ -1,16 +1,16 @@
 import type { MenuPath } from '@difizen/mana-core';
 
-export const TREE_CLASS = 'mana-Tree';
-export const TREE_CONTAINER_CLASS = 'mana-TreeContainer';
-export const TREE_NODE_CLASS = 'mana-TreeNode';
-export const TREE_NODE_CONTENT_CLASS = 'mana-TreeNodeContent';
-export const TREE_NODE_TAIL_CLASS = 'mana-TreeNodeTail';
-export const TREE_NODE_SEGMENT_CLASS = 'mana-TreeNodeSegment';
-export const TREE_NODE_SEGMENT_GROW_CLASS = 'mana-TreeNodeSegmentGrow';
+export const TREE_CLASS = 'mana-tree';
+export const TREE_CONTAINER_CLASS = 'mana-tree-container';
+export const TREE_NODE_CLASS = 'mana-tree-node';
+export const TREE_NODE_CONTENT_CLASS = 'mana-tree-node-content';
+export const TREE_NODE_TAIL_CLASS = 'mana-tree-node-tail';
+export const TREE_NODE_SEGMENT_CLASS = 'mana-tree-node-segment';
+export const TREE_NODE_SEGMENT_GROW_CLASS = 'mana-tree-node-segment-grow';
 
-export const EXPANDABLE_TREE_NODE_CLASS = 'mana-ExpandableTreeNode';
-export const COMPOSITE_TREE_NODE_CLASS = 'mana-CompositeTreeNode';
-export const TREE_NODE_CAPTION_CLASS = 'mana-TreeNodeCaption';
+export const EXPANDABLE_TREE_NODE_CLASS = 'mana-expandable-tree-node';
+export const COMPOSITE_TREE_NODE_CLASS = 'mana-composite-tree-node';
+export const TREE_NODE_CAPTION_CLASS = 'mana-tree-node-caption';
 export const TREE_NODE_INDENT_GUIDE_CLASS = 'mana-tree-node-indent';
 /**
  * Representation of the tree force update options.

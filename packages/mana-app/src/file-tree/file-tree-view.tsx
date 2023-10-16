@@ -20,12 +20,16 @@ import { FileTreeModel } from './file-tree-model';
 import { FileTreeContextMenuPath, URINode } from './file-tree-protocol';
 import { FileStat, FileType } from './files';
 
+import 'font-awesome/css/font-awesome.min.css';
+import 'file-icons-js/css/style.css';
+
 export const FILE_TREE_CLASS = 'mana-FileTree';
 export const FILE_STAT_NODE_CLASS = 'mana-FileStatNode';
 export const DIR_NODE_CLASS = 'mana-DirNode';
 export const FILE_STAT_ICON_CLASS = 'mana-FileStatIcon';
 
 export const FileTreeViewFactory = 'file-tree-view-fatory';
+import './style/file-icon.less';
 
 export const FileTreeViewModule = ManaModule.create()
   .register(FileTree, FileTreeModel)

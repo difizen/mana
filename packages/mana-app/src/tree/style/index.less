@@ -1,6 +1,6 @@
 /* stylelint-disable declaration-block-no-redundant-longhand-properties */
 
-.mana-Tree {
+.mana-tree {
   position: relative;
   height: calc(100% - var(--mana-border-width));
   overflow: hidden;
@@ -8,7 +8,7 @@
   color: var(--mana-foreground);
 }
 
-.mana-Tree:focus .mana-TreeContainer.empty {
+.mana-tree:focus .mana-tree-container.empty {
   outline-width: 1px;
   outline-style: solid;
   outline-color: var(--mana-focusBorder);
@@ -16,29 +16,29 @@
   opacity: 1 !important;
 }
 
-.mana-Tree:focus,
-.mana-TreeContainer .ReactVirtualized__List:focus {
+.mana-tree:focus,
+.mana-tree-container .ReactVirtualized__List:focus {
   border: none;
   outline: 0;
   box-shadow: none;
 }
 
-.mana-TreeContainer {
+.mana-tree-container {
   height: 100%;
 }
 
-.mana-TreeNode {
+.mana-tree-node {
   display: flex;
   line-height: var(--mana-content-line-height);
 }
 
-.mana-TreeNode:hover {
+.mana-tree-node:hover {
   color: var(--mana-list-hoverForeground);
   background: var(--mana-list-hoverBackground);
   cursor: pointer;
 }
 
-.mana-TreeNodeContent {
+.mana-tree-node-content {
   display: flex;
   align-items: center;
   width: calc(100% - var(--mana-scrollbar-rail-width));
@@ -74,68 +74,68 @@
   transform: rotate(-90deg);
 }
 
-.mana-Tree:focus .mana-TreeNode.mana-mod-selected,
-.mana-Tree .ReactVirtualized__List:focus .mana-TreeNode.mana-mod-selected {
+.mana-tree:focus .mana-tree-node.mana-mod-selected,
+.mana-tree .ReactVirtualized__List:focus .mana-tree-node.mana-mod-selected {
   color: var(--mana-list-activeSelectionForeground) !important;
   background: var(--mana-list-activeSelectionBackground);
 }
 
-.mana-Tree:focus .mana-TreeNode.mana-mod-selected .mana-TreeNodeTail,
-.mana-Tree
+.mana-tree:focus .mana-tree-node.mana-mod-selected .mana-tree-node-tail,
+.mana-tree
   .ReactVirtualized__List:focus
-  .mana-TreeNode.mana-mod-selected
-  .mana-TreeNodeTail,
-.mana-Tree:focus .mana-TreeNode.mana-mod-selected .mana-caption-suffix,
-.mana-Tree
+  .mana-tree-node.mana-mod-selected
+  .mana-tree-node-tail,
+.mana-tree:focus .mana-tree-node.mana-mod-selected .mana-caption-suffix,
+.mana-tree
   .ReactVirtualized__List:focus
-  .mana-TreeNode.mana-mod-selected
+  .mana-tree-node.mana-mod-selected
   .mana-caption-suffix,
-.mana-Tree:focus .mana-TreeNode.mana-mod-selected .mana-TreeNodeInfo,
-.mana-Tree
+.mana-tree:focus .mana-tree-node.mana-mod-selected .mana-tree-nodeInfo,
+.mana-tree
   .ReactVirtualized__List:focus
-  .mana-TreeNode.mana-mod-selected
-  .mana-TreeNodeInfo {
+  .mana-tree-node.mana-mod-selected
+  .mana-tree-nodeInfo {
   color: var(--mana-list-activeSelectionForeground) !important;
 }
 
-.mana-TreeNodeInfo {
+.mana-tree-nodeInfo {
   color: var(--mana-foreground);
   opacity: 0.7;
 }
 
-.mana-Tree .mana-TreeNode.mana-mod-selected {
+.mana-tree .mana-tree-node.mana-mod-selected {
   color: var(--mana-list-inactiveSelectionForeground);
   background: var(--mana-list-inactiveSelectionBackground);
 }
 
-.mana-TreeNode.mana-mod-not-selectable {
+.mana-tree-node.mana-mod-not-selectable {
   color: var(--mana-descriptionForeground);
 }
 
-.mana-TreeNode.mana-mod-not-selectable:hover {
+.mana-tree-node.mana-mod-not-selectable:hover {
   background: none;
   cursor: default;
 }
 
-.mana-TreeNodeSegment {
+.mana-tree-node-segment {
   flex-grow: 0;
   white-space: nowrap;
   user-select: none;
 }
 
-.mana-TreeNodeSegmentGrow {
+.mana-tree-node-segment-grow {
   flex-grow: 1 !important;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.mana-TreeNodeTail {
+.mana-tree-node-tail {
   min-width: 1rem;
   text-align: center;
 }
 
-.mana-TreeNodeSegment mark {
+.mana-tree-node-segment mark {
   color: var(--mana-list-inactiveSelectionForeground);
   background-color: var(--mana-list-filterMatchBackground);
 }
@@ -157,7 +157,7 @@
 }
 
 .mana-tree-node-indent.always,
-.mana-TreeContainer:hover .mana-tree-node-indent.hover {
+.mana-tree-container:hover .mana-tree-node-indent.hover {
   border-color: var(--mana-tree-inactiveIndentGuidesStroke);
 }
 
@@ -165,32 +165,32 @@
   border-color: var(--mana-tree-indentGuidesStroke);
 }
 
-.mana-TreeContainer .mana-WelcomeView {
+.mana-tree-container .mana-WelcomeView {
   padding-top: var(--mana-ui-padding);
-  padding-right: var(--mana-welcomeView-horizontal-padding);
-  padding-left: var(--mana-welcomeView-horizontal-padding);
+  padding-right: 20px;
+  padding-left: 20px;
 }
 
-.mana-TreeContainer .mana-WelcomeView > * {
-  margin: var(--mana-welcomeView-elements-margin) 0;
+.mana-tree-container .mana-WelcomeView > * {
+  margin: 13px 0;
 }
 
-.mana-TreeContainer .mana-WelcomeView .mana-WelcomeViewButtonWrapper {
+.mana-tree-container .mana-WelcomeView .mana-WelcomeViewButtonWrapper {
   display: flex;
   padding: 0 var(--mana-ui-padding);
 }
 
-.mana-TreeContainer .mana-WelcomeView .mana-WelcomeViewButton {
+.mana-tree-container .mana-WelcomeView .mana-WelcomeViewButton {
   width: 100%;
-  max-width: var(--mana-welcomeView-button-maxWidth);
+  max-width: 260px;
   margin: auto;
 }
 
-.mana-TreeContainer .mana-WelcomeView .mana-WelcomeViewCommandLink {
+.mana-tree-container .mana-WelcomeView .mana-WelcomeViewCommandLink {
   cursor: pointer;
 }
 
-.mana-TreeContainer .mana-WelcomeView .mana-WelcomeViewCommandLink.disabled {
+.mana-tree-container .mana-WelcomeView .mana-WelcomeViewCommandLink.disabled {
   cursor: default;
   opacity: var(--mana-mod-disabled-opacity);
   pointer-events: none;

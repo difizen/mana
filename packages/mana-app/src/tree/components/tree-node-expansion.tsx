@@ -1,15 +1,16 @@
 import { ViewInstance } from '@difizen/mana-core';
 import { useInject } from '@difizen/mana-observable';
-import { TreeNodeComponents } from '../tree';
-import type { TreeNodeProps } from '../tree';
-import { ExpandableTreeNode } from '../tree-expansion';
-import { TREE_NODE_SEGMENT_CLASS } from '../tree-protocol';
-import type { TreeView } from '../view/tree-view';
+
 import {
   BUSY_CLASS,
   COLLAPSED_CLASS,
   EXPANSION_TOGGLE_CLASS,
 } from '../../style/style-protocol';
+import { TreeNodeComponents } from '../tree';
+import type { TreeNodeProps } from '../tree';
+import { ExpandableTreeNode } from '../tree-expansion';
+import { TREE_NODE_SEGMENT_CLASS } from '../tree-protocol';
+import type { TreeView } from '../view/tree-view';
 
 export function TreeNodeExpansion(props: TreeNodeProps) {
   const treeNodeComponents = useInject<TreeNodeComponents>(TreeNodeComponents);
