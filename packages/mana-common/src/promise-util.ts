@@ -24,14 +24,11 @@ export async function retry<T>(
 
   for (let i = 0; i < retries; i += 1) {
     try {
-      // eslint-disable-next-line no-await-in-loop
       return await task();
     } catch (error: any) {
       lastError = error;
-      // eslint-disable-next-line no-await-in-loop
       await timeout(delay);
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-throw-literal
   throw lastError;
 }

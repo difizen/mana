@@ -70,8 +70,8 @@ export class Path {
     this.root = Path.toRoot(this);
 
     const extIndex = this.base.lastIndexOf('.');
-    this.name = extIndex === -1 ? this.base : this.base.substring(0, extIndex + 1);
-    this.ext = extIndex === -1 ? '' : this.base.substring(extIndex + 1);
+    this.name = extIndex === -1 ? this.base : this.base.substring(0, extIndex);
+    this.ext = extIndex === -1 ? '' : this.base.substring(extIndex);
   }
 
   /**

@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { ApplicationModule } from './application';
 import { CommandModule } from './command';
 import { CommonModule } from './common';

@@ -24,4 +24,10 @@ describe('Path util', () => {
     assert(Path.toRoot(new Path('/a/b/c'))?.toString() === '/');
     assert(Path.toRoot(new Path('/c:/a/b/c'))?.toString() === '/c:');
   });
+
+  it('#name base ext', async () => {
+    assert(new Path('/c:xx\\xx.a').ext === '.a');
+    assert(new Path('/c:xx\\xx.a').name === 'xx');
+    assert(new Path('/c:xx\\xx.a').base === 'xx.a');
+  });
 });
