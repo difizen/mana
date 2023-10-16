@@ -49,5 +49,7 @@
   "devDependencies": {
     "rimraf": "latest"
   },
-  "publishConfig": {}
+  "publishConfig": {
+    "access": "public"
+  }
 }

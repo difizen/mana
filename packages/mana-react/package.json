@@ -56,5 +56,7 @@
     "@types/react-dom": "^18.2.0",
     "rimraf": "latest"
   },
-  "publishConfig": {}
+  "publishConfig": {
+    "access": "public"
+  }
 }

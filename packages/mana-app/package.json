@@ -75,5 +75,7 @@
     "@types/uuid": "^9.0.2",
     "rimraf": "latest"
   },
-  "publishConfig": {}
+  "publishConfig": {
+    "access": "public"
+  }
 }
