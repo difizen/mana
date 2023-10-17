@@ -17,11 +17,14 @@
     "ci": "nx run-many --target=lint:prettier,lint,test,coverage:jest,coverage",
     "ci:affected": "nx affected --target=lint:prettier,lint,test,coverage:jest,coverage",
     "docs": "nx run @difizen/mana-docs:start",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
     "clean": "git clean -fX ."
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.23.0",
     "@babel/plugin-transform-flow-strip-types": "^7.22.5",
+    "@changesets/cli": "^2.26.2",
     "@commitlint/cli": "^17.7.2",
     "@commitlint/config-conventional": "^17.7.0",
     "@types/jest": "^29.5.5",
