@@ -1,1 +1,1 @@
-# difi
+# mana-app

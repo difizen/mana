@@ -52,7 +52,6 @@
   "peerDependencies": {
     "react": ">=18.0.0"
   },
-  "typedocMain": "src/index.ts",
   "publishConfig": {
     "access": "public"
   }
