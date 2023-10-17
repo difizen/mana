@@ -13,8 +13,7 @@ on:
 
 permissions:
   contents: 'read'
-  id-token: 'write'
-  issues: 'write'
+  actions: 'read'
 
 jobs:
   ci:
