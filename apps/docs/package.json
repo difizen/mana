@@ -1,5 +1,6 @@
 {
   "name": "@difizen/mana-docs",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "description": "Document site for mana",
