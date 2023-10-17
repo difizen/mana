@@ -1,7 +1,7 @@
 # @difizen/mana-common
 
-## 0.0.2-alpha.0
+## 0.0.2-alpha.1
 
 ### Patch Changes
 
-- Initial version
+- Initial Version

@@ -1,11 +1,11 @@
 # @difizen/mana-core
 
-## 0.0.2-alpha.0
+## 0.0.2-alpha.1
 
 ### Patch Changes
 
-- Initial version
+- Initial Version
 - Updated dependencies
-  - @difizen/mana-common@0.0.2-alpha.0
-  - @difizen/mana-observable@0.0.2-alpha.0
-  - @difizen/mana-syringe@0.0.2-alpha.0
+  - @difizen/mana-common@0.0.2-alpha.1
+  - @difizen/mana-observable@0.0.2-alpha.1
+  - @difizen/mana-syringe@0.0.2-alpha.1

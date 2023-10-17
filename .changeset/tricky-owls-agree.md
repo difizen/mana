@@ -8,4 +8,4 @@
 '@difizen/mana-syringe': patch
 ---
 
-Initial version
+Initial Version

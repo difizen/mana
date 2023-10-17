@@ -6,7 +6,7 @@
   "description": "Document site for mana",
   "scripts": {
     "start": "dumi dev",
-    "build": "dumi build"
+    "release": "dumi build"
   },
   "devDependencies": {
     "dumi": "^2.2.7",

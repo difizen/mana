@@ -21,7 +21,6 @@
     "docs": "nx run @difizen/mana-docs:start",
     "docs:build": "nx run @difizen/mana-docs:build",
     "changeset": "changeset",
-    "version-packages": "changeset version",
     "clean": "git clean -fX ."
   },
   "devDependencies": {
