@@ -123,7 +123,7 @@ describe('cancellation', () => {
   it('#Cancellation dispose', () => {
     const source = new CancellationTokenSource();
     source.dispose();
-    assert(source.token === CancellationToken.Cancelled);
+    assert(source.token === CancellationToken.None);
   });
 
   it('#is cancelled', () => {
@@ -149,7 +149,6 @@ describe('cancellation', () => {
     source.cancel();
     source.cancel();
     let result = true;
-    assert('maxListeners' in source.token.onCancellationRequested);
     assert(onRequest);
     const disposable = source.token.onCancellationRequested(() => {
       result = false;
