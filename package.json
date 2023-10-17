@@ -11,6 +11,7 @@
     "coverage:jest": "jest --coverage",
     "postinstall": "is-ci || husky install",
     "setup": "nx run-many --target=setup",
+    "build": "nx run-many --target=build",
     "lint": "nx run-many --target=lint:prettier,lint",
     "lint:prettier": "prettier --check --ignore-unknown .",
     "lint-staged": "lint-staged",
@@ -18,6 +19,7 @@
     "ci": "nx run-many --target=lint:prettier,lint,test,coverage:jest,coverage",
     "ci:affected": "nx affected --target=lint:prettier,lint,test,coverage:jest,coverage",
     "docs": "nx run @difizen/mana-docs:start",
+    "docs:build": "nx run @difizen/mana-docs:build",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "clean": "git clean -fX ."
