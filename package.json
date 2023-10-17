@@ -24,8 +24,14 @@
     "clean": "git clean -fX ."
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.23.0",
+    "@babel/plugin-proposal-decorators": "^7.23.2",
+    "@babel/plugin-transform-class-properties": "^7.22.5",
     "@babel/plugin-transform-flow-strip-types": "^7.22.5",
+    "@babel/plugin-transform-private-methods": "^7.22.5",
+    "@babel/plugin-transform-private-property-in-object": "^7.22.11",
+    "@babel/preset-env": "^7.23.2",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.2",
     "@changesets/cli": "^2.26.2",
     "@commitlint/cli": "^17.7.2",
     "@commitlint/config-conventional": "^17.7.0",
