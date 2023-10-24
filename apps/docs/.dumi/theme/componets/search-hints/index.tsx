@@ -1,43 +1,8 @@
-import React from 'react';
-
 import { Empty, Spin } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { Link } from 'dumi';
-import styled from 'styled-components';
-
-const Hit = styled.div`
-  margin: 16px;
-
-  .ant-typography {
-    margin: 0;
-    padding: 0;
-  }
-`;
-
-const HitTitle = styled.span`
-  font-size: 16px;
-  font-weight: 500;
-`;
-
-const HitDesc = styled.span`
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
-`;
-
-const BottomHint = styled.div`
-  font-size: 12px;
-  color: #9d9d9d;
-`;
-
-const HighlightText = styled.span`
-  color: rgba(0, 96, 230, 1);
-  font-weight: 500;
-`;
-
-const CenterHint = styled.div`
-  display: flex;
-  justify-content: center;
-`;
+import React from 'react';
+import './index.less';
 
 interface ISearchHits {
   setVisible: (v: boolean) => void;
@@ -58,29 +23,37 @@ interface ISearchResult {
   highlightTexts: IHighlightText[];
 }
 
-const SearchHits: React.FC<ISearchHits> = ({ loading, hitsResult, setVisible }) => {
+function SearchHits({ loading, hitsResult, setVisible }: ISearchHits) {
   return (
     <>
       {loading && !hitsResult?.length ? (
-        <CenterHint>
+        <div className="difizen-dumi-search-hint-center">
           <Spin />
-        </CenterHint>
+        </div>
       ) : null}
       {!loading || hitsResult?.length
         ? hitsResult?.slice(0, 30).map((hit) => {
             return (
               <Link to={hit.link} key={hit.link}>
-                <Hit onClick={() => setVisible(false)}>
+                <div
+                  className="difizen-dumi-search-hint"
+                  onClick={() => setVisible(false)}
+                >
                   <Paragraph ellipsis={{ rows: 1 }}>
                     {hit.highlightTitleTexts.map((titleText, index) => {
                       return (
-                        <HitTitle key={'hit-title-' + index}>
+                        <span
+                          className="difizen-dumi-search-hint-title"
+                          key={'hit-title-' + index}
+                        >
                           {titleText.highlighted ? (
-                            <HighlightText>{titleText.text}</HighlightText>
+                            <span className="difizen-dumi-search-hint-highlight">
+                              {titleText.text}
+                            </span>
                           ) : (
                             titleText.text
                           )}
-                        </HitTitle>
+                        </span>
                       );
                     })}
                   </Paragraph>
@@ -88,28 +61,33 @@ const SearchHits: React.FC<ISearchHits> = ({ loading, hitsResult, setVisible }) 
                   <Paragraph ellipsis={{ rows: 3 }}>
                     {hit.highlightTexts.map((text, index) => {
                       return (
-                        <HitDesc key={'hit-text-' + index}>
+                        <span
+                          className="difizen-dumi-search-hint-desc"
+                          key={'hit-text-' + index}
+                        >
                           {text.highlighted ? (
-                            <HighlightText>{text.text}</HighlightText>
+                            <span className="difizen-dumi-search-hint-highlight">
+                              {text.text}
+                            </span>
                           ) : (
                             text.text
                           )}
-                        </HitDesc>
+                        </span>
                       );
                     })}
                   </Paragraph>
-                </Hit>
+                </div>
               </Link>
             );
           })
         : null}
-      <BottomHint>
-        <CenterHint>
+      <div className="difizen-dumi-search-hint-bottom">
+        <div className="difizen-dumi-search-hint-center">
           {!loading && !hitsResult?.length ? <Empty /> : '仅显示前 30 条记录'}
-        </CenterHint>
-      </BottomHint>
+        </div>
+      </div>
     </>
   );
-};
+}
 
 export default SearchHits;

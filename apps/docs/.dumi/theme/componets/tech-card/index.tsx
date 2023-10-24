@@ -1,10 +1,10 @@
 import { Col, Row } from 'antd';
+import { useSiteData } from 'dumi';
 import React, { useEffect, useState } from 'react';
 
-import { useSiteData } from 'dumi';
-import useScroll from '../hooks/useScroll';
-import { useWindowSize } from '../hooks/useWindowSize';
-import { Title } from './Title';
+import useScroll from '../../hooks/useScroll';
+import { useWindowSize } from '../../hooks/useWindowSize';
+import { Title } from '../title';
 
 const TechCard: React.FC = () => {
   const scroll = useScroll();

@@ -18,6 +18,6 @@ pnpm run docs
 
 ```
 pnpm changeset
-pnpm changeset Version
+pnpm changeset version
 pnpm changeset publish
 ```

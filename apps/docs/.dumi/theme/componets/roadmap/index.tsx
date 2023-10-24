@@ -1,24 +1,8 @@
 import { useSiteData } from 'dumi';
 import React from 'react';
-import styled from 'styled-components';
-import CarouselRoadMap from './CarouselRoadMap';
+import './index.less';
 
-const RoadMap = styled.div`
-  position: relative;
-  height: 490px;
-  margin-top: 70px;
-  background-image: url('https://mdn.alipayobjects.com/huamei_usjdcg/afts/img/A*-Y_eQZ-uikgAAAAAAAAAAAAADo6HAQ/original');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: auto 460px;
-
-  @media only screen and (min-width: 1450px) {
-    background-size: 100% 100%;
-  }
-  @media only screen and (max-width: 768px) {
-    height: 450px;
-  }
-`;
+import CarouselRoadMap from '../carousel-roadmap';
 
 const rollContent = [
   {
@@ -98,7 +82,7 @@ export const Roadmap: React.FC = () => {
   );
 
   return (
-    <RoadMap>
+    <div className="difizen-dumi-roadmap">
       <CarouselRoadMap
         carouselData={roadmapData}
         titleInfo={{
@@ -110,6 +94,6 @@ export const Roadmap: React.FC = () => {
         content={content}
         rollContent={rollContent}
       />
-    </RoadMap>
+    </div>
   );
 };

@@ -8,8 +8,8 @@ export default (api: IApi) => {
       const list = JSON.parse(stdout);
       list.forEach((item) => {
         if (memo.resolve?.alias) {
-          memo.resolve.alias[`${item.name}/lib/mock`] = `${item.path}/src/mock`;
-          memo.resolve.alias[item.name] = `${item.path}/src`;
+          memo.resolve.alias[`${item.name}/es/mock`] = `${item.path}/src/mock`;
+          memo.resolve.alias[item.name] = `${item.path}/src/index.js`;
         }
       });
     } catch (_e) {

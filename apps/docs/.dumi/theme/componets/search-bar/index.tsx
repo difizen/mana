@@ -1,43 +1,9 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { useSiteSearch } from 'dumi';
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import './index.less';
 
-import SearchHits from './SearchHits';
-
-const DesktopHitsWrapper = styled.div`
-  position: absolute;
-  top: 60px;
-  left: 25px;
-  background-color: #fff;
-  width: 450px;
-  padding: 12px;
-  z-index: 10;
-  /* max-height: 400px; */
-  /* overflow-y: auto; */
-  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.03);
-`;
-
-const DesktopSearchInputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  width: 226px;
-  padding: 0 12px;
-  margin: 0 24px 0;
-  height: 36px;
-  font-size: 14px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px 0 rgba(0 0 0 / 0.05);
-  background-color: #fff;
-`;
-
-const DesktopSearchInput = styled.input`
-  width: 100%;
-  font-size: 14px;
-  background-color: transparent;
-  outline: none;
-  border: none;
-`;
+import SearchHits from '../search-hints/index.js';
 
 const SearchBar: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -120,8 +86,9 @@ const SearchBar: React.FC = () => {
   return (
     <>
       {/* 搜索框 */}
-      <DesktopSearchInputWrapper ref={searchBarRef}>
-        <DesktopSearchInput
+      <div className="difizen-dumi-search-bar-input-container" ref={searchBarRef}>
+        <input
+          className="difizen-dumi-search-bar-input"
           id="pc-search-input"
           placeholder="请输入关键词搜索文档"
           value={keywords}
@@ -131,10 +98,11 @@ const SearchBar: React.FC = () => {
           autoComplete="off"
         />
         <SearchOutlined style={{ fontSize: 18, cursor: 'pointer' }} />
-      </DesktopSearchInputWrapper>
+      </div>
       {/* 搜索结果 */}
       {visible ? (
-        <DesktopHitsWrapper
+        <div
+          className="difizen-dumi-search-bar-hint"
           ref={resultPanelRef}
           tabIndex={0}
           role="menu"
@@ -164,7 +132,7 @@ const SearchBar: React.FC = () => {
               hitsResult={hitsResult}
             />
           </div>
-        </DesktopHitsWrapper>
+        </div>
       ) : null}
     </>
   );

@@ -1,156 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import styled from 'styled-components';
 
-import useAnimate from '../hooks/useAnimate';
-import { useWindowSize } from '../hooks/useWindowSize';
+import useAnimate from '../../hooks/useAnimate';
+import { useWindowSize } from '../../hooks/useWindowSize';
+import { Title } from '../title';
+import './index.less';
 
-import { Title } from './Title';
-
-const RoadmapWrapper = styled.div`
-  position: relative;
-  height: 460px;
-  padding-top: 70px;
-  .disabled-control-r-olling-btn {
-    color: #eee;
-    cursor: not-allowed;
-  }
-
-  .control-rolling-btn {
-    position: absolute;
-    z-index: 1;
-    width: 50px;
-    height: 50px;
-    border: 0;
-    border-radius: 50%;
-    margin-top: 50px;
-    background-color: #fff;
-    box-shadow: 0 0 10px 5px #1b1b1b09;
-    cursor: pointer;
-  }
-
-  @media only screen and (max-width: 768px) {
-    padding-top: 32px;
-    .control-rolling-btn {
-      width: 40px;
-      height: 40px;
-    }
-  }
-`;
-
-const Roadmap = styled.div`
-  overflow: hidden;
-  margin: 0 auto;
-  transition: all 0.6s ease-out;
-  z-index: 1;
-  margin-top: -10px;
-
-  @media only screen and (min-width: 1420px) {
-    width: 1192px;
-  }
-
-  @media only screen and (max-width: 1420px) {
-    width: 888px;
-  }
-
-  @media only screen and (max-width: 1140px) {
-    width: 584px;
-  }
-
-  @media only screen and (max-width: 840px) {
-    width: 280px;
-  }
-`;
-
-const Roadline = styled.div`
-  position: absolute;
-  top: 143px;
-  left: 50%;
-  margin: 10px 0;
-  transform: translateX(-50%);
-
-  .next-btn {
-    right: -100px;
-    transition: all 0.5s;
-  }
-
-  .prev-btn {
-    left: -100px;
-    transition: all 0.5s;
-  }
-
-  @media only screen and (min-width: 1420px) {
-    width: 1192px;
-  }
-
-  @media only screen and (max-width: 1420px) {
-    width: 888px;
-  }
-
-  @media only screen and (max-width: 1140px) {
-    width: 584px;
-  }
-
-  @media only screen and (max-width: 840px) {
-    width: 280px;
-  }
-
-  @media only screen and (max-width: 768px) {
-    top: 103px;
-  }
-
-  @media only screen and (max-width: 520px) {
-    .next-btn {
-      right: -60px;
-    }
-
-    .prev-btn {
-      left: -60px;
-    }
-  }
-  @media only screen and (max-width: 375px) {
-    .next-btn {
-      right: -45px;
-    }
-
-    .prev-btn {
-      left: -45px;
-    }
-  }
-`;
-
-const RadmapRollWrapper = styled.div`
-  z-index: 1;
-  overflow: hidden;
-  margin-left: 0;
-  transition: all 0.3s;
-  white-space: nowrap;
-  height: 316px;
-`;
-
-const RoadmapCardWrapper = styled.div`
-  display: inline-block;
-`;
-
-const RoadmapCard = styled.div`
-  position: relative;
-  vertical-align: top;
-  display: inline-block;
-  display: flex;
-  flex-direction: column;
-  width: 280px;
-  /* height: 216px; */
-  box-sizing: border-box;
-  padding: 20px;
-  border-radius: 10px;
-  margin-right: 24px;
-  background-image: linear-gradient(180deg, #fff 0%, rgb(255 255 255 / 50%) 100%);
-  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 3%);
-  text-align: center;
-
-  a {
-    color: rgba(0, 96, 230, 1);
-  }
-`;
+interface IProps {
+  carouselData: Record<string, any>[];
+  titleInfo: Record<string, any>;
+  content: Record<string, any>[];
+  extraContent?: any;
+  rollContent?: Record<string, any>[];
+  cardStyle?: Record<string, any>;
+  buttonStyle?: Record<string, any>;
+  startFromBeginning?: boolean;
+}
 
 const CarouselRoadMap: React.FC<IProps> = (props) => {
   const {
@@ -247,18 +111,18 @@ const CarouselRoadMap: React.FC<IProps> = (props) => {
   }, [roadWidth, carouselData.length]);
 
   return (
-    <RoadmapWrapper>
+    <div className="difizen-dumi-carousel">
       <Title marginTop={titleInfo.marginTop} marginBottom={40}>
         {titleInfo.title}
       </Title>
-      <Roadline>
+      <div className="difizen-dumi-carousel-line">
         {extraContent}
         <button
           type="button"
           disabled={isDisabledPrevBtn}
           style={buttonStyle}
-          className={`control-rolling-btn prev-btn ${
-            isDisabledPrevBtn ? 'disabled-control-rolling-btn' : ''
+          className={`difizen-dumi-carousel-rolling-btn difizen-dumi-carousel-prev-btn ${
+            isDisabledPrevBtn ? 'difizen-dumi-carousel-rolling-btn-disabled' : ''
           }`}
           onClick={() => {
             if (rollingWidth >= 0) {
@@ -273,8 +137,8 @@ const CarouselRoadMap: React.FC<IProps> = (props) => {
           type="button"
           disabled={isDisabledNextBtn}
           style={buttonStyle}
-          className={`control-rolling-btn next-btn ${
-            isDisabledNextBtn ? 'disabled-control-rolling-btn' : ''
+          className={`difizen-dumi-carousel-rolling-btn difizen-dumi-carousel-next-btn ${
+            isDisabledNextBtn ? 'difizen-dumi-carousel-rolling-btn-disabled' : ''
           }`}
           onClick={() => {
             setRollingWidth(rollingWidth - (boxWidth + marginRight));
@@ -282,18 +146,25 @@ const CarouselRoadMap: React.FC<IProps> = (props) => {
         >
           {'>'}
         </button>
-      </Roadline>
-      <Roadmap
+      </div>
+      <div
+        className="difizen-dumi-carousel-roadmap"
         ref={roadmapRef}
         style={{
           opacity: animate.opacity,
           transform: animate.translate,
         }}
       >
-        <RadmapRollWrapper style={{ marginLeft: rollingWidth }}>
+        <div
+          className="difizen-dumi-carousel-roadmap-container"
+          style={{ marginLeft: rollingWidth }}
+        >
           {carouselData.map((data) => {
             return (
-              <RoadmapCardWrapper key={data.id}>
+              <div
+                className="difizen-dumi-carousel-roadmap-card-container"
+                key={data.id}
+              >
                 {rollContent?.map((item) => (
                   <>
                     <div style={item.style}>
@@ -302,7 +173,8 @@ const CarouselRoadMap: React.FC<IProps> = (props) => {
                     </div>
                   </>
                 ))}
-                <RoadmapCard
+                <div
+                  className="difizen-dumi-carousel-roadmap-card"
                   style={cardStyle}
                   ref={(el) => el && (refs.current[data.id] = el)}
                   key={data.id}
@@ -361,25 +233,14 @@ const CarouselRoadMap: React.FC<IProps> = (props) => {
                       )}
                     </>
                   ))}
-                </RoadmapCard>
-              </RoadmapCardWrapper>
+                </div>
+              </div>
             );
           })}
-        </RadmapRollWrapper>
-      </Roadmap>
-    </RoadmapWrapper>
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default CarouselRoadMap;
-
-interface IProps {
-  carouselData: Record<string, any>[];
-  titleInfo: Record<string, any>;
-  content: Record<string, any>[];
-  extraContent?: any;
-  rollContent?: Record<string, any>[];
-  cardStyle?: Record<string, any>;
-  buttonStyle?: Record<string, any>;
-  startFromBeginning?: boolean;
-}
