@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable guard-for-in */
-/* eslint-disable @typescript-eslint/no-redeclare */
-/* eslint-disable class-methods-use-this */
 import { DisposableCollection, Disposable, Emitter } from '@difizen/mana-common';
 import { singleton, inject } from '@difizen/mana-syringe';
 

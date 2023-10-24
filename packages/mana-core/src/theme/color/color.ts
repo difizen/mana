@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
 /* eslint-disable no-inner-declarations */
-/* eslint-disable no-multi-assign */
-/* eslint-disable default-case */
-/* eslint-disable no-restricted-properties */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.

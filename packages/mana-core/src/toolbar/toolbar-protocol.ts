@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Event, Disposable } from '@difizen/mana-common';
 
 import type { CommandHandler } from '../command';

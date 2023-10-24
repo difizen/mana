@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-redeclare */
 import { Disposable, DisposableCollection } from '@difizen/mana-common';
 import type { Contribution } from '@difizen/mana-syringe';
 import { contrib, inject, singleton } from '@difizen/mana-syringe';

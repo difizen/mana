@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Event } from '@difizen/mana-common';
 import { Emitter } from '@difizen/mana-common';
 import { prop } from '@difizen/mana-observable';
