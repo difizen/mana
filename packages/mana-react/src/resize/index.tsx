@@ -459,8 +459,8 @@ export const ResizeHandleVertical = (props: ResizeHandleProps) => {
     let fixedElement: HTMLElement;
     let flexElement: HTMLElement;
     let targetFixedHeight = 0;
-    const prevMinResize = parseInt(prevEle!.dataset['minResize'] || '0', 10);
-    const nextMinResize = parseInt(nextEle!.dataset['minResize'] || '0', 10);
+    const prevMinResize = parseFloat(prevEle!.dataset['minResize'] || '0');
+    const nextMinResize = parseFloat(nextEle!.dataset['minResize'] || '0');
     if (props.flexMode === ResizeFlexMode.Prev) {
       fixedElement = prevEle!;
       flexElement = nextEle!;
@@ -686,8 +686,8 @@ export const ResizeHandleVertical = (props: ResizeHandleProps) => {
       window.cancelAnimationFrame(requestFrame.current);
     }
     requestFrame.current = window.requestAnimationFrame(() => {
-      const prevMinResize = cachedPrevElement.current!.dataset['minResize'] || 0;
-      const nextMinResize = cachedNextElement.current!.dataset['minResize'] || 0;
+      const prevMinResize = parseFloat(cachedPrevElement.current!.dataset['minResize'] || '0');
+      const nextMinResize = parseFloat(cachedNextElement.current!.dataset['minResize'] || '0');
       if (prevMinResize || nextMinResize) {
         if (prevHeight <= prevMinResize || nextHeight <= nextMinResize) {
           return;
