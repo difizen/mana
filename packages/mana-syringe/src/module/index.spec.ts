@@ -8,9 +8,7 @@ describe('module', () => {
     @injectable()
     class Foo {}
     class Bar {}
-    const module = Module((reg) => {
-      reg(Foo);
-    }).register(Bar);
+    const module = Module().register(Foo, Bar);
     GlobalContainer.load(module);
     const foo = GlobalContainer.get(Foo);
     assert(foo instanceof Foo);
@@ -20,9 +18,7 @@ describe('module', () => {
     @injectable()
     class Foo {}
     class Bar {}
-    const module = Module((reg) => {
-      reg(Foo);
-    }).register(Bar);
+    const module = Module().register(Foo, Bar);
 
     assert(Syringe.isModule(module));
     assert(!Syringe.isModule({}));
@@ -31,9 +27,7 @@ describe('module', () => {
   it('#load module once', () => {
     @injectable()
     class Foo {}
-    const module = Module((reg) => {
-      reg(Foo);
-    });
+    const module = Module().register(Foo);
     GlobalContainer.load(module);
     GlobalContainer.load(module);
     const foo = GlobalContainer.get(Foo);

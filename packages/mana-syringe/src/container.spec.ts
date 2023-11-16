@@ -252,12 +252,8 @@ describe('container', () => {
         }
       }
       const baseModule = Module().register(Foo).contribution(FooSymbol);
-      const fooModule = Module((reg) => {
-        reg(FooContribution);
-      });
-      const barModule = Module((reg) => {
-        reg(BarContribution);
-      });
+      const fooModule = Module().register(FooContribution);
+      const barModule = Module().register(BarContribution);
       GlobalContainer.load(baseModule);
       GlobalContainer.load(fooModule);
       const foo = GlobalContainer.get(Foo);
