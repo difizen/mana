@@ -67,7 +67,7 @@ export namespace Syringe {
       token: Syringe.Token<T> | Syringe.InjectOption<T>,
       options?: Syringe.InjectOption<T>,
     ) => void;
-    load: (module: Module, force?: boolean) => Disposable;
+    load: (module: Module, force?: boolean, deep?: boolean) => void;
     unload: (module: Module) => void;
     get: <T>(token: Syringe.Token<T>) => T;
     getNamed: <T>(token: Syringe.Token<T>, named: Syringe.Named) => T;

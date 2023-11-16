@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { MaybePromise } from '@difizen/mana-common';
 import type { interfaces } from 'inversify';
 import { ContainerModule } from 'inversify';
 
@@ -12,8 +11,8 @@ import { Register } from '../register';
 
 type TokenOrOption<T> = Syringe.Token<T> | Syringe.InjectOption<T>;
 
-export class SyringeModule implements Syringe.Module {
-  protected dependencies: MaybePromise<SyringeModule>[] = [];
+export class SyringeModule<T = Syringe.Module> implements Syringe.Module {
+  protected dependencies: T[] = [];
   /**
    * @readonly
    * module unique id
@@ -75,20 +74,20 @@ export class SyringeModule implements Syringe.Module {
     return this;
   }
 
-  dependOn(...modules: MaybePromise<SyringeModule>[]) {
+  dependOn(...modules: T[]) {
     this.dependencies.push(...modules);
     return this;
   }
 
-  toLoader(): SyringeModuleLoader {
+  toLoader(): SyringeModuleLoader<T> {
     return {
       dependencies: this.dependencies.length > 0 ? this.dependencies : undefined,
     };
   }
 }
 
-export interface SyringeModuleLoader {
-  dependencies?: MaybePromise<SyringeModule>[];
+export interface SyringeModuleLoader<T = Syringe.Module> {
+  dependencies?: T[];
 }
 
 export function isSyringeModule(data: Syringe.Module): data is SyringeModule {

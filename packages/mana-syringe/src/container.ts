@@ -78,26 +78,24 @@ export class Container implements Syringe.Container, InversifyContext, Disposabl
     this.onRegisteredEmitter.dispose();
     this.disposed = true;
   }
-  load(module: Syringe.Module, force?: boolean): Disposable {
+  load(module: Syringe.Module, force?: boolean, deep = true): void {
     if (force || !this.loadedModules.includes(module.id)) {
       if (isSyringeModule(module)) {
+        if (deep) {
+          const { dependencies } = module.toLoader();
+          if (dependencies) {
+            for (const dep of dependencies) {
+              this.load(dep);
+            }
+          }
+        }
         this.container.load(module.inversifyModule);
         this.onModuleChangedEmitter.fire();
       } else {
         console.warn('Unsupported module.', module);
       }
       this.loadedModules.push(module.id);
-      return {
-        dispose: () => {
-          this.unload(module);
-        },
-      };
     }
-    return {
-      dispose: () => {
-        //
-      },
-    };
   }
   unload(module: Syringe.Module): void {
     if (isSyringeModule(module)) {

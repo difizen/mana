@@ -235,40 +235,6 @@ describe('container', () => {
       assert(loaded);
       assert(container.isBound(Foo));
     });
-    it('#remove contrib in module', () => {
-      const FooSymbol = Syringe.defineToken('FooSymbol');
-      @singleton({ contrib: FooSymbol })
-      class FooContribution {}
-      @singleton({ contrib: FooSymbol })
-      class BarContribution {}
-
-      @singleton()
-      class Foo {
-        public provider: Contribution.Provider<Record<any, any>>;
-        constructor(
-          @contrib(FooSymbol) provider: Contribution.Provider<Record<any, any>>,
-        ) {
-          this.provider = provider;
-        }
-      }
-      const baseModule = Module().register(Foo).contribution(FooSymbol);
-      const fooModule = Module().register(FooContribution);
-      const barModule = Module().register(BarContribution);
-      GlobalContainer.load(baseModule);
-      GlobalContainer.load(fooModule);
-      const foo = GlobalContainer.get(Foo);
-      const contribs = foo.provider.getContributions();
-      assert(contribs.length === 1);
-      assert(contribs[0] instanceof FooContribution);
-      GlobalContainer.unload(fooModule);
-      const toDispose = GlobalContainer.load(barModule);
-      const newContribs = foo.provider.getContributions({ cache: false });
-      assert(newContribs.length === 1);
-      assert(newContribs[0] instanceof BarContribution);
-      toDispose.dispose();
-      const emptyContribs = foo.provider.getContributions({ cache: false });
-      assert(emptyContribs.length === 0);
-    });
   });
   describe('basic', () => {
     it('#new container', () => {
