@@ -4,11 +4,9 @@ import { SyringeModule } from '@difizen/mana-syringe';
 
 import type { CanloadModule, ModuleLoader, ModulePreload } from './module-protocol';
 
-export class ManaModule extends SyringeModule {
-  protected dependencies: MaybePromise<ManaModule>[] = [];
+export class ManaModule extends SyringeModule<MaybePromise<ManaModule>> {
   protected preloadMethod?: ModulePreload;
   protected canloadMethod?: CanloadModule;
-  protected moduleName?: string | undefined;
   /**
    * @internal
    */
@@ -18,18 +16,8 @@ export class ManaModule extends SyringeModule {
     return this.loadDefer.promise;
   }
 
-  get name() {
-    return this.moduleName;
-  }
-
   constructor(name?: string) {
-    super();
-    this.moduleName = name;
-  }
-
-  dependOn(...modules: MaybePromise<ManaModule>[]) {
-    this.dependencies.push(...modules);
-    return this;
+    super(name);
   }
 
   canload(fn: CanloadModule) {
@@ -41,7 +29,7 @@ export class ManaModule extends SyringeModule {
     this.preloadMethod = fn;
     return this;
   }
-  toLoader(): ModuleLoader {
+  override toLoader(): ModuleLoader {
     return {
       dependencies: this.dependencies.length > 0 ? this.dependencies : undefined,
       preload: this.preloadMethod,

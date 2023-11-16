@@ -29,8 +29,10 @@ export class ManaContext implements Syringe.Context {
       if (preload) {
         await preload(this);
       }
+    } else {
+      console.warn('Unsupported module.', module);
     }
-    this.container.load(module);
+    this.container.load(module, false, false);
     if (ManaModule.is(module)) {
       module.loadDefer.resolve();
     }
