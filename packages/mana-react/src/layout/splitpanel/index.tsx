@@ -251,6 +251,7 @@ export const SplitPanel = React.forwardRef(function SplitPanel(
           //   }
           // }}
           id={getProp(element, 'id') /* @deprecated: query by data-view-id */}
+          className={getProp(element, 'className')}
           style={{
             // 手风琴场景，固定尺寸和flex尺寸混合布局；需要在resize flex模式下禁用
             ...(element.props.flex &&
