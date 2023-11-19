@@ -1,9 +1,15 @@
 import type { interfaces } from 'inversify';
+
 export type InversifyContext = {
-  container: interfaces.Container;
+  container: InversifyRegister;
 };
 export function isInversifyContext(data: Record<any, any>): data is InversifyContext {
-  return data && typeof data === 'object' && 'container' in data && 'inversify' in data;
+  return (
+    data &&
+    typeof data === 'object' &&
+    'container' in data &&
+    isInversifyRegister(data['container'])
+  );
 }
 
 export type InversifyRegister = {

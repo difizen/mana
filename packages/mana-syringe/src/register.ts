@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { interfaces } from 'inversify';
 
-import { DefaultContainerManager } from './container-manager';
+import { ContainerAPI } from './container-api';
 import { Utils, Syringe } from './core';
-import type { InversifyRegister } from './inversify-api';
-import { isInversifyRegister } from './inversify-api';
+import type { InversifyContext } from './inversify-api';
+import { isInversifyContext } from './inversify-api';
 import {
   bindNamed,
   bindGeneralToken,
@@ -19,7 +20,7 @@ export class Register<T> {
    * 注册目标 token，合并 token 配置后基于配置注册
    */
   static resolveTarget<R>(
-    register: InversifyRegister,
+    ictx: InversifyContext,
     target: Syringe.Token<R>,
     option: Syringe.TargetOption<R> = {},
   ): void {
@@ -27,7 +28,7 @@ export class Register<T> {
       try {
         const sideOption = Reflect.getMetadata(OptionSymbol, target);
         if (sideOption) {
-          Register.resolveOption(register, sideOption);
+          Register.resolveOption(ictx, sideOption);
         }
       } catch (ex) {
         // noop
@@ -59,7 +60,7 @@ export class Register<T> {
         tokens.unshift(target);
         mixedOption.token = tokens;
       }
-      Register.resolveOption(register, mixedOption);
+      Register.resolveOption(ictx, mixedOption);
     } catch (ex) {
       // noop
     }
@@ -68,7 +69,7 @@ export class Register<T> {
    * 基于配置注册
    */
   static resolveOption<R>(
-    iRegister: InversifyRegister,
+    ictx: InversifyContext,
     baseOption: Syringe.InjectOption<R>,
   ): void {
     const parsedOption = Utils.toRegistryOption({
@@ -85,7 +86,7 @@ export class Register<T> {
     }
 
     parsedOption.token.forEach((token) => {
-      const register = new Register(iRegister, token, { ...parsedOption });
+      const register = new Register(ictx, token, { ...parsedOption });
       register.resolve();
     });
   }
@@ -98,14 +99,14 @@ export class Register<T> {
    */
   protected generalToken: interfaces.ServiceIdentifier<T>;
   protected option: Syringe.FormattedInjectOption<T>;
-  protected register: InversifyRegister;
+  protected ictx: InversifyContext;
   protected mutiple: boolean;
   constructor(
-    register: InversifyRegister,
+    ictx: InversifyContext,
     token: Syringe.UnionToken<T>,
     option: Syringe.FormattedInjectOption<T>,
   ) {
-    this.register = register;
+    this.ictx = ictx;
     this.token = token;
     this.option = option;
     this.rawToken = Utils.isNamedToken(token) ? token.token : token;
@@ -115,23 +116,23 @@ export class Register<T> {
   }
   /**
    * multi or mono register
-   * mono bind 优先级 useValue > useDynamic > useFactory > useClass
+   * priority: useValue > useDynamic > useFactory > useClass
    */
   resolve(): void {
-    const { register } = this;
-    if (!isInversifyRegister(register)) {
+    const { ictx } = this;
+    if (!isInversifyContext(ictx)) {
       return;
     }
     if (this.mutiple) {
-      this.resolveMutilple(register);
+      this.resolveMutilple(ictx);
     } else {
-      this.resolveMono(register);
+      this.resolveMono(ictx);
       if (!this.named && this.option.contrib.length > 0) {
         this.option.contrib.forEach((contribution) => {
           if (Utils.isMultipleEnabled(contribution)) {
-            bindGeneralToken(contribution, register).toService(this.generalToken);
+            bindGeneralToken(contribution, ictx).toService(this.generalToken);
           } else {
-            bindMonoToken(contribution, register).toService(this.generalToken);
+            bindMonoToken(contribution, ictx).toService(this.generalToken);
           }
         });
       }
@@ -139,18 +140,18 @@ export class Register<T> {
   }
   // eslint-disable-next-line consistent-return
   protected resolveMono(
-    register: InversifyRegister,
+    ictx: InversifyContext,
   ): interfaces.BindingWhenOnSyntax<T> | undefined {
     if ('useValue' in this.option) {
-      return bindMonoToken(this.generalToken, register).toConstantValue(
+      return bindMonoToken(this.generalToken, ictx).toConstantValue(
         this.option.useValue!,
       );
     }
     if (this.option.useDynamic.length > 0) {
       const dynamic = this.option.useDynamic[this.option.useDynamic.length - 1];
       return bindLifecycle(
-        bindMonoToken(this.generalToken, register).toDynamicValue((ctx) => {
-          const container = DefaultContainerManager.getContainer(ctx.container)!;
+        bindMonoToken(this.generalToken, ictx).toDynamicValue((ctx) => {
+          const container = ContainerAPI.getOrCreateContainer(ctx.container)!;
           return dynamic({ container });
         }),
         this.option,
@@ -158,45 +159,42 @@ export class Register<T> {
     }
     if (this.option.useFactory.length > 0) {
       const factrory = this.option.useFactory[this.option.useFactory.length - 1];
-      return bindMonoToken(this.generalToken, register).toFactory((ctx) => {
-        const container = DefaultContainerManager.getContainer(ctx.container)!;
+      return bindMonoToken(this.generalToken, ictx).toFactory((ctx) => {
+        const container = ContainerAPI.getOrCreateContainer(ctx.container)!;
         return factrory({ container });
       });
     }
     if (this.option.useClass.length > 0) {
       const newable = this.option.useClass[this.option.useClass.length - 1];
       return bindLifecycle(
-        bindMonoToken(this.generalToken, register).to(newable),
+        bindMonoToken(this.generalToken, ictx).to(newable),
         this.option,
       );
     }
     return undefined;
   }
-  protected resolveMutilple(register: InversifyRegister): void {
+  protected resolveMutilple(ictx: InversifyContext): void {
     const classesList = this.option.useClass.map((newable) =>
-      bindLifecycle(
-        bindGeneralToken(this.generalToken, register).to(newable),
-        this.option,
-      ),
+      bindLifecycle(bindGeneralToken(this.generalToken, ictx).to(newable), this.option),
     );
     const dynamicList = this.option.useDynamic.map((dynamic) =>
       bindLifecycle(
-        bindGeneralToken(this.generalToken, register).toDynamicValue((ctx) => {
-          const container = DefaultContainerManager.getContainer(ctx.container)!;
+        bindGeneralToken(this.generalToken, ictx).toDynamicValue((ctx) => {
+          const container = ContainerAPI.getOrCreateContainer(ctx.container)!;
           return dynamic({ container });
         }),
         this.option,
       ),
     );
     const factoryList = this.option.useFactory.map((factrory) =>
-      bindGeneralToken(this.generalToken, register).toFactory((ctx) => {
-        const container = DefaultContainerManager.getContainer(ctx.container)!;
+      bindGeneralToken(this.generalToken, ictx).toFactory((ctx) => {
+        const container = ContainerAPI.getOrCreateContainer(ctx.container)!;
         return factrory({ container });
       }),
     );
     const valueToBind =
       'useValue' in this.option
-        ? bindGeneralToken(this.generalToken, register).toConstantValue(
+        ? bindGeneralToken(this.generalToken, ictx).toConstantValue(
             this.option.useValue!,
           )
         : undefined;

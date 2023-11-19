@@ -1,7 +1,9 @@
 import type { interfaces } from 'inversify';
 import { Container } from 'inversify';
+
 import { Syringe, Utils } from '../core';
-import type { InversifyRegister } from './inversify-protocol';
+
+import type { InversifyContext } from './inversify-protocol';
 
 export function bindSingleton<T>(
   toBind: interfaces.BindingInSyntax<T>,
@@ -33,23 +35,23 @@ export function bindNamed<T>(
 
 export function bindGeneralToken<T>(
   token: interfaces.ServiceIdentifier<T>,
-  register: InversifyRegister,
+  ictx: InversifyContext,
 ): interfaces.BindingToSyntax<T> {
-  return register.bind(tokenToIdentifier(token));
+  return ictx.container.bind(tokenToIdentifier(token));
 }
 export function bindMonoToken<T>(
   token: interfaces.ServiceIdentifier<T>,
-  register: InversifyRegister,
+  ictx: InversifyContext,
 ): interfaces.BindingToSyntax<T> {
-  if (register.isBound(tokenToIdentifier(token))) {
+  if (ictx.container.isBound(tokenToIdentifier(token))) {
     try {
-      return register.rebind(tokenToIdentifier(token));
+      return ictx.container.rebind(tokenToIdentifier(token));
     } catch (ex) {
       // not bind in crrent container
-      return register.bind(tokenToIdentifier(token));
+      return ictx.container.bind(tokenToIdentifier(token));
     }
   }
-  return register.bind(tokenToIdentifier(token));
+  return ictx.container.bind(tokenToIdentifier(token));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

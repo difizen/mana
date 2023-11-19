@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
 import 'reflect-metadata';
-import type { Disposable, Event, Newable, Abstract } from '@difizen/mana-common';
+import type { Event, Newable, Abstract } from '@difizen/mana-common';
 
 export type TokenOption = {
   multiple?: boolean;
@@ -54,6 +54,7 @@ export namespace Syringe {
   export type Registry = (register: Register) => void;
   export type Module = {
     id: number;
+    name?: string;
   };
 
   export function isModule(data: Record<any, any> | undefined): data is Module {

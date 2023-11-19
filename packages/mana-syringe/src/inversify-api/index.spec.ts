@@ -84,7 +84,7 @@ describe('inversify', () => {
     const FooFactory = Symbol('FooFactory');
     @injectable()
     class Foo {}
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [FooFactory],
       useFactory: [() => () => new Foo()],
@@ -99,13 +99,13 @@ describe('inversify', () => {
     const Foo = Symbol('Foo');
     const Bar = Symbol('Bar');
     const foo = {};
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [Foo],
       useValue: foo,
       lifecycle: Syringe.Lifecycle.singleton,
     });
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [Bar],
       useValue: false,
@@ -121,7 +121,7 @@ describe('inversify', () => {
     const Foo = Symbol('Foo');
     const named = 'named';
     const foo = {};
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [{ token: Foo, named }],
       useValue: foo,
@@ -136,7 +136,7 @@ describe('inversify', () => {
     const named = 'named';
     @injectable()
     class Foo {}
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [{ token: FooFactory, named }],
       useFactory: [() => () => new Foo()],
@@ -150,7 +150,7 @@ describe('inversify', () => {
     const FooDynamic = Symbol('FooDynamic');
     @injectable()
     class Foo {}
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [FooDynamic],
       useDynamic: [() => new Foo()],
@@ -164,7 +164,7 @@ describe('inversify', () => {
     const named = 'named';
     @injectable()
     class Foo {}
-    Register.resolveOption(GlobalContainer.container, {
+    Register.resolveOption(GlobalContainer, {
       ...emptyOptions,
       token: [{ token: FooDynamic, named }],
       useDynamic: [() => new Foo()],
@@ -176,7 +176,7 @@ describe('inversify', () => {
   it('#bind named', () => {
     @injectable()
     class Foo {}
-    Register.resolveOption<Foo>(GlobalContainer.container, {
+    Register.resolveOption<Foo>(GlobalContainer, {
       ...emptyOptions,
       token: [{ token: Foo, named: 'named' }],
       lifecycle: Syringe.Lifecycle.singleton,
@@ -189,7 +189,7 @@ describe('inversify', () => {
   it('#bind', () => {
     @injectable()
     class Foo {}
-    Register.resolveOption<Foo>(GlobalContainer.container, {
+    Register.resolveOption<Foo>(GlobalContainer, {
       ...emptyOptions,
       lifecycle: Syringe.Lifecycle.singleton,
       useClass: [Foo],

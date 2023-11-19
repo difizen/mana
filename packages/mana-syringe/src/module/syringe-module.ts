@@ -48,9 +48,9 @@ export class SyringeModule<T = Syringe.Module> implements Syringe.Module {
       options: Syringe.InjectOption<T> = {},
     ): void => {
       if (Utils.isInjectOption(token)) {
-        Register.resolveOption(inversifyRegister, token);
+        Register.resolveOption({ container: inversifyRegister }, token);
       } else {
-        Register.resolveTarget(inversifyRegister, token, options);
+        Register.resolveTarget({ container: inversifyRegister }, token, options);
       }
     };
     if (this.optionCollection) {

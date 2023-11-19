@@ -3,7 +3,7 @@ import { DisposableCollection, Emitter } from '@difizen/mana-common';
 import type { interfaces } from 'inversify';
 import { Container as InversifyContainer } from 'inversify';
 
-import { DefaultContainerManager } from './container-manager';
+import { ContainerAPI } from './container-api';
 import { Syringe } from './core';
 import { Utils } from './core';
 import {
@@ -14,6 +14,8 @@ import {
 import type { InversifyContext } from './inversify-api/inversify-protocol';
 import { isSyringeModule } from './module';
 import { Register } from './register';
+
+export const ContainerMeta = Symbol('ContainerMeta');
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class Container implements Syringe.Container, InversifyContext, Disposable {
@@ -56,14 +58,13 @@ export class Container implements Syringe.Container, InversifyContext, Disposabl
 
   protected loadedModules: number[] = [];
   container: interfaces.Container;
-  protected inversify = true;
   constructor(inversifyContainer?: interfaces.Container) {
     if (inversifyContainer) {
       this.container = inversifyContainer;
     } else {
       this.container = new InversifyContainer();
     }
-    DefaultContainerManager.setContainer(this.container, this);
+    ContainerAPI.setCache(this.container, this);
     this.register({
       token: Syringe.ContextToken,
       useDynamic: (ctx) => {
@@ -92,7 +93,10 @@ export class Container implements Syringe.Container, InversifyContext, Disposabl
         this.container.load(module.inversifyModule);
         this.onModuleChangedEmitter.fire();
       } else {
-        console.warn('Unsupported module.', module);
+        console.warn(
+          `Unsupported module${module.name ? ` ${module.name}` : ''}.`,
+          module,
+        );
       }
       this.loadedModules.push(module.id);
     }
@@ -147,9 +151,9 @@ export class Container implements Syringe.Container, InversifyContext, Disposabl
     options: Syringe.InjectOption<T> = {},
   ): void {
     if (Utils.isInjectOption(token)) {
-      Register.resolveOption(this.container, token);
+      Register.resolveOption(this, token);
     } else {
-      Register.resolveTarget(this.container, token, options);
+      Register.resolveTarget(this, token, options);
     }
     this.onRegisteredEmitter.fire();
   }
@@ -160,7 +164,7 @@ export const GlobalContainer = new Container(InversifyGlobalContainer);
 export const register: Syringe.Register =
   GlobalContainer.register.bind(GlobalContainer);
 
-DefaultContainerManager.toContainer = (ctn) => {
+ContainerAPI.toContainer = (ctn) => {
   const container = new Container(ctn);
   return container;
 };
