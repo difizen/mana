@@ -1,8 +1,6 @@
 import assert from 'assert';
 
 import { register, GlobalContainer, Container } from './container';
-import type { Contribution } from './contribution';
-import { contrib } from './contribution';
 import { Syringe } from './core';
 import { singleton, transient, injectable } from './decorator';
 import { Module } from './module';
