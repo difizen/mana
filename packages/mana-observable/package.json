@@ -33,6 +33,7 @@
     "setup": "father build",
     "build": "father build",
     "test": ": Note: lint task is delegated to test:* scripts",
+    "test:jest": "jest",
     "test:vitest": "vitest run",
     "coverage": ": Note: lint task is delegated to coverage:* scripts",
     "coverage:vitest": "vitest run --coverage",

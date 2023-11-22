@@ -354,7 +354,7 @@ describe('Tracker', () => {
     assert(changeTimes === 0);
   });
 
-  it('#track class instance with normal arr', () => {
+  it('#track unobservable array property', () => {
     class Foo {
       map = new Map<string, string>();
       getArr() {
@@ -378,7 +378,28 @@ describe('Tracker', () => {
     assert(valueA === 'a');
   });
 
-  it('#track class map property', () => {
+  it('#track observable array property', () => {
+    class Bar {
+      @prop() count = 0;
+    }
+    class Foo {
+      @prop() arr: Bar[] = [];
+    }
+    const foo = new Foo();
+    let changeCount = 0;
+    const reaction = () => {
+      const trackable = Tracker.track(foo, reaction);
+      trackable.arr;
+      changeCount += 1;
+    };
+    reaction(); // 1
+    foo.arr.push(new Bar()); // 3
+    foo.arr.push(new Bar()); // 5
+    foo.arr.push(new Bar()); // 7
+    assert(changeCount === 7);
+  });
+
+  it('#deep track observable array property', () => {
     class Bar {
       @prop() count = 0;
     }
@@ -404,31 +425,24 @@ describe('Tracker', () => {
     }
     assert(changeCount === 8);
   });
-
-  it('#track class map property', () => {
+  it('#track observable map property', () => {
     class Foo {
-      @prop() arr: { count: number }[] = [];
+      @prop() objMap = new Map<string, { count: number }>();
     }
     const foo = new Foo();
     let changeCount = 0;
     const reaction = () => {
       const trackable = Tracker.track(foo, reaction);
-      for (let i = 0; i < trackable.arr.length; i++) {
-        trackable.arr[i]?.count;
-      }
+      trackable.objMap;
       changeCount += 1;
     };
     reaction(); // 1
-    foo.arr.push({ count: 1 }); // 3
-    foo.arr.push({ count: 2 }); // 5
-    foo.arr.push({ count: 3 }); // 7
-    const obj = foo.arr[0];
-    if (obj) {
-      observable(obj).count = 0; // 8
-    }
-    assert(changeCount === 8);
+    foo.objMap.set('a', { count: 1 }); // 2
+    foo.objMap.set('b', { count: 2 }); // 3
+    foo.objMap.set('c', { count: 3 }); // 4
+    assert(changeCount === 4);
   });
-  it('#track class map property', () => {
+  it('#deep track observable map property', () => {
     class Foo {
       @prop() objMap = new Map<string, { count: number }>();
     }
@@ -452,5 +466,23 @@ describe('Tracker', () => {
       observable(obj).count = 0; // 5
     }
     assert(changeCount === 5);
+  });
+
+  it('#track observable plainObject property', () => {
+    class Foo {
+      @prop() obj = { a: 'a', b: { c: 'c', d: {} } };
+    }
+    const foo = new Foo();
+    let changeCount = 0;
+    const reaction = () => {
+      const trackable = Tracker.track(foo, reaction);
+      trackable.obj.a;
+      trackable.obj.b.c;
+      changeCount += 1;
+    };
+    reaction(); // 1
+    observable(foo).obj.a = 'aa'; // 2
+    // foo.obj.a = 'aa'; // 2
+    assert(changeCount === 2);
   });
 });
