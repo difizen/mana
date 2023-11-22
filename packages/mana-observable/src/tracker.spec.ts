@@ -463,7 +463,7 @@ describe('Tracker', () => {
     foo.objMap.set('c', { count: 3 }); // 4
     const obj = foo.objMap.get('a');
     if (obj) {
-      observable(obj).count = 0; // 5
+      obj.count = 0; // 5
     }
     assert(changeCount === 5);
   });
@@ -481,8 +481,28 @@ describe('Tracker', () => {
       changeCount += 1;
     };
     reaction(); // 1
-    observable(foo).obj.a = 'aa'; // 2
-    // foo.obj.a = 'aa'; // 2
-    assert(changeCount === 2);
+    foo.obj.a = 'aa'; // 2
+    foo.obj.b.c = 'cc'; // 3
+    assert(changeCount === 3);
+  });
+  it('#deep track observable plainObject property', () => {
+    class Bar {
+      @prop() count = 0;
+    }
+    class Foo {
+      @prop() obj = { a: 'a', b: new Bar() };
+    }
+    const foo = new Foo();
+    let changeCount = 0;
+    const reaction = () => {
+      const trackable = Tracker.track(foo, reaction);
+      trackable.obj.a;
+      trackable.obj.b.count;
+      changeCount += 1;
+    };
+    reaction(); // 1
+    foo.obj.a = 'aa'; // 2
+    foo.obj.b.count = 1; // 3
+    assert(changeCount === 3);
   });
 });
