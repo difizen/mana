@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CommandHandler } from '../command/command-protocol';
 
 import type {
@@ -46,7 +45,7 @@ export interface MenuNode {
   /**
    * The order to display menu node.
    */
-  order?: string | undefined;
+  order?: string;
   /**
    * Optional icon for the menu item
    */
@@ -79,6 +78,7 @@ export namespace CommandMenuNode {
 }
 
 export interface ExecutableMenuNode extends MenuNode, CommandHandler {
+  command?: string;
   /**
    * In addition to the mandatory command property, an alternative command can be defined.
    * It will be shown and invoked when pressing Alt while opening a menu.
@@ -93,7 +93,7 @@ export namespace ExecutableMenuNode {
   }
 }
 
-export type ActionMenuNode = CommandMenuNode;
+export type ActionMenuNode = CommandMenuNode | ExecutableMenuNode;
 export namespace ActionMenuNode {
   /* Determine whether object is a MenuAction */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

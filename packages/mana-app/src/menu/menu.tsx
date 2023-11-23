@@ -100,23 +100,27 @@ export class Menu implements Disposable {
     this.states.delete(key);
   }
 
+  protected isGroup(item: MenuItem): boolean {
+    return MenuItem.isGeneralMenuItem(item) && !item.isSubmenu;
+  }
+
   renderMenuList = (list: readonly MenuItem[], inMenu = false): React.ReactNode => {
     const childNodes: React.ReactNode[] = [];
     list.forEach((child, index) => {
       if (MenuItem.isGeneralMenuItem(child)) {
-        if (!child.isSubmenu) {
+        if (this.isGroup(child)) {
           if (index > 0 && index < list.length - 1) {
             childNodes.push(
               <MenuComponent.Divider key={`${child.id}-divider-before`} />,
             );
           }
-          const children = this.renderMenuList(child.children, true);
+          const children = this.renderMenuList(child.children.sort(this.sort), true);
           if (children instanceof Array) {
             childNodes.push(...children);
           } else {
             childNodes.push(children);
           }
-          if (index < list.length - 1) {
+          if (index < list.length - 1 && !this.isGroup(list[index + 1])) {
             childNodes.push(
               <MenuComponent.Divider key={`${child.id}-divider-after`} />,
             );
@@ -150,6 +154,9 @@ export class Menu implements Disposable {
     }
 
     if (MenuItem.isActionMenuItem(item)) {
+      if (!this.isVisible(item)) {
+        return null;
+      }
       return (
         <MenuComponent.Item
           disabled={!this.isEnable(item)}
