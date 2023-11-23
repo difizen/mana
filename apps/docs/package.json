@@ -9,6 +9,7 @@
     "release": "dumi build"
   },
   "devDependencies": {
+    "@types/react": "^18.2.0",
     "dumi": "^2.2.7",
     "execa": "^5.1.1"
   },
@@ -16,7 +17,12 @@
     "node": ">=16.20.0"
   },
   "packageManager": "pnpm@8.4.0",
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
   "dependencies": {
+    "@difizen/mana-app": "^0.0.2-alpha.1",
+    "@difizen/mana-react": "^0.0.2-alpha.1",
     "@ant-design/icons": "^4.7.0",
     "antd": "^5.8.6",
     "styled-components": "^6.0.7"
