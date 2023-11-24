@@ -43,7 +43,7 @@
     justify-content: space-between;
     width: 100%;
     height: 28px;
-    padding: 0 12px;
+    padding: 0 12px 0 6px;
     color: #333;
     text-align: left;
     background: transparent;
@@ -51,6 +51,11 @@
     outline: none;
     box-shadow: none;
     cursor: pointer;
+
+    >span {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &-item-hidden {
@@ -66,13 +71,11 @@
   }
 
   &-item-icon {
-    position: absolute;
-    top: 50%;
-    left: 6px;
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 24px;
     height: 24px;
-    margin-top: -12px;
     font-size: 13px;
   }
 

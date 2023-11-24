@@ -50,12 +50,19 @@ export function getContent(
   return (
     <>
       <button type="button" className={`${baseCls}-button`} onClick={onClick}>
-        {icon && React.isValidElement(icon) && (
-          <span className={`${baseCls}-icon`}>{icon}</span>
-        )}
-        <span className={`${baseCls}-text`}>{text || children}</span>
-        {hotkey && <span className={`${baseCls}-hotkey`}>{hotkey}</span>}
-        {innerExtra}
+        <span>
+          <span className={`${baseCls}-icon`}>
+            {icon && React.isValidElement(icon) && (
+                icon
+              )}
+          </span>
+
+          <span className={`${baseCls}-text`}>{text || children}</span>
+          </span>
+        <span>
+          {hotkey && <span className={`${baseCls}-hotkey`}>{hotkey}</span>}
+          {innerExtra}
+        </span>
       </button>
       {outerExtra}
     </>
