@@ -7,9 +7,9 @@ nav:
   order: 3
 ---
 
-# 工具栏
+# 菜单
 
-## 简单使用
+## 菜单栏
 
 <code src="../../src/menu/menubar"></code>
 
