@@ -114,7 +114,10 @@ export class Menu implements Disposable {
               <MenuComponent.Divider key={`${child.id}-divider-before`} />,
             );
           }
-          const children = this.renderMenuList(child.children.sort(this.sort), true);
+          const children = this.renderMenuList(
+            [...child.children].sort(this.sort),
+            true,
+          );
           if (children instanceof Array) {
             childNodes.push(...children);
           } else {
@@ -138,7 +141,7 @@ export class Menu implements Disposable {
     return <MenuComponent>{childNodes}</MenuComponent>;
   };
 
-  renderMenuItem = (item: MenuItem, root = false) => {
+  renderMenuItem(item: MenuItem, root = false) {
     let content = null;
     if (MenuItem.isGeneralMenuItem(item)) {
       const sorted = [...item.children].sort(this.sort);
@@ -160,6 +163,7 @@ export class Menu implements Disposable {
       return (
         <MenuComponent.Item
           disabled={!this.isEnable(item)}
+          icon={item.renderIcon()}
           onClick={() => {
             this.execute(item);
           }}
@@ -174,7 +178,7 @@ export class Menu implements Disposable {
       return <MenuComponent>{content}</MenuComponent>;
     }
     return content;
-  };
+  }
 
   dispose(): void {
     this.states.clear();

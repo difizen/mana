@@ -1,6 +1,11 @@
 /* eslint-disable max-len, @typescript-eslint/indent */
 
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  StopOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
 import type { CommandRegistry, MenuRegistry } from '@difizen/mana-app';
 import { inject } from '@difizen/mana-app';
 import {
@@ -10,8 +15,6 @@ import {
   prop,
   CommandContribution,
 } from '@difizen/mana-app';
-
-// import { CommonCommand } from './commands';
 
 @singleton()
 export class Model {
@@ -23,22 +26,22 @@ export class Model {
 export const Commands = {
   SHOW: {
     id: 'common.command.show',
-    icon: PlusOutlined,
+    icon: EyeOutlined,
     label: '显示菜单项',
   },
   HIDE: {
     id: 'common.command.hide',
-    icon: MinusOutlined,
+    icon: EyeInvisibleOutlined,
     label: '隐藏菜单项',
   },
   ENABLE: {
     id: 'common.command.enable',
-    icon: PlusOutlined,
+    icon: CheckCircleOutlined,
     label: '激活菜单项',
   },
   DISABLE: {
     id: 'common.command.disable',
-    icon: MinusOutlined,
+    icon: StopOutlined,
     label: '菜单项失效',
   },
 };

@@ -1,52 +1,118 @@
 /* eslint-disable max-len, @typescript-eslint/indent */
 
-import type { MenuRegistry } from '@difizen/mana-app';
-import { singleton } from '@difizen/mana-app';
-import { MAIN_MENU_BAR } from '@difizen/mana-app';
-import { MenuContribution } from '@difizen/mana-app';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  StopOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
+import type { CommandRegistry, MenuRegistry } from '@difizen/mana-app';
+import {
+  MAIN_MENU_BAR,
+  MenuContribution,
+  singleton,
+  prop,
+  CommandContribution,
+} from '@difizen/mana-app';
 
-import { CommonCommand } from './commands';
-
+@singleton()
+export class Model {
+  @prop()
+  visible = false;
+  @prop()
+  enable = false;
+}
+export const Commands = {
+  SHOW: {
+    id: 'common.command.show',
+    icon: EyeOutlined,
+    label: '显示菜单项',
+  },
+  HIDE: {
+    id: 'common.command.hide',
+    icon: EyeInvisibleOutlined,
+    label: '隐藏菜单项',
+  },
+  ENABLE: {
+    id: 'common.command.enable',
+    icon: CheckCircleOutlined,
+    label: '激活菜单项',
+  },
+  DISABLE: {
+    id: 'common.command.disable',
+    icon: StopOutlined,
+    label: '菜单项失效',
+  },
+};
 export namespace CommonMenus {
-  export const MENU = [...MAIN_MENU_BAR, '0_menu'];
-  export const MENUS = [...MAIN_MENU_BAR, '5_menus'];
-  export const ACTION_GROUP = [...MENUS, '1_action_group'];
-  export const SUB = [...ACTION_GROUP, '3_submenu'];
+  export const MAIN_MENU = [...MAIN_MENU_BAR, 'a_main_menu'];
+  export const SUB = [...MAIN_MENU, 'main_submenu'];
+  export const HELP = [...MAIN_MENU_BAR, 'b_help_menus'];
+  export const ACTION_GROUP = [...MAIN_MENU, 'action_group'];
+  export const ENABLE_GROUP = [...MAIN_MENU, 'enable_group'];
 }
 
-@singleton({ contrib: [MenuContribution] })
-export class SimpleMenu implements MenuContribution {
+@singleton({ contrib: [MenuContribution, CommandContribution] })
+export class Menus implements MenuContribution, CommandContribution {
+  registerCommands(command: CommandRegistry): void {
+    command.registerCommand(Commands.SHOW, {
+      execute: (model: Model) => {
+        model.visible = true;
+      },
+    });
+    command.registerCommand(Commands.HIDE, {
+      execute: (model: Model) => {
+        model.visible = false;
+      },
+      isVisible: (model: Model) => {
+        return model.visible;
+      },
+    });
+    command.registerCommand(Commands.ENABLE, {
+      execute: (model: Model) => {
+        model.enable = true;
+      },
+    });
+    command.registerCommand(Commands.DISABLE, {
+      execute: (model: Model) => {
+        model.enable = false;
+      },
+      isEnabled: (model: Model) => {
+        return model.enable;
+      },
+    });
+  }
   registerMenus(menu: MenuRegistry) {
     menu.registerGroupMenu(CommonMenus.ACTION_GROUP, {});
+    menu.registerGroupMenu(CommonMenus.ENABLE_GROUP, {});
+    menu.registerSubmenu(CommonMenus.MAIN_MENU, { label: '主菜单' });
     menu.registerSubmenu(CommonMenus.SUB, { label: '子菜单' });
-    menu.registerSubmenu(CommonMenus.MENU, { label: '菜单项' });
-    menu.registerSubmenu(CommonMenus.MENUS, { label: '另一个菜单项' });
+    menu.registerSubmenu(CommonMenus.HELP, { label: '帮助' });
 
-    menu.registerMenuAction(CommonMenus.MENUS, {
-      id: '1_actions_0',
-      command: CommonCommand.DECREACE_COUNT.id,
-      label: '操作0',
-    });
-    menu.registerMenuAction(CommonMenus.MENUS, {
-      id: '1_actions_',
-      command: CommonCommand.INCREASE_COUNT.id,
-      label: '操作1',
+    menu.registerMenuAction(CommonMenus.SUB, {
+      id: Commands.ENABLE.id + 'sub',
+      command: Commands.ENABLE.id,
     });
     menu.registerMenuAction(CommonMenus.SUB, {
-      id: CommonCommand.INCREASE_COUNT.id + 'sub',
-      command: CommonCommand.INCREASE_COUNT.id,
+      id: Commands.DISABLE.id + 'sub',
+      command: Commands.DISABLE.id,
     });
-    menu.registerMenuAction(CommonMenus.SUB, {
-      id: CommonCommand.DECREACE_COUNT.id + 'sub',
-      command: CommonCommand.DECREACE_COUNT.id,
+
+    menu.registerMenuAction(CommonMenus.ACTION_GROUP, {
+      id: Commands.SHOW.id + 'group',
+      command: Commands.SHOW.id,
     });
     menu.registerMenuAction(CommonMenus.ACTION_GROUP, {
-      id: CommonCommand.INCREASE_COUNT.id + 'action',
-      command: CommonCommand.INCREASE_COUNT.id,
+      id: Commands.HIDE.id + 'group',
+      command: Commands.HIDE.id,
     });
-    menu.registerMenuAction(CommonMenus.ACTION_GROUP, {
-      id: CommonCommand.DECREACE_COUNT.id + 'action',
-      command: CommonCommand.DECREACE_COUNT.id,
+    menu.registerMenuAction(CommonMenus.ENABLE_GROUP, {
+      id: Commands.ENABLE.id + 'group',
+      command: Commands.ENABLE.id,
+    });
+    menu.registerMenuAction(CommonMenus.ENABLE_GROUP, {
+      id: Commands.DISABLE.id + 'group',
+      command: Commands.DISABLE.id,
     });
   }
 }

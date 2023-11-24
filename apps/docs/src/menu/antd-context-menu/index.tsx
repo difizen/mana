@@ -1,5 +1,5 @@
 import type { MenuItemRenderProps, Menu as ManaMenu } from '@difizen/mana-app';
-import { ManaModule, MenuRegistry } from '@difizen/mana-app';
+import { ManaModule } from '@difizen/mana-app';
 import {
   ManaAppPreset,
   useInject,
@@ -8,32 +8,21 @@ import {
   MenuItem,
   MenuInstance,
   MenuRender,
-  DisposableCollection,
 } from '@difizen/mana-app';
 import { Menu, Dropdown } from 'antd';
 import type { MenuProps } from 'antd/lib/menu';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
-import { useState } from 'react';
 
-import { CommonCommandContribution } from './commands';
-import { Counter } from './counter';
-import { SimpleMenu, CommonMenus } from './menu';
-import './index.less';
+import { Menus, Model } from './menu';
 
-export * from './counter';
-export * from './commands';
-
-export const BaseModule = ManaModule.create().register(
-  SimpleMenu,
-  CommonCommandContribution,
-  Counter,
-);
+export const BaseModule = ManaModule.create().register(Menus, Model);
 
 const MenuItemToProps = (item: MenuItem, menu: ManaMenu): ItemType | undefined => {
   if (MenuItem.isGeneralMenuItem(item)) {
     let children: ItemType[] = [];
     if (item.children) {
-      children = item.children
+      children = [...item.children]
+        .sort(menu.sort)
         .map((child) => MenuItemToProps(child, menu))
         .filter((i): i is ItemType => !!i);
     }
@@ -73,74 +62,21 @@ const MenuItemToProps = (item: MenuItem, menu: ManaMenu): ItemType | undefined =
 
 const MenuItemRender = (props: MenuItemRenderProps) => {
   const { item, root } = props;
-  const [dynamicMenusToDispose, setDynamicMenusToDispose] = useState<
-    DisposableCollection | undefined
-  >(undefined);
-  const counter = useInject(Counter);
   const menu = useInject<ManaMenu>(MenuInstance);
-  const menus = useInject<MenuRegistry>(MenuRegistry);
   if (!root || !MenuItem.isGeneralMenuItem(item)) {
     return null;
   }
-  const menuProps: MenuProps['items'] = item.children
+  const menuProps: MenuProps['items'] = [...item.children]
+    .sort(menu.sort)
     .map((i) => MenuItemToProps(i, menu))
     .filter((i): i is ItemType => !!i);
 
   return (
-    <Dropdown
-      onOpenChange={(open: boolean) => {
-        if (open && counter.count > 0) {
-          if (dynamicMenusToDispose && !dynamicMenusToDispose.disposed) {
-            dynamicMenusToDispose.dispose();
-          }
-          if (counter.count > 0) {
-            const toDispose = new DisposableCollection();
-            for (let index = 0; index < counter.count; index++) {
-              toDispose.push(
-                menus.registerMenuAction(CommonMenus.MENU_DYNAMIC, {
-                  id: 'dynamic-menu-' + index,
-                  label: '动态菜单' + index,
-                  execute: () => {
-                    //console.log('dynamic-menu-' + index);
-                  },
-                  isVisible: () => true,
-                  isEnabled: () => true,
-                }),
-              );
-            }
-            setDynamicMenusToDispose(toDispose);
-          }
-        } else {
-          if (dynamicMenusToDispose) {
-            dynamicMenusToDispose.dispose();
-          }
-          setDynamicMenusToDispose(undefined);
-        }
-      }}
-      menu={{ items: menuProps }}
-      trigger={['contextMenu']}
-    >
+    <Dropdown menu={{ items: menuProps }} trigger={['contextMenu']}>
       <div>
         <Menu mode="inline" items={menuProps} />
       </div>
     </Dropdown>
-  );
-};
-
-const MyMenu = () => {
-  const counter = useInject(Counter);
-  return (
-    <div className="libro-example-menu-antd-context-menu">
-      <div>counter: {counter.count}</div>
-      <div>
-        {/* <MenuBarRender menuPath={MAIN_MENU_BAR} /> */}
-        <MenuRender
-          data={[{ a: 'a' }]}
-          menuPath={MAIN_MENU_BAR}
-          render={MenuItemRender}
-        />
-      </div>
-    </div>
   );
 };
 
@@ -151,7 +87,7 @@ const App = (): JSX.Element => {
       modules={[ManaAppPreset, BaseModule]}
       renderChildren
     >
-      <MyMenu />
+      <MenuRender data={[]} menuPath={MAIN_MENU_BAR} render={MenuItemRender} />
     </ManaComponents.Application>
   );
 };
