@@ -2,9 +2,9 @@ import 'react';
 import assert from 'assert';
 
 import { prop } from './decorator';
+import { Notifiable } from './notifiable';
 import { Notifier } from './notifier';
 import { observable } from './observable';
-import { Notifiable } from './reactivity';
 import { Observability, ObservableProperties } from './utils';
 
 describe('observable', () => {
@@ -15,9 +15,9 @@ describe('observable', () => {
     const foo = observable(new Foo());
     const instanceBasic = observable(foo);
     const nullInstance = observable(null as any);
-    assert(!Observability.is(nullInstance));
-    assert(Observability.is(instanceBasic));
-    assert(Observability.is(instanceBasic, 'name'));
+    assert(!Observability.marked(nullInstance));
+    assert(Observability.marked(instanceBasic));
+    assert(Observability.marked(instanceBasic, 'name'));
     assert(ObservableProperties.get(instanceBasic)?.includes('name'));
   });
   it('#extends properties', () => {
@@ -133,8 +133,9 @@ describe('observable', () => {
     assert(reactable === reactable1);
     const observableFoo = observable(foo);
     assert(Notifiable.is(reactable));
-    assert(Observability.is(v));
+    assert(Observability.marked(v));
     assert(observableFoo === foo);
+    // TODO: 循环
     let changed = false;
     const notifier = Notifier.find(reactable);
     notifier?.onChange(() => {

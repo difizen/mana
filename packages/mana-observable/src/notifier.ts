@@ -6,7 +6,7 @@ import { AsyncEmitter } from './async-event';
 import { ObservableConfig } from './config';
 import type { Notify } from './core';
 import { ObservableSymbol } from './core';
-import { Notifiable } from './reactivity';
+import { Notifiable } from './notifiable';
 import { Observability } from './utils';
 
 export interface Notification<T = any> {
@@ -57,15 +57,15 @@ export class Notifier implements Disposable {
     }
     const origin = Observability.getOrigin(target);
     const exist = Notifier.get(target, prop);
-    if (!exist || exist.disposed) {
-      const ntf = new Notifier();
-      Notifier.set(origin, notifier, prop);
-      return ntf;
+    if (exist && !exist.disposed) {
+      return exist;
     }
-    return exist;
+    const ntf = new Notifier();
+    Notifier.set(origin, ntf, prop);
+    return ntf;
   }
   static find(target: any, prop?: any): Notifier | undefined {
-    if (!Observability.notifiable(target, prop)) {
+    if (!Observability.marked(target, prop)) {
       return undefined;
     }
     return Notifier.getOrCreate(target, prop);

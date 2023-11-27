@@ -2,36 +2,33 @@
 import 'reflect-metadata';
 import type { Disposable } from '@difizen/mana-common';
 
+import type { Traceable } from './core';
 import { ObservableSymbol } from './core';
 
-interface Original {
-  [ObservableSymbol.Self]: any;
-}
-
-function isOriginal(data: any): data is Original {
-  return Observability.trackable(data) && data[ObservableSymbol.Self];
-}
-
 export namespace Observability {
-  export function shouldTrack(obj: any): boolean {
-    if (obj) {
-      if (obj instanceof Promise) {
-        return false;
-      }
-      if (obj instanceof WeakMap) {
-        return false;
-      }
+  export function isTraceable(data: any): data is Traceable {
+    return !!data && data[ObservableSymbol.Self];
+  }
+
+  export function isObject(obj: any): obj is Record<string | number | symbol, any> {
+    return !!obj && typeof obj === 'object';
+  }
+  export function canBeObservable(
+    obj: any,
+  ): obj is Record<string | number | symbol, any> {
+    if (!isObject(obj)) {
+      return false;
+    }
+    if (obj instanceof Promise) {
+      return false;
+    }
+    if (obj instanceof WeakMap) {
+      return false;
     }
     return true;
   }
-  export function trackable(obj: any): obj is Record<string | number | symbol, any> {
-    return !!obj && typeof obj === 'object' && shouldTrack(obj);
-  }
-  export function notifiable(obj: any, property: string | symbol): boolean {
-    return is(obj, property);
-  }
-  export function is(obj: any, property?: string | symbol): boolean {
-    if (!trackable(obj)) {
+  export function marked(obj: any, property?: string | symbol): boolean {
+    if (!isObject(obj)) {
       return false;
     }
     const origin = getOrigin(obj);
@@ -41,15 +38,14 @@ export namespace Observability {
     return Reflect.hasOwnMetadata(ObservableSymbol.Observable, origin);
   }
   export function mark(obj: Record<any, any>, property?: string | symbol) {
+    Reflect.defineMetadata(ObservableSymbol.Observable, true, obj);
     if (property) {
       Reflect.defineMetadata(ObservableSymbol.Observable, true, obj, property);
-    } else {
-      Reflect.defineMetadata(ObservableSymbol.Observable, true, obj);
     }
   }
 
   export function getOrigin<T = any>(obj: T): T {
-    if (!isOriginal(obj)) {
+    if (!isTraceable(obj)) {
       return obj;
     }
     return obj[ObservableSymbol.Self];
@@ -97,9 +93,9 @@ export namespace ObservableProperties {
   }
 
   export function add(obj: Record<any, any>, property: string): void {
-    const exisringProperties = getOwn(obj);
-    if (exisringProperties) {
-      exisringProperties.push(property);
+    const existingProperties = getOwn(obj);
+    if (existingProperties) {
+      existingProperties.push(property);
     } else {
       const protoProperties = get(obj) || [];
       Reflect.defineMetadata(

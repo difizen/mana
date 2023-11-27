@@ -4,7 +4,7 @@ export * from './tracker';
 export * from './watch';
 export * from './notifier';
 export * from './observable';
-export * from './reactivity';
+export * from './notifiable';
 export * from './decorator';
 export * from './utils';
 export * from './core';

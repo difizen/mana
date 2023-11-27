@@ -1,5 +1,5 @@
-/* eslint-disable prefer-spread */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prefer-spread */
 import { isPlainObject } from '@difizen/mana-common';
 
 import { ObservableSymbol } from './core';
@@ -11,27 +11,29 @@ export interface Notifiable {
 }
 
 export namespace Notifiable {
+  export const token = Symbol('Notifiable');
   export function is(target: any): target is Notifiable {
-    return (
-      Observability.trackable(target) && (target as any)[ObservableSymbol.Notifier]
-    );
+    return Observability.isObject(target) && !!target[ObservableSymbol.Notifier];
   }
   export function getNotifier(target: Notifiable): Notifier {
     return target[ObservableSymbol.Notifier];
   }
-  export function set(target: any, value: Notifiable): void {
-    Reflect.defineMetadata(ObservableSymbol.Notifier, value, target);
+  export function tryGetNotifier(target: any): Notifier | undefined {
+    if (is(target)) {
+      return target[ObservableSymbol.Notifier];
+    }
+    return undefined;
+  }
+  export function set<T extends object>(target: T, value: Notifiable): void {
+    Reflect.defineMetadata(token, value, target);
   }
 
-  export function get<T extends Record<any, any>>(target: T): T & Notifiable {
-    return Reflect.getMetadata(ObservableSymbol.Notifier, target);
+  export function get<T extends object>(target: T): T & Notifiable {
+    return Reflect.getMetadata(token, target);
   }
   export function canBeNotifiable(value: any): boolean {
-    if (!value) {
+    if (!Observability.isObject(value)) {
       return false;
-    }
-    if (is(value)) {
-      return true;
     }
     if (value instanceof Array) {
       return true;
@@ -44,41 +46,33 @@ export namespace Notifiable {
     }
     return false;
   }
-  export function transform<T = any>(
-    value: T,
-  ): [T, undefined] | [T & Notifiable, Notifier] {
-    let notifier: Notifier | undefined = undefined;
-    if (!Observability.trackable(value)) {
-      return [value, undefined];
+  export function transform<T = any>(target: T): T | (T & Notifiable) {
+    if (is(target)) {
+      return target;
     }
-    if (is(value)) {
-      notifier = getNotifier(value);
-      return [value, notifier];
+    if (!Observability.canBeObservable(target)) {
+      return target;
     }
-    const exsit = get(value);
-    if (exsit) {
-      return [exsit, getNotifier(exsit)];
+    const origin = Observability.getOrigin(target);
+    const notifiable = Notifiable.get(origin);
+    if (notifiable) {
+      return notifiable;
     }
-    let reactable: any;
-    if (value instanceof Array) {
-      reactable = transformArray(value);
+    if (origin instanceof Array) {
+      return transformArray(origin);
     }
-    if (value instanceof Map) {
-      reactable = transformMap(value);
+    if (origin instanceof Map) {
+      return transformMap(origin);
     }
-    if (isPlainObject(value)) {
-      reactable = transformPlainObject(value);
+    if (isPlainObject(origin)) {
+      return transformPlainObject(origin);
     }
-    if (reactable) {
-      set(value, reactable);
-      return [reactable, getNotifier(reactable)];
-    }
-    return [value, undefined];
+    return target;
   }
 
-  export function transformArray<T>(toReactable: T[]): T[] & Notifiable {
-    const notifier = Notifier.getOrCreate(toReactable);
-    return new Proxy(toReactable, {
+  export function transformArray<T extends Array<any>>(target: T): T & Notifiable {
+    const notifier = Notifier.getOrCreate(target);
+    const notifiable = new Proxy(target, {
       get(self: any, prop: string | symbol): any {
         if (prop === ObservableSymbol.Notifier) {
           return notifier;
@@ -88,8 +82,7 @@ export namespace Notifiable {
         }
         const result = Reflect.get(self, prop);
         const origin = Observability.getOrigin(result);
-        const [v] = Notifiable.transform(origin);
-        return v;
+        return Notifiable.transform(origin);
       },
       set(self: any, prop: string | symbol, value: any): any {
         const result = Reflect.set(self, prop, value);
@@ -97,13 +90,13 @@ export namespace Notifiable {
         return result;
       },
     });
+    set(target, notifiable);
+    return notifiable;
   }
 
-  export function transformPlainObject<T extends object>(
-    toReactable: T,
-  ): T & Notifiable {
-    const notifier = Notifier.getOrCreate(toReactable);
-    return new Proxy(toReactable, {
+  export function transformPlainObject<T extends object>(target: T): T & Notifiable {
+    const notifier = Notifier.getOrCreate(target);
+    const notifiable = new Proxy(target, {
       get(self: any, prop: string | symbol): any {
         if (prop === ObservableSymbol.Notifier) {
           return notifier;
@@ -113,8 +106,7 @@ export namespace Notifiable {
         }
         const result = Reflect.get(self, prop);
         const origin = Observability.getOrigin(result);
-        const [v] = Notifiable.transform(origin);
-        return v;
+        return Notifiable.transform(origin);
       },
       set(self: any, prop: string | symbol, value: any): any {
         const result = Reflect.set(self, prop, value);
@@ -127,11 +119,13 @@ export namespace Notifiable {
         return result;
       },
     });
+    set(target, notifiable);
+    return notifiable;
   }
 
-  export function transformMap<T, P>(toReactable: Map<T, P>): Map<T, P> & Notifiable {
-    const notifier = Notifier.getOrCreate(toReactable);
-    return new Proxy(toReactable, {
+  export function transformMap<T extends Map<any, any>>(target: T): T & Notifiable {
+    const notifier = Notifier.getOrCreate(target);
+    const notifiable = new Proxy(target, {
       get(self: any, prop: string | symbol): any {
         if (prop === ObservableSymbol.Notifier) {
           return notifier;
@@ -163,8 +157,7 @@ export namespace Notifiable {
             return (...args: any) => {
               result = self.get.apply(self, args);
               const origin = Observability.getOrigin(result);
-              const [v] = Notifiable.transform(origin);
-              return v;
+              return Notifiable.transform(origin);
             };
           default:
             result = Reflect.get(self, prop);
@@ -172,15 +165,12 @@ export namespace Notifiable {
               return result.bind(self);
             } else {
               const origin = Observability.getOrigin(result);
-              const [v] = Notifiable.transform(origin);
-              return v;
+              return Notifiable.transform(origin);
             }
         }
       },
     });
+    set(target, notifiable);
+    return notifiable;
   }
-}
-
-export interface ReactiveHandler {
-  onChange?: (value: any) => any;
 }
