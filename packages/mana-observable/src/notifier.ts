@@ -6,30 +6,8 @@ import { AsyncEmitter } from './async-event';
 import { ObservableConfig } from './config';
 import type { Notify } from './core';
 import { ObservableSymbol } from './core';
+import { Notifiable } from './reactivity';
 import { Observability } from './utils';
-
-function setNotifier(
-  tracker: Notifier,
-  obj: Record<string, any>,
-  property?: string | symbol,
-) {
-  if (property === undefined) {
-    Reflect.defineMetadata(ObservableSymbol.Notifier, tracker, obj);
-  } else {
-    Reflect.defineMetadata(ObservableSymbol.Notifier, tracker, obj, property);
-  }
-}
-
-function getNotifier(
-  obj: Record<string, any>,
-  property?: string | symbol,
-): Notifier | undefined {
-  if (property === undefined) {
-    return Reflect.getMetadata(ObservableSymbol.Notifier, obj);
-  } else {
-    return Reflect.getMetadata(ObservableSymbol.Notifier, obj, property);
-  }
-}
 
 export interface Notification<T = any> {
   target: T;
@@ -67,18 +45,22 @@ export class Notifier implements Disposable {
   }
 
   static trigger(target: any, prop?: any): void {
-    const exist = getNotifier(target, prop);
+    const exist = Notifier.get(target, prop);
     if (exist) {
       exist.notify(target, prop);
     }
   }
   static getOrCreate(target: any, prop?: any): Notifier {
-    const origin = Observability.getOrigin(target);
-    const exist = getNotifier(target, prop);
-    if (!exist || exist.disposed) {
-      const notifier = new Notifier();
-      setNotifier(notifier, origin, prop);
+    const notifier = Notifiable.getNotifier(target);
+    if (notifier) {
       return notifier;
+    }
+    const origin = Observability.getOrigin(target);
+    const exist = Notifier.get(target, prop);
+    if (!exist || exist.disposed) {
+      const ntf = new Notifier();
+      Notifier.set(origin, notifier, prop);
+      return ntf;
     }
     return exist;
   }
@@ -87,5 +69,37 @@ export class Notifier implements Disposable {
       return undefined;
     }
     return Notifier.getOrCreate(target, prop);
+  }
+  static get(target: any, property?: any): Notifier | undefined {
+    if (property === undefined) {
+      return Reflect.getMetadata(ObservableSymbol.Notifier, target);
+    } else {
+      return Reflect.getMetadata(ObservableSymbol.Notifier, target, property);
+    }
+  }
+
+  static set(target: any, notifier: Notifier, property?: any): void {
+    if (property === undefined) {
+      Reflect.defineMetadata(ObservableSymbol.Notifier, notifier, target);
+    } else {
+      Reflect.defineMetadata(ObservableSymbol.Notifier, notifier, target, property);
+    }
+  }
+
+  static once(
+    notifier: Notifier,
+    onChange: () => void,
+    target: any,
+    property?: string,
+  ) {
+    const toDispose = Observability.getDisposable(notifier, target, property);
+    if (toDispose) {
+      toDispose.dispose();
+    }
+    // console.log(notifier);
+    const disposable = notifier.onChange(() => {
+      onChange();
+    });
+    Observability.setDisposable(notifier, disposable, target, property);
   }
 }

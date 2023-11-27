@@ -1,30 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Notifier } from './notifier';
-import type { Reactor } from './reactivity';
-import { Reactable } from './reactivity';
+import { Notifiable } from './reactivity';
 import { InstanceValue, ObservableProperties, Observability } from './utils';
 
 //
-export function listenReactor(
-  reactor: Reactor,
-  onChange: () => void,
-  target: any,
-  property?: string,
-) {
-  const toDispose = Observability.getDisposable(reactor, target, property);
-  if (toDispose) {
-    toDispose.dispose();
-  }
-  const disposable = reactor.onChange(() => {
-    onChange();
-  });
-  Observability.setDisposable(reactor, disposable, target, property);
-}
 
 // redefine observable properties
 export function defineProperty(target: any, property: string, defaultValue?: any) {
   /**
-   * notify reactor when property changed
+   * notify notifier when property changed
    */
   const onChange = () => {
     Notifier.trigger(target, property);
@@ -32,16 +16,16 @@ export function defineProperty(target: any, property: string, defaultValue?: any
   /**
    * set observable property value and register onChange listener
    * @param value
-   * @param reactor
+   * @param notifier
    */
-  const setValue = (value: any, reactor: Reactor | undefined) => {
+  const setValue = (value: any, notifier: Notifier | undefined) => {
     InstanceValue.set(target, property, value);
-    if (reactor) {
-      listenReactor(reactor, onChange, target, property);
+    if (notifier) {
+      Notifier.once(notifier, onChange, target, property);
     }
   };
   const initialValue = target[property] === undefined ? defaultValue : target[property];
-  setValue(...Reactable.transform(initialValue));
+  setValue(...(Notifiable.transform(initialValue) as [any, Notifier | undefined]));
   // property getter
   const getter = function getter(this: any): void {
     const value = Reflect.getMetadata(property, target);
@@ -49,11 +33,11 @@ export function defineProperty(target: any, property: string, defaultValue?: any
   };
   // property setter
   const setter = function setter(this: any, value: any): void {
-    const [tValue, reactor] = Reactable.transform(value);
+    const [tValue, notifier] = Notifiable.transform(value);
     const oldValue = InstanceValue.get(target, property);
-    if (Reactable.is(oldValue)) {
+    if (Notifiable.is(oldValue)) {
       const toDispose = Observability.getDisposable(
-        Reactable.getReactor(oldValue),
+        Notifiable.getNotifier(oldValue),
         target,
         property,
       );
@@ -61,7 +45,7 @@ export function defineProperty(target: any, property: string, defaultValue?: any
         toDispose.dispose();
       }
     }
-    setValue(tValue, reactor);
+    setValue(tValue, notifier);
     if (tValue !== oldValue) {
       onChange();
     }
@@ -88,22 +72,22 @@ export function observable<T extends Record<any, any>>(target: T): T {
   const properties = ObservableProperties.find(target);
   const origin = Observability.getOrigin(target);
   if (!properties) {
-    if (Reactable.canBeReactable(target)) {
-      const exsit = Reactable.get(origin);
+    if (Notifiable.canBeNotifiable(target)) {
+      const exsit = Notifiable.get(origin);
       if (exsit) {
         return exsit;
       }
       const onChange = () => {
         Notifier.trigger(origin);
       };
-      const [reatableValue, reactor] = Reactable.transform(origin);
-      if (reactor) {
-        reactor.onChange(() => {
+      const [notifiableValue, notifier] = Notifiable.transform(origin);
+      if (notifier) {
+        notifier.onChange(() => {
           onChange();
         });
       }
       Observability.mark(origin);
-      return reatableValue;
+      return notifiableValue;
     }
     return target;
   }

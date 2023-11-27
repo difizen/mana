@@ -2,7 +2,6 @@
 import assert from 'assert';
 
 import { prop } from './decorator';
-import { observable } from './observable';
 import { Trackable, Tracker } from './tracker';
 import { Observability } from './utils';
 

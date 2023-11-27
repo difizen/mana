@@ -1,77 +1,94 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import 'react';
 import assert from 'assert';
 
 import { isPlainObject } from '@difizen/mana-common';
 
-import { Reactable } from './reactivity';
+import { Notifiable } from './reactivity';
 import { Observability } from './utils';
 
 describe('reactivity', () => {
   it('#can be reactable', () => {
     class Foo {}
     const a = new Foo();
-    assert(!Reactable.canBeReactable(a));
-    assert(!Reactable.canBeReactable(null));
-    assert(!Reactable.canBeReactable(undefined));
-    assert(Reactable.canBeReactable([]));
-    assert(Reactable.canBeReactable({}));
-    assert(Reactable.canBeReactable(new Map()));
-    const [arrValue] = Reactable.transform([]);
-    assert(Reactable.canBeReactable(arrValue));
+    assert(!Notifiable.canBeNotifiable(a));
+    assert(!Notifiable.canBeNotifiable(null));
+    assert(!Notifiable.canBeNotifiable(undefined));
+    assert(Notifiable.canBeNotifiable([]));
+    assert(Notifiable.canBeNotifiable({}));
+    assert(Notifiable.canBeNotifiable(new Map()));
+    const [arrValue] = Notifiable.transform([]);
+    assert(Notifiable.canBeNotifiable(arrValue));
   });
   it('#transform base', () => {
-    const [tValue, reactor] = Reactable.transform(undefined);
+    const [tValue, notifier] = Notifiable.transform(undefined);
     assert(tValue === undefined);
-    assert(reactor === undefined);
+    assert(notifier === undefined);
     const arr = ['a'];
-    const [arrValue, arrReactor] = Reactable.transform(arr);
-    const [arrValue1, arrReactor1] = Reactable.transform(arr);
-    assert(arrReactor);
+    const [arrValue, arrNotifier] = Notifiable.transform(arr);
+    const [arrValue1, arrNotifier1] = Notifiable.transform(arr);
+    assert(arrNotifier);
     assert(arrValue !== arr);
-    assert(arrReactor?.value === arr);
     assert(arrValue1 === arrValue);
-    assert(arrReactor1 === arrReactor);
-    const [arrValue2, arrReactor2] = Reactable.transform(arrValue);
-    assert(arrReactor === arrReactor2);
+    assert(arrNotifier1 === arrNotifier);
+    const [arrValue2, arrNotifier2] = Notifiable.transform(arrValue);
+    assert(arrNotifier === arrNotifier2);
     assert(arrValue === arrValue2);
     class A {}
     const a = new A();
-    const [objValue, objReactor] = Reactable.transform(a);
-    assert(!objReactor);
+    const [objValue, objNotifier] = Notifiable.transform(a);
+    assert(!objNotifier);
     assert(a === objValue);
   });
 
   it('#transform array', () => {
     const v: any[] = [];
-    const [tValue] = Reactable.transform(v);
+    const [tValue] = Notifiable.transform(v);
     assert(tValue instanceof Array);
-    assert(Reactable.is(tValue));
+    assert(Notifiable.is(tValue));
     assert(Observability.getOrigin(tValue) === v);
+  });
+  it('#transform array nested', () => {
+    const v: any[] = [[]];
+    const [tValue] = Notifiable.transform(v);
+    assert(tValue[0] instanceof Array);
+    assert(Notifiable.is(tValue[0]));
   });
 
   it('#transform map', () => {
     const v: Map<string, string> = new Map();
-    const [tValue] = Reactable.transform(v);
+    const [tValue] = Notifiable.transform(v);
     assert(tValue instanceof Map);
-    assert(Reactable.is(tValue));
+    assert(Notifiable.is(tValue));
     assert(Observability.getOrigin(tValue) === v);
+  });
+  it('#transform map nested', () => {
+    const v: Map<string, any> = new Map();
+    v.set('a', {});
+    const [tValue] = Notifiable.transform(v);
+    assert(tValue instanceof Map);
+    assert(Notifiable.is(tValue.get('a')));
   });
 
   it('#transform plain object', () => {
     const v = {};
-    const [tValue] = Reactable.transform(v);
+    const [tValue] = Notifiable.transform(v);
     assert(isPlainObject(tValue));
-    assert(Reactable.is(tValue));
+    assert(Notifiable.is(tValue));
     assert(Observability.getOrigin(tValue) === v);
   });
+  it('#transform plain object nested', () => {
+    const v = { a: {} };
+    const [tValue] = Notifiable.transform(v);
+    assert(isPlainObject(tValue.a));
+    assert(Notifiable.is(tValue.a));
+  });
 
-  it('#reactable array', () => {
+  it('#array notifier', () => {
     const v: any[] = [];
-    const [tValue, reactor] = Reactable.transform(v);
+    const [tValue, notifier] = Notifiable.transform(v);
     let changedTimes = 0;
-    if (reactor) {
-      reactor.onChange(() => {
+    if (notifier) {
+      notifier.onChange(() => {
         changedTimes += 1;
       });
     }
@@ -81,12 +98,12 @@ describe('reactivity', () => {
     assert(tValue.length === 0);
     assert(changedTimes === 3);
   });
-  it('#reactable map', () => {
+  it('#map notifier', () => {
     const v: Map<string, string> = new Map();
-    const [tValue, reactor] = Reactable.transform(v);
+    const [tValue, notifier] = Notifiable.transform(v);
     let changedTimes = 0;
-    if (reactor) {
-      reactor.onChange(() => {
+    if (notifier) {
+      notifier.onChange(() => {
         changedTimes += 1;
       });
     }
@@ -100,19 +117,26 @@ describe('reactivity', () => {
     assert(changedTimes === 4);
   });
 
-  it('#reactable plain object', () => {
-    const v: any = {};
-    const [tValue, reactor] = Reactable.transform(v);
+  it('#plainObject notifier', () => {
+    const v: any = { a: '', b: { c: '' }, d: '' };
+    const [tValue, notifier] = Notifiable.transform(v);
+    const [, notifier1] = Notifiable.transform(v.b);
     let changedTimes = 0;
-    if (reactor) {
-      reactor.onChange(() => {
+    if (notifier) {
+      notifier.onChange(() => {
+        changedTimes += 1;
+      });
+    }
+    if (notifier1) {
+      notifier1.onChange(() => {
         changedTimes += 1;
       });
     }
     tValue.a = 'a';
     assert(tValue.a === 'a');
-    tValue.b = 'b';
-    delete tValue.b;
+    tValue.b.c = 'c';
+    assert(tValue.b.c === 'c');
+    delete tValue.d;
     assert(changedTimes === 3);
   });
 });
