@@ -4,7 +4,7 @@ import assert from 'assert';
 import { prop } from './decorator';
 import { Notifier } from './notifier';
 import { observable } from './observable';
-import { Reactable } from './reactivity';
+import { Notifiable } from './reactivity';
 import { Observability, ObservableProperties } from './utils';
 
 describe('observable', () => {
@@ -68,9 +68,9 @@ describe('observable', () => {
     const instanceArray = observable(new ClassArray());
     instanceArray.list = [];
     let changed = false;
-    if (Reactable.is(instanceArray.list)) {
-      const reactor = Reactable.getReactor(instanceArray.list);
-      reactor.onChange(() => {
+    if (Notifiable.is(instanceArray.list)) {
+      const notifier = Notifiable.getNotifier(instanceArray.list);
+      notifier.onChange(() => {
         changed = true;
       });
     }
@@ -132,7 +132,7 @@ describe('observable', () => {
     assert(reactable1 === reactable2);
     assert(reactable === reactable1);
     const observableFoo = observable(foo);
-    assert(Reactable.is(reactable));
+    assert(Notifiable.is(reactable));
     assert(Observability.is(v));
     assert(observableFoo === foo);
     let changed = false;

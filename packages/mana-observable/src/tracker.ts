@@ -5,7 +5,7 @@ import { getPropertyDescriptor, isPlainObject } from '@difizen/mana-common';
 import { ObservableSymbol } from './core';
 import { Notifier } from './notifier';
 import { observable } from './observable';
-import { Reactable } from './reactivity';
+import { Notifiable } from './reactivity';
 import { Observability } from './utils';
 
 type Act = (...args: any) => void;
@@ -31,21 +31,21 @@ function handleNotifier<T extends Record<string, any>>(
   obj: T,
   property?: string,
 ) {
-  const lastToDispose: Disposable = Observability.getDisposable(act, obj, property);
-  if (lastToDispose) {
-    lastToDispose.dispose();
-  }
-  const toDispose = notifier.once(() => {
-    if (property) {
-      act({
-        key: property as keyof T,
-        value: obj[property],
-      });
-    } else {
-      act(obj);
-    }
-  });
-  Observability.setDisposable(act, toDispose, obj, property);
+  Notifier.once(
+    notifier,
+    () => {
+      if (property) {
+        act({
+          key: property as keyof T,
+          value: obj[property],
+        });
+      } else {
+        act(obj);
+      }
+    },
+    obj,
+    property,
+  );
 }
 
 export type Trackable = {
@@ -143,11 +143,6 @@ export namespace Tracker {
     });
   }
 
-  export function setReactableNotifier(origin: any, act: Act) {
-    const notifier = Notifier.getOrCreate(origin);
-    handleNotifier(notifier, act, origin);
-  }
-
   export function toInstanceTracker<T extends Record<any, any>>(
     exist: T | undefined,
     origin: T,
@@ -177,17 +172,17 @@ export namespace Tracker {
           }
         }
         const value = getValue(target, property, proxy, notifier);
-        if (Reactable.is(value)) {
-          const transformed = get(value, act);
-          if (transformed) {
-            return transformed;
-          }
-          const newValue = tramsform(value, act);
-          set(value, act, newValue);
-          return newValue;
-        }
+        // if (Notifiable.is(value)) {
+        //   const transformed = get(value, act);
+        //   if (transformed) {
+        //     return transformed;
+        //   }
+        //   const newValue = tramsform(value, act);
+        //   set(value, act, newValue);
+        //   return newValue;
+        // }
         if (Observability.trackable(value)) {
-          if (Reactable.canBeReactable(value)) {
+          if (Notifiable.canBeNotifiable(value)) {
             return track(value, act, false);
           }
           return track(value, act, deep);
@@ -198,32 +193,37 @@ export namespace Tracker {
     set(origin, act, proxy);
     return proxy;
   }
-  export function toReactableTracker<T extends Record<any, any>>(
+  export function toNotifiableTracker<T extends Record<any, any>>(
     exist: T | undefined,
     origin: T,
     object: T,
     act: Act,
-    deep: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _deep: boolean,
   ) {
-    let maybeReactable = object;
-    if (deep) {
-      // try make reactable
-      if (!Observability.is(origin)) {
-        maybeReactable = observable(origin);
-      }
-    }
-    maybeReactable = Reactable.get(origin) ?? object;
-    // set reactable listener
-    if (Reactable.is(maybeReactable)) {
-      setReactableNotifier(origin, act);
-    }
     if (exist) {
       return exist;
     }
-    if (!deep) {
-      return object;
+    let maybeNotifiable = object;
+    let notifier: Notifier | undefined = undefined;
+    // if (deep) {
+    //   // try make reactable
+    //   if (!Observability.is(origin)) {
+    //     maybeNotifiable = observable(origin);
+    //   }
+    // }
+    maybeNotifiable = Notifiable.get(origin);
+    if (!maybeNotifiable) {
+      [maybeNotifiable, notifier] = Notifiable.transform(origin);
     }
-    const proxy = tramsform(maybeReactable, act);
+    // set reactable listener
+    if (Notifiable.is(maybeNotifiable)) {
+      if (!notifier) {
+        notifier = Notifiable.getNotifier(maybeNotifiable);
+      }
+      handleNotifier(notifier, act, origin);
+    }
+    const proxy = tramsform(maybeNotifiable, act);
     set(origin, act, proxy);
     return proxy;
   }
@@ -248,8 +248,8 @@ export namespace Tracker {
       exist = get(origin, act);
     }
     // get exist reactble
-    if (Reactable.canBeReactable(origin)) {
-      return toReactableTracker(exist, origin, object, act, deep);
+    if (Notifiable.canBeNotifiable(origin)) {
+      return toNotifiableTracker(exist, origin, object, act, deep);
     } else {
       return toInstanceTracker(exist, origin, act, deep);
     }

@@ -1,52 +1,32 @@
 /* eslint-disable prefer-spread */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Emitter, isPlainObject } from '@difizen/mana-common';
+import { isPlainObject } from '@difizen/mana-common';
 
 import { ObservableSymbol } from './core';
+import { Notifier } from './notifier';
 import { Observability } from './utils';
 
-/**
- * Reactor is bound to an reacable object, such as array/map/object.
- * Reactor helpers the reacable object to server multiple observable objects.
- * It will trigger when the reacable object is changed.
- */
-export class Reactor {
-  protected changedEmitter: Emitter<any>;
-  protected readonly _value: any;
-  constructor(val: any) {
-    this.changedEmitter = new Emitter();
-    this._value = val;
-  }
-  get onChange() {
-    return this.changedEmitter.event;
-  }
-  get value() {
-    return this._value;
-  }
-  notify(value: any) {
-    this.changedEmitter.fire(value);
-  }
+export interface Notifiable {
+  [ObservableSymbol.Notifier]: Notifier;
 }
 
-export interface Reactable {
-  [ObservableSymbol.Reactor]: Reactor;
-}
-
-export namespace Reactable {
-  export function is(target: any): target is Reactable {
-    return Observability.trackable(target) && (target as any)[ObservableSymbol.Reactor];
+export namespace Notifiable {
+  export function is(target: any): target is Notifiable {
+    return (
+      Observability.trackable(target) && (target as any)[ObservableSymbol.Notifier]
+    );
   }
-  export function getReactor(target: Reactable): Reactor {
-    return target[ObservableSymbol.Reactor];
+  export function getNotifier(target: Notifiable): Notifier {
+    return target[ObservableSymbol.Notifier];
   }
-  export function set(target: any, value: Reactable): void {
-    Reflect.defineMetadata(ObservableSymbol.Reactor, value, target);
+  export function set(target: any, value: Notifiable): void {
+    Reflect.defineMetadata(ObservableSymbol.Notifier, value, target);
   }
 
-  export function get<T extends Record<any, any>>(target: T): T & Reactable {
-    return Reflect.getMetadata(ObservableSymbol.Reactor, target);
+  export function get<T extends Record<any, any>>(target: T): T & Notifiable {
+    return Reflect.getMetadata(ObservableSymbol.Notifier, target);
   }
-  export function canBeReactable(value: any): boolean {
+  export function canBeNotifiable(value: any): boolean {
     if (!value) {
       return false;
     }
@@ -64,20 +44,22 @@ export namespace Reactable {
     }
     return false;
   }
-  export function transform<T = any>(value: T): [T, Reactor | undefined] {
-    let reactor: Reactor | undefined = undefined;
+  export function transform<T = any>(
+    value: T,
+  ): [T, undefined] | [T & Notifiable, Notifier] {
+    let notifier: Notifier | undefined = undefined;
     if (!Observability.trackable(value)) {
       return [value, undefined];
     }
     if (is(value)) {
-      reactor = getReactor(value);
-      return [value, reactor];
+      notifier = getNotifier(value);
+      return [value, notifier];
     }
     const exsit = get(value);
     if (exsit) {
-      return [exsit, getReactor(exsit)];
+      return [exsit, getNotifier(exsit)];
     }
-    let reactable;
+    let reactable: any;
     if (value instanceof Array) {
       reactable = transformArray(value);
     }
@@ -89,94 +71,110 @@ export namespace Reactable {
     }
     if (reactable) {
       set(value, reactable);
-      return [reactable, getReactor(reactable)];
+      return [reactable, getNotifier(reactable)];
     }
     return [value, undefined];
   }
 
-  export function transformArray(toReactable: any[]) {
-    const reactor = new Reactor(toReactable);
+  export function transformArray<T>(toReactable: T[]): T[] & Notifiable {
+    const notifier = Notifier.getOrCreate(toReactable);
     return new Proxy(toReactable, {
       get(self: any, prop: string | symbol): any {
-        if (prop === ObservableSymbol.Reactor) {
-          return reactor;
+        if (prop === ObservableSymbol.Notifier) {
+          return notifier;
         }
         if (prop === ObservableSymbol.Self) {
           return self;
         }
         const result = Reflect.get(self, prop);
-        return result;
+        const origin = Observability.getOrigin(result);
+        const [v] = Notifiable.transform(origin);
+        return v;
       },
       set(self: any, prop: string | symbol, value: any): any {
         const result = Reflect.set(self, prop, value);
-        reactor.notify(value);
+        notifier.notify(value);
         return result;
       },
     });
   }
 
-  export function transformPlainObject(toReactable: any) {
-    const reactor = new Reactor(toReactable);
+  export function transformPlainObject<T extends object>(
+    toReactable: T,
+  ): T & Notifiable {
+    const notifier = Notifier.getOrCreate(toReactable);
     return new Proxy(toReactable, {
       get(self: any, prop: string | symbol): any {
-        if (prop === ObservableSymbol.Reactor) {
-          return reactor;
+        if (prop === ObservableSymbol.Notifier) {
+          return notifier;
         }
         if (prop === ObservableSymbol.Self) {
           return self;
         }
         const result = Reflect.get(self, prop);
-        return result;
+        const origin = Observability.getOrigin(result);
+        const [v] = Notifiable.transform(origin);
+        return v;
       },
       set(self: any, prop: string | symbol, value: any): any {
         const result = Reflect.set(self, prop, value);
-        reactor.notify(value);
+        notifier.notify(value);
         return result;
       },
       deleteProperty(self: any, prop: string | symbol): boolean {
         const result = Reflect.deleteProperty(self, prop);
-        reactor.notify(undefined);
+        notifier.notify(undefined);
         return result;
       },
     });
   }
 
-  export function transformMap(toReactable: Map<any, any>) {
-    const reactor = new Reactor(toReactable);
+  export function transformMap<T, P>(toReactable: Map<T, P>): Map<T, P> & Notifiable {
+    const notifier = Notifier.getOrCreate(toReactable);
     return new Proxy(toReactable, {
       get(self: any, prop: string | symbol): any {
-        if (prop === ObservableSymbol.Reactor) {
-          return reactor;
+        if (prop === ObservableSymbol.Notifier) {
+          return notifier;
         }
         if (prop === ObservableSymbol.Self) {
           return self;
         }
         let result;
         switch (prop) {
-          case 'set':
-            return (...args: any) => {
-              result = self.set.apply(self, args);
-              reactor.notify(undefined);
-              return result;
-            };
           case 'delete':
             return (...args: any) => {
               result = self.delete.apply(self, args);
-              reactor.notify(undefined);
+              notifier.notify(undefined);
               return result;
             };
           case 'clear':
             return (...args: any) => {
               result = (self as Map<any, any>).clear.apply(self, args);
-              reactor.notify(undefined);
+              notifier.notify(undefined);
               return result;
+            };
+          case 'set':
+            return (...args: any) => {
+              result = self.set.apply(self, args);
+              notifier.notify(undefined);
+              return result;
+            };
+          case 'get':
+            return (...args: any) => {
+              result = self.get.apply(self, args);
+              const origin = Observability.getOrigin(result);
+              const [v] = Notifiable.transform(origin);
+              return v;
             };
           default:
             result = Reflect.get(self, prop);
             if (typeof result === 'function') {
               return result.bind(self);
+            } else {
+              const origin = Observability.getOrigin(result);
+              const [v] = Notifiable.transform(origin);
+              return v;
             }
-            return result;
         }
       },
     });
