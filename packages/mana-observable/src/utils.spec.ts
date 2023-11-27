@@ -31,17 +31,16 @@ describe('utils', () => {
     assert(Observability.getOrigin(fooProxy) === foo);
     assert(equals(fooProxy, foo));
     assert(Observability.getOrigin(null) === null);
-    assert(!Observability.trackable(null));
-    assert(!Observability.is(null, 'name'));
-    assert(Observability.trackable({}));
-    assert(!Observability.trackable(new WeakMap()));
-    assert(!Observability.trackable(Promise.resolve()));
+    assert(!Observability.canBeObservable(null));
+    assert(!Observability.marked(null, 'name'));
+    assert(Observability.canBeObservable({}));
+    assert(!Observability.canBeObservable(new WeakMap()));
+    assert(!Observability.canBeObservable(Promise.resolve()));
     Observability.mark(foo, 'info');
     Observability.mark(foo);
-    assert(Observability.is(foo, 'info'));
-    assert(Observability.is(foo));
-    assert(Observability.trackable(foo));
-    assert(Observability.notifiable(foo, 'info'));
+    assert(Observability.marked(foo, 'info'));
+    assert(Observability.marked(foo));
+    assert(Observability.canBeObservable(foo));
   });
   it('#ObservableProperties', () => {
     class ClassBasic {

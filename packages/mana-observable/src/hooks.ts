@@ -22,7 +22,7 @@ export function useObserve<T>(obj: T): T {
   const [, dispatch] = React.useReducer<
     (prevState: Partial<T>, action: Action<T>) => Partial<T>
   >(reducer, {});
-  if (!Observability.trackable(obj)) {
+  if (!Observability.canBeObservable(obj)) {
     return obj;
   }
   return Tracker.track(obj, dispatch);

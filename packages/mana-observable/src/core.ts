@@ -21,3 +21,7 @@ export namespace Observable {
     getContainer: () => Container | undefined;
   };
 }
+
+export interface Traceable<T = any> {
+  [ObservableSymbol.Self]: T;
+}

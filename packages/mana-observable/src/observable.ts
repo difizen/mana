@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Notifiable } from './notifiable';
 import { Notifier } from './notifier';
-import { Notifiable } from './reactivity';
 import { InstanceValue, ObservableProperties, Observability } from './utils';
 
 //
@@ -18,14 +18,17 @@ export function defineProperty(target: any, property: string, defaultValue?: any
    * @param value
    * @param notifier
    */
-  const setValue = (value: any, notifier: Notifier | undefined) => {
+  const handleValue = (value: any) => {
     InstanceValue.set(target, property, value);
-    if (notifier) {
-      Notifier.once(notifier, onChange, target, property);
+    if (Notifiable.is(value)) {
+      const notifier = Notifiable.getNotifier(value);
+      if (notifier) {
+        Notifier.once(notifier, onChange, target, property);
+      }
     }
   };
   const initialValue = target[property] === undefined ? defaultValue : target[property];
-  setValue(...(Notifiable.transform(initialValue) as [any, Notifier | undefined]));
+  handleValue(Notifiable.transform(initialValue));
   // property getter
   const getter = function getter(this: any): void {
     const value = Reflect.getMetadata(property, target);
@@ -33,7 +36,7 @@ export function defineProperty(target: any, property: string, defaultValue?: any
   };
   // property setter
   const setter = function setter(this: any, value: any): void {
-    const [tValue, notifier] = Notifiable.transform(value);
+    const notifiableValue = Notifiable.transform(value);
     const oldValue = InstanceValue.get(target, property);
     if (Notifiable.is(oldValue)) {
       const toDispose = Observability.getDisposable(
@@ -45,8 +48,8 @@ export function defineProperty(target: any, property: string, defaultValue?: any
         toDispose.dispose();
       }
     }
-    setValue(tValue, notifier);
-    if (tValue !== oldValue) {
+    handleValue(notifiableValue);
+    if (notifiableValue !== oldValue) {
       onChange();
     }
   };
@@ -62,34 +65,24 @@ export function defineProperty(target: any, property: string, defaultValue?: any
   // mark observable property
   ObservableProperties.add(target, property);
   Observability.mark(target, property);
-  Observability.mark(target);
 }
 
 export function observable<T extends Record<any, any>>(target: T): T {
-  if (!Observability.trackable(target)) {
+  if (!Observability.canBeObservable(target)) {
     return target;
   }
   const properties = ObservableProperties.find(target);
   const origin = Observability.getOrigin(target);
   if (!properties) {
-    if (Notifiable.canBeNotifiable(target)) {
-      const exsit = Notifiable.get(origin);
-      if (exsit) {
-        return exsit;
-      }
-      const onChange = () => {
+    const notifiableValue = Notifiable.transform(origin);
+    if (Notifiable.is(notifiableValue)) {
+      const notifier = Notifiable.getNotifier(notifiableValue);
+      notifier.onChange(() => {
         Notifier.trigger(origin);
-      };
-      const [notifiableValue, notifier] = Notifiable.transform(origin);
-      if (notifier) {
-        notifier.onChange(() => {
-          onChange();
-        });
-      }
-      Observability.mark(origin);
-      return notifiableValue;
+      });
     }
-    return target;
+    Observability.mark(origin);
+    return notifiableValue;
   }
   properties.forEach((property) => defineProperty(origin, property));
   return origin;
