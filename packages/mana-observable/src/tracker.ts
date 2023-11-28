@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getPropertyDescriptor, isPlainObject } from '@difizen/mana-common';
+import { getPropertyDescriptor, isPlainObject, noop } from '@difizen/mana-common';
 
 import { ObservableSymbol } from './core';
 import { Notifiable } from './notifiable';
@@ -10,48 +10,53 @@ import { Observability } from './utils';
 type Act = (...args: any) => void;
 
 function getValue<T extends Record<any, any>>(
-  obj: T,
+  target: T,
   property: string | symbol,
   proxy: T,
   notifier?: Notifier,
 ) {
   if (!notifier) {
-    const descriptor = getPropertyDescriptor(obj, property);
+    const descriptor = getPropertyDescriptor(target, property);
     if (descriptor?.get) {
       return descriptor.get.call(proxy);
     }
   }
-  return obj[property as any];
+  return target[property as any];
 }
 
 function handleNotifier<T extends Record<string, any>>(
   notifier: Notifier,
   act: Act,
-  obj: T,
+  target: T,
   property?: string,
 ) {
+  // console.log('handleNotifier add listener', target, property);
   Notifier.once(
     notifier,
     () => {
+      // console.log('handleNotifier action', target, property);
       if (property) {
         act({
           key: property as keyof T,
-          value: obj[property],
+          value: target[property],
         });
       } else {
-        act(obj);
+        act(target);
       }
     },
-    obj,
+    target,
     property,
   );
 }
 
 export type Trackable = {
   [ObservableSymbol.Tracker]: Record<string, any>;
+  [Trackable.activator]?: (() => void) | undefined;
 };
 
 export namespace Trackable {
+  export const activator = Symbol('activator');
+
   export function is(target: any): target is Trackable {
     return (
       Observability.canBeObservable(target) && (target as any)[ObservableSymbol.Tracker]
@@ -81,62 +86,66 @@ export namespace Tracker {
     return Reflect.hasOwnMetadata(act, target, ObservableSymbol.Tracker);
   }
 
-  export function tramsform(toTrack: any, act: Act) {
+  export function tramsform(toTrack: any, act: Act, activator?: () => void) {
     if (toTrack instanceof Array) {
-      return transformArray(toTrack, act);
+      return transformArray(toTrack, act, activator);
     }
     if (toTrack instanceof Map) {
-      return transformMap(toTrack, act);
+      return transformMap(toTrack, act, activator);
     }
     if (isPlainObject(toTrack)) {
-      return transformPlainObject(toTrack, act);
+      return transformPlainObject(toTrack, act, activator);
     }
     return toTrack;
   }
-  export function transformArray(toTrack: any[], act: Act) {
+  export function transformArray(toTrack: any[], act: Act, activator?: () => void) {
     return new Proxy(toTrack, {
       get(target: any, property: string | symbol): any {
         const value = target[property];
         if (property === ObservableSymbol.Self) {
           return value;
         }
-        if (Observability.canBeObservable(value)) {
-          return track(value, act);
+        if (property === Trackable.activator) {
+          return activator;
         }
-        return value;
+        return track(value, act);
       },
     });
   }
 
-  export function transformPlainObject(toTrack: any, act: Act) {
+  export function transformPlainObject(toTrack: any, act: Act, activator?: () => void) {
     return new Proxy(toTrack, {
       get(target: any, property: string | symbol): any {
         const value = target[property];
         if (property === ObservableSymbol.Self) {
           return value;
         }
-        if (Observability.canBeObservable(value)) {
-          return track(value, act);
+        if (property === Trackable.activator) {
+          return activator;
         }
-        return value;
+        return track(value, act);
       },
     });
   }
 
-  export function transformMap(toTrack: Map<any, any>, act: Act) {
+  export function transformMap(
+    toTrack: Map<any, any>,
+    act: Act,
+    activator?: () => void,
+  ) {
     return new Proxy(toTrack, {
       get(target: any, property: string | symbol): any {
         const value = target[property];
         if (property === ObservableSymbol.Self) {
           return value;
+        }
+        if (property === Trackable.activator) {
+          return activator;
         }
         if (property === 'get' && typeof value === 'function') {
           return function (...args: any[]) {
             const innerValue = value.apply(target, args);
-            if (Observability.canBeObservable(innerValue)) {
-              return track(innerValue, act);
-            }
-            return innerValue;
+            return track(innerValue, act);
           };
         }
         return value;
@@ -148,7 +157,6 @@ export namespace Tracker {
     exist: T | undefined,
     origin: T,
     act: Act,
-    deep = true,
   ) {
     if (exist) {
       return exist;
@@ -157,6 +165,7 @@ export namespace Tracker {
     if (!Observability.marked(origin)) {
       observable(origin);
     }
+
     const proxy = new Proxy(origin, {
       get(target: any, property: string | symbol): any {
         if (property === ObservableSymbol.Tracker) {
@@ -166,29 +175,27 @@ export namespace Tracker {
           return target;
         }
         let notifier;
+        let value;
         if (typeof property === 'string') {
+          // console.log(
+          //   'Observability.marked',
+          //   target,
+          //   property,
+          //   Observability.marked(target, property),
+          // );
           if (Observability.marked(target, property)) {
             notifier = Notifier.getOrCreate(target, property);
             handleNotifier(notifier, act, target, property);
+            value = getValue(target, property, proxy, notifier);
+            return track(value, act, true);
+          }
+          const descriptor = getPropertyDescriptor(target, property);
+          if (descriptor?.get) {
+            return descriptor.get.call(proxy);
           }
         }
-        const value = getValue(target, property, proxy, notifier);
-        // if (Notifiable.is(value)) {
-        //   const transformed = get(value, act);
-        //   if (transformed) {
-        //     return transformed;
-        //   }
-        //   const newValue = tramsform(value, act);
-        //   set(value, act, newValue);
-        //   return newValue;
-        // }
-        if (Observability.canBeObservable(value)) {
-          if (Notifiable.canBeNotifiable(value)) {
-            return track(value, act, false);
-          }
-          return track(value, act, deep);
-        }
-        return value;
+        value = target[property];
+        return track(value, act, true);
       },
     });
     set(origin, act, proxy);
@@ -197,31 +204,27 @@ export namespace Tracker {
   export function toNotifiableTracker<T extends Record<any, any>>(
     exist: T | undefined,
     origin: T,
-    object: T,
     act: Act,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _deep: boolean,
+    asProperty: boolean,
   ) {
     if (exist) {
       return exist;
     }
-    let maybeNotifiable = object;
-    // if (deep) {
-    //   // try make reactable
-    //   if (!Observability.is(origin)) {
-    //     maybeNotifiable = observable(origin);
-    //   }
-    // }
-    maybeNotifiable = Notifiable.get(origin);
+    let maybeNotifiable: T = Notifiable.get(origin);
     if (!maybeNotifiable) {
       maybeNotifiable = Notifiable.transform(origin);
     }
     // set reactable listener
-    if (Notifiable.is(maybeNotifiable)) {
+
+    let activator;
+    if (!asProperty && Notifiable.is(maybeNotifiable)) {
       const notifier = Notifiable.getNotifier(maybeNotifiable);
-      handleNotifier(notifier, act, origin);
+      activator = () => {
+        handleNotifier(notifier, act, origin);
+      };
+      activator();
     }
-    const proxy = tramsform(maybeNotifiable, act);
+    const proxy = tramsform(maybeNotifiable, act, activator);
     set(origin, act, proxy);
     return proxy;
   }
@@ -229,7 +232,7 @@ export namespace Tracker {
   export function track<T extends Record<any, any>>(
     object: T,
     act: Act,
-    deep = true,
+    asProperty = false,
   ): T {
     if (!Observability.canBeObservable(object)) {
       return object;
@@ -240,16 +243,21 @@ export namespace Tracker {
       origin = Trackable.getOrigin(object);
     }
     origin = Observability.getOrigin(origin);
-    let exist: T | undefined = undefined;
     // already has tracker
+    let exist: (T & Trackable) | undefined = undefined;
     if (has(origin, act)) {
       exist = get(origin, act);
+      if (exist) {
+        if (exist[Trackable.activator]) {
+          exist[Trackable.activator]();
+        }
+        return exist;
+      }
     }
-    // get exist reactble
     if (Notifiable.canBeNotifiable(origin)) {
-      return toNotifiableTracker(exist, origin, object, act, deep);
+      return toNotifiableTracker(exist, origin, act, asProperty);
     } else {
-      return toInstanceTracker(exist, origin, act, deep);
+      return toInstanceTracker(exist, origin, act);
     }
   }
 }

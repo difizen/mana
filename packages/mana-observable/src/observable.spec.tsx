@@ -5,7 +5,7 @@ import { prop } from './decorator';
 import { Notifiable } from './notifiable';
 import { Notifier } from './notifier';
 import { observable } from './observable';
-import { Observability, ObservableProperties } from './utils';
+import { getOrigin, Observability, ObservableProperties } from './utils';
 
 describe('observable', () => {
   it('#observable properties', () => {
@@ -121,27 +121,108 @@ describe('observable', () => {
     foo.list.push('');
     assert(changed);
   });
-
-  it('#observable reactbale', () => {
+  it('#observable notifiable', () => {
     const v: any[] = [];
     class Foo {}
     const foo = new Foo();
-    const reactable = observable(v);
-    const reactable1 = observable(v);
-    const reactable2 = observable(reactable);
-    assert(reactable1 === reactable2);
-    assert(reactable === reactable1);
+    const notifiable = observable(v);
+    const notifiable1 = observable(v);
+    const notifiable2 = observable(notifiable);
+    assert(notifiable1 === notifiable2);
+    assert(notifiable === notifiable1);
     const observableFoo = observable(foo);
-    assert(Notifiable.is(reactable));
+    assert(Notifiable.is(notifiable));
     assert(Observability.marked(v));
     assert(observableFoo === foo);
-    // TODO: 循环
     let changed = false;
-    const notifier = Notifier.find(reactable);
+    const notifier = Notifier.find(notifiable);
     notifier?.onChange(() => {
       changed = true;
     });
-    reactable1.push('');
+    notifiable1.push('');
     assert(changed);
+  });
+  it('#get notifier', () => {
+    const foo = {
+      a: {
+        b: {
+          c: 1,
+        },
+      },
+    };
+    const f = observable(foo);
+    assert(Notifiable.is(f.a.b));
+    const notifier = Notifiable.getNotifier(f.a.b);
+    const originalB = Observability.getOrigin(f.a.b);
+    const maybeNewNotifier = Notifier.getOrCreate(originalB);
+    assert(notifier === maybeNewNotifier);
+  });
+
+  it('#observable nested', () => {
+    class Foo {
+      @prop() info = '';
+    }
+    class Bar {
+      @prop() obj: { foo: Foo | undefined } = {
+        foo: undefined,
+      };
+    }
+    const bar = new Bar();
+    const foo = new Foo();
+    let bChangeTimes = 0;
+    const b = observable(bar);
+    const bNotifier = Notifier.find(b, 'obj');
+    bNotifier?.onChange(() => {
+      bChangeTimes += 1;
+    });
+
+    let objChangeTimes = 0;
+
+    assert(Notifiable.is(b.obj));
+    const objNotifier = Notifiable.getNotifier(b.obj);
+    objNotifier?.onChange(() => {
+      objChangeTimes += 1;
+    });
+
+    bar.obj.foo = foo;
+    const f = observable(foo);
+    let fooChangeTimes = 0;
+    const fooNotifier = Notifier.find(f, 'info');
+    fooNotifier?.onChange(() => {
+      fooChangeTimes += 1;
+    });
+    foo.info = 'foo';
+    assert(b.obj === b.obj);
+    assert(bChangeTimes === 1);
+    assert(objChangeTimes === 1);
+    assert(fooChangeTimes === 1);
+  });
+
+  it('#observable nested obj', () => {
+    const foo = {
+      a: {
+        b: {
+          c: 1,
+        },
+      },
+    };
+    const f = observable(foo);
+    assert(Notifiable.is(f));
+    const fNotifier = Notifiable.getNotifier(f);
+    let fChangeTimes = 0;
+    fNotifier?.onChange(() => {
+      fChangeTimes += 1;
+    });
+
+    assert(Notifiable.is(f.a.b));
+    const bNotifier = Notifiable.getNotifier(f.a.b);
+    let bChangeTimes = 0;
+    bNotifier?.onChange(() => {
+      bChangeTimes += 1;
+    });
+
+    f.a.b.c = 2;
+    assert(fChangeTimes === 0);
+    assert(bChangeTimes === 1);
   });
 });

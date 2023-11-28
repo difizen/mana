@@ -81,7 +81,7 @@ describe('tarcker', () => {
     assert(!!Notifier.find(foo, 'name'));
     tracker?.notify(foo, 'name');
   });
-  it('#tracker once', (done) => {
+  it('#tracker once', () => {
     class Foo {
       @prop() name?: string;
     }
@@ -94,13 +94,11 @@ describe('tarcker', () => {
     });
     tracker?.onChange(() => {
       times += 1;
-      if (times === 2) {
-        assert(once === 1);
-        done();
-      }
     });
     assert(!!Notifier.find(foo, 'name'));
     tracker?.notify(foo, 'name');
     tracker?.notify(foo, 'name');
+    assert(times === 2);
+    assert(once === 1);
   });
 });
