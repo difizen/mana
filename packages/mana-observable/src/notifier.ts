@@ -97,7 +97,7 @@ export class Notifier implements Disposable {
       toDispose.dispose();
     }
     // console.log(notifier);
-    const disposable = notifier.onChange(() => {
+    const disposable = notifier.once(() => {
       onChange();
     });
     Observability.setDisposable(notifier, disposable, target, property);

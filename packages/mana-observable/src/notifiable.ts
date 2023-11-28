@@ -20,7 +20,7 @@ export namespace Notifiable {
   }
   export function tryGetNotifier(target: any): Notifier | undefined {
     if (is(target)) {
-      return target[ObservableSymbol.Notifier];
+      return getNotifier(target);
     }
     return undefined;
   }
@@ -85,6 +85,7 @@ export namespace Notifiable {
         return Notifiable.transform(origin);
       },
       set(self: any, prop: string | symbol, value: any): any {
+        // console.log('set', self, prop, value);
         const result = Reflect.set(self, prop, value);
         notifier.notify(value);
         return result;
@@ -109,6 +110,7 @@ export namespace Notifiable {
         return Notifiable.transform(origin);
       },
       set(self: any, prop: string | symbol, value: any): any {
+        // console.log('set', self, prop, value);
         const result = Reflect.set(self, prop, value);
         notifier.notify(value);
         return result;

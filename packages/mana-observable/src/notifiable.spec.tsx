@@ -4,6 +4,7 @@ import assert from 'assert';
 import { isPlainObject } from '@difizen/mana-common';
 
 import { Notifiable } from './notifiable';
+import { Notifier } from './notifier';
 import { Observability } from './utils';
 
 describe('reactivity', () => {
@@ -152,5 +153,21 @@ describe('reactivity', () => {
     assert(tValue['b'].c === 'c');
     delete tValue['d'];
     assert(changedTimes === 3);
+  });
+
+  it('#get notifier', () => {
+    const foo = {
+      a: {
+        b: {
+          c: 1,
+        },
+      },
+    };
+    const f = Notifiable.transform(foo);
+    assert(Notifiable.is(f.a.b));
+    const notifier = Notifiable.getNotifier(f.a.b);
+    const originalB = Observability.getOrigin(f.a.b);
+    const maybeNewNotifier = Notifier.getOrCreate(originalB);
+    assert(notifier === maybeNewNotifier);
   });
 });

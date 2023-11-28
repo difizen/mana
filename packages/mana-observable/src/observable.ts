@@ -23,6 +23,7 @@ export function defineProperty(target: any, property: string, defaultValue?: any
     if (Notifiable.is(value)) {
       const notifier = Notifiable.getNotifier(value);
       if (notifier) {
+        // console.log('add listener', notifier, onChange, target, property);
         Notifier.once(notifier, onChange, target, property);
       }
     }
@@ -71,16 +72,10 @@ export function observable<T extends Record<any, any>>(target: T): T {
   if (!Observability.canBeObservable(target)) {
     return target;
   }
-  const properties = ObservableProperties.find(target);
   const origin = Observability.getOrigin(target);
+  const properties = ObservableProperties.find(origin);
   if (!properties) {
     const notifiableValue = Notifiable.transform(origin);
-    if (Notifiable.is(notifiableValue)) {
-      const notifier = Notifiable.getNotifier(notifiableValue);
-      notifier.onChange(() => {
-        Notifier.trigger(origin);
-      });
-    }
     Observability.mark(origin);
     return notifiableValue;
   }
