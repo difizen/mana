@@ -132,28 +132,34 @@ export const TreeViewComponent = forwardRef<HTMLDivElement>(
     const rows = Array.from(treeView.rows.values());
     const TreeRow = treeView.treeRowComponent;
     return (
-      <div
-        ref={ref}
-        {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
+      <Dropdown
+        className="mana-tree-node-dropdown"
+        trigger={['contextMenu']}
+        overlay={<MenuRender data={[treeView]} menuPath={treeView.contextMenuPath} />}
       >
-        <List
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ref={listRef}
-          width={treeView.offsetWidth || 100}
-          height={treeView.offsetHeight || 100}
-          rowCount={rows.length}
-          rowHeight={cache.rowHeight}
-          rowRenderer={(rowProps) => (
-            <TreeRow {...rowProps} cache={cache} row={rows[rowProps.index]} />
-          )}
-          scrollToIndex={treeView.scrollToRow}
-          onScroll={treeView.handleScroll.bind(treeView)}
-          tabIndex={-1}
-          style={{
-            overflow: 'auto',
-          }}
-        />
-      </div>
+        <div
+          ref={ref}
+          {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
+        >
+          <List
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ref={listRef}
+            width={treeView.offsetWidth || 100}
+            height={treeView.offsetHeight || 100}
+            rowCount={rows.length}
+            rowHeight={cache.rowHeight}
+            rowRenderer={(rowProps) => (
+              <TreeRow {...rowProps} cache={cache} row={rows[rowProps.index]} />
+            )}
+            scrollToIndex={treeView.scrollToRow}
+            onScroll={treeView.handleScroll.bind(treeView)}
+            tabIndex={-1}
+            style={{
+              overflow: 'auto',
+            }}
+          />
+        </div>
+      </Dropdown>
     );
   },
 );
@@ -288,8 +294,8 @@ export class TreeView extends BaseView implements StatefulView {
             parentDepth === undefined
               ? 0
               : TreeNode.isVisible(node.parent)
-              ? parentDepth + 1
-              : parentDepth;
+                ? parentDepth + 1
+                : parentDepth;
           if (CompositeTreeNode.is(node)) {
             depths.set(node, depth);
           }
