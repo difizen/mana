@@ -84,6 +84,22 @@ describe('observable', () => {
     assert(instanceArray.list.length === 0);
   });
 
+  it('#property usage', () => {
+    class ClassArray {
+      @prop() enable = false;
+    }
+    const instance = observable(new ClassArray());
+    assert(Observability.marked(instance, 'enable'));
+    // instanceArray.enable = true;
+    let changeTimes = 0;
+    const notifier = Notifier.getOrCreate(instance, 'enable');
+    notifier.onChange(() => {
+      changeTimes += 1;
+    });
+    instance.enable = true;
+    assert(changeTimes === 1);
+  });
+
   it('#child class', (done) => {
     class Foo {
       @prop() fooName = 'foo';

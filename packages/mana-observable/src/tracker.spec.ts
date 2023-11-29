@@ -504,4 +504,27 @@ describe('Tracker', () => {
     foo.obj.b.count = 1; // 3
     assert(changeCount === 3);
   });
+  it('#renders', () => {
+    class Model {
+      @prop() enabled = false;
+    }
+    const model = new Model();
+    let changeTimes = 0;
+    let changeTimes1 = 0;
+    const render = () => {
+      const trackable = Tracker.track(model, render);
+      trackable.enabled;
+      changeTimes += 1;
+    };
+    const render1 = () => {
+      const trackable = Tracker.track(model, render1);
+      trackable.enabled;
+      changeTimes1 += 1;
+    };
+    render(); // 1
+    render1(); // 1
+    model.enabled = true; // 2
+    assert(changeTimes === 2);
+    assert(changeTimes1 === 2);
+  });
 });

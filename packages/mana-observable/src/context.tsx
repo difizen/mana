@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { createContext, useContext, useMemo } from 'react';
 
 import type { Observable } from './core';
 import { useObserve } from './hooks';
@@ -20,13 +20,13 @@ export class ObservableContextImpl implements Observable.ContainerContext {
 
 export const defaultObservableContext = new ObservableContextImpl();
 
-export const ObservableContext = React.createContext<Observable.ContainerContext>(
+export const ObservableContext = createContext<Observable.ContainerContext>(
   defaultObservableContext,
 );
 
 export function useInject<T>(identifier: Observable.Token<T>): T {
-  const { getContainer } = React.useContext(ObservableContext);
-  const obj = React.useMemo<T>(() => {
+  const { getContainer } = useContext(ObservableContext);
+  const obj = useMemo<T>(() => {
     const container = getContainer();
     if (!container) {
       throw new Error(
