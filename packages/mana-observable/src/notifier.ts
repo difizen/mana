@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Disposable } from '@difizen/mana-common';
+import { Event } from '@difizen/mana-common';
 
-import type { EventListenerOption } from './async-event';
 import { AsyncEmitter } from './async-event';
 import { ObservableConfig } from './config';
 import type { Notify } from './core';
@@ -16,13 +16,17 @@ export interface Notification<T = any> {
 export class Notifier implements Disposable {
   protected changedEmitter = new AsyncEmitter<Notification>();
   disposed = false;
-  get onChange() {
-    return (listener: (e: any) => any, options: EventListenerOption = {}) => {
-      return this.changedEmitter.event(listener, {
-        async: ObservableConfig.async,
-        ...options,
-      });
-    };
+  get onChange(): Event<any> {
+    if (ObservableConfig.async) {
+      return this.onChangeAsync;
+    }
+    return this.onChangeSync;
+  }
+  get onChangeAsync() {
+    return this.changedEmitter.eventAsync;
+  }
+  get onChangeSync() {
+    return this.changedEmitter.event;
   }
 
   dispose() {
@@ -30,11 +34,11 @@ export class Notifier implements Disposable {
     this.disposed = true;
   }
 
-  once(trigger: Notify, options?: EventListenerOption): Disposable {
+  once(trigger: Notify, context?: any): Disposable {
     const toDispose = this.onChange((e) => {
       trigger(e.target, e.prop);
       toDispose.dispose();
-    }, options);
+    }, context);
     return toDispose;
   }
 
@@ -96,5 +100,20 @@ export class Notifier implements Disposable {
       onChange();
     });
     Observability.setDisposable(key, disposable, notifier);
+  }
+
+  static toEvent(target: any, prop: any, async?: boolean) {
+    const notifier = Notifier.getOrCreate(target, prop);
+    if (notifier) {
+      if (async === undefined) {
+        return notifier.onChange;
+      }
+      if (async) {
+        return notifier.onChangeAsync;
+      } else {
+        return notifier.onChangeSync;
+      }
+    }
+    return Event.None;
   }
 }

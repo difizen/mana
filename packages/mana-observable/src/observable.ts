@@ -27,7 +27,7 @@ export function defineProperty(target: any, property: string, defaultValue?: any
         if (last) {
           last.dispose();
         }
-        const toDispose = notifier.onChange(onChange, { async: false });
+        const toDispose = notifier.onChangeSync(onChange);
         Observability.setDisposable(notifier, toDispose, target, property);
       }
     }

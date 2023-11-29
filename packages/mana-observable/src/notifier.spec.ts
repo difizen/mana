@@ -33,6 +33,21 @@ describe('tarcker', () => {
     Notifier.trigger(foo, 'name');
     assert(changed);
   });
+
+  it('#trigger', () => {
+    class Foo {
+      @prop() name?: string;
+    }
+    const foo = observable(new Foo());
+    let changed = false;
+    const event = Notifier.toEvent(foo, 'name');
+    event(() => {
+      changed = true;
+    });
+    Notifier.trigger(foo, 'name');
+    assert(changed);
+  });
+
   it('#trigger array', () => {
     class Foo {
       @prop() arr: number[] = [1, 2, 3];
