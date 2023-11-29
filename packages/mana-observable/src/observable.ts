@@ -23,8 +23,12 @@ export function defineProperty(target: any, property: string, defaultValue?: any
     if (Notifiable.is(value)) {
       const notifier = Notifiable.getNotifier(value);
       if (notifier) {
-        // console.log('add listener', notifier, onChange, target, property);
-        Notifier.once(notifier, onChange, target, property);
+        const last = Observability.getDisposable(notifier, target, property);
+        if (last) {
+          last.dispose();
+        }
+        const toDispose = notifier.onChange(onChange, { async: false });
+        Observability.setDisposable(notifier, toDispose, target, property);
       }
     }
   };

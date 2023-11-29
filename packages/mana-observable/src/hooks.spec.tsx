@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import 'reflect-metadata';
 import assert from 'assert';
 
 import React, { useEffect } from 'react';
