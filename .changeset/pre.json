@@ -11,5 +11,5 @@
     "@difizen/mana-syringe": "0.0.1",
     "@difizen/mana-docs": "0.0.1"
   },
-  "changesets": ["tricky-owls-agree"]
+  "changesets": ["funny-beers-guess", "tricky-owls-agree"]
 }
