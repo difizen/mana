@@ -30,11 +30,9 @@ function handleNotifier<T extends Record<string, any>>(
   target: T,
   property?: string,
 ) {
-  // console.log('handleNotifier add listener', target, property);
   Notifier.once(
     notifier,
     () => {
-      // console.log('handleNotifier action', target, property);
       if (property) {
         act({
           key: property as keyof T,
@@ -177,12 +175,6 @@ export namespace Tracker {
         let notifier;
         let value;
         if (typeof property === 'string') {
-          // console.log(
-          //   'Observability.marked',
-          //   target,
-          //   property,
-          //   Observability.marked(target, property),
-          // );
           if (Observability.marked(target, property)) {
             notifier = Notifier.getOrCreate(target, property);
             handleNotifier(notifier, act, target, property);

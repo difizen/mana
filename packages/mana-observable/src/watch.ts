@@ -22,15 +22,15 @@ function watchAll<T>(target: T, callback: Notify): Disposable {
     return Disposable.NONE;
   }
   tryObservable(data);
-  const tracker = Notifier.find(data);
-  if (!tracker) {
+  const notifier = Notifier.find(data);
+  if (!notifier) {
     return Disposable.NONE;
   }
   const props: string[] = Object.keys(data);
   if (props) {
     props.forEach((prop) => Notifier.find(target, prop));
   }
-  return tracker.onChange(callback);
+  return notifier.onChange(callback);
 }
 
 function watchProp<T>(
@@ -40,9 +40,9 @@ function watchProp<T>(
 ): Disposable {
   const data = getOrigin(target);
   tryObservable(data);
-  const tracker = Notifier.find(data, prop);
-  if (tracker) {
-    return tracker.onChange(callback);
+  const notifier = Notifier.find(data, prop);
+  if (notifier) {
+    return notifier.onChange(callback, { async: false });
   }
   console.warn(
     `Cannot add watcher for unobservable property ${prop.toString()}`,

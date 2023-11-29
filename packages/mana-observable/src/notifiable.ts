@@ -85,7 +85,6 @@ export namespace Notifiable {
         return Notifiable.transform(origin);
       },
       set(self: any, prop: string | symbol, value: any): any {
-        // console.log('set', self, prop, value);
         const result = Reflect.set(self, prop, value);
         notifier.notify(value);
         return result;
@@ -110,7 +109,6 @@ export namespace Notifiable {
         return Notifiable.transform(origin);
       },
       set(self: any, prop: string | symbol, value: any): any {
-        // console.log('set', self, prop, value);
         const result = Reflect.set(self, prop, value);
         notifier.notify(value);
         return result;

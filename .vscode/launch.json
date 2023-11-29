@@ -39,7 +39,7 @@
         "--inspect-brk",
         "${workspaceRoot}/node_modules/jest/bin/jest.js",
         "--runInBand",
-        "./packages/mana-observable/src/test.spec.ts"
+        "./packages/mana-observable"
       ],
       "console": "integratedTerminal",
       "runtimeExecutable": "/Users/brokun/.nvm/versions/node/v16.20.0/bin/node",

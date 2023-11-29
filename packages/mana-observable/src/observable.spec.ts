@@ -5,7 +5,7 @@ import { prop } from './decorator';
 import { Notifiable } from './notifiable';
 import { Notifier } from './notifier';
 import { observable } from './observable';
-import { getOrigin, Observability, ObservableProperties } from './utils';
+import { Observability, ObservableProperties } from './utils';
 
 describe('observable', () => {
   it('#observable properties', () => {

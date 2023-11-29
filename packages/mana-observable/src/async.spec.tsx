@@ -7,6 +7,7 @@ import { prop } from './decorator';
 import { useObserve } from './hooks';
 import { Notifier } from './notifier';
 import { observable } from './observable';
+import { watch } from './watch';
 
 describe('Async', () => {
   beforeAll(() => {
@@ -21,22 +22,56 @@ describe('Async', () => {
       @prop() name?: string;
     }
     const foo = observable(new Foo());
-    let changed = 0;
+    let changedTimes = 0;
     const notifier = Notifier.find(foo, 'name');
     notifier?.onChange(() => {
-      changed += 1;
+      changedTimes += 1;
     });
     Notifier.trigger(foo, 'name');
     Notifier.trigger(foo, 'name');
     Notifier.trigger(foo, 'name');
     Promise.resolve()
       .then(() => {
-        assert(changed === 1);
+        assert(changedTimes === 1);
         done();
         return;
       })
-      .catch((_e) => {
-        //
+      .catch((e) => {
+        done(e);
+      });
+  });
+
+  it('#watch allways listen sync', (done) => {
+    class Foo {
+      @prop() name?: string;
+    }
+    const foo = observable(new Foo());
+    let changedTimes = 0;
+    let watchChangeTimes = 0;
+    const notifier = Notifier.find(foo, 'name');
+    notifier?.onChange(() => {
+      changedTimes += 1;
+    });
+    watch(foo, 'name', () => {
+      watchChangeTimes += 1;
+    });
+
+    Notifier.trigger(foo, 'name');
+    Notifier.trigger(foo, 'name');
+    Notifier.trigger(foo, 'name');
+    try {
+      assert(watchChangeTimes === 3);
+    } catch (e) {
+      done(e);
+    }
+    Promise.resolve()
+      .then(() => {
+        assert(changedTimes === 1);
+        done();
+        return;
+      })
+      .catch((e) => {
+        done(e);
       });
   });
 
@@ -58,8 +93,8 @@ describe('Async', () => {
         done();
         return;
       })
-      .catch((_e) => {
-        //
+      .catch((e) => {
+        done(e);
       });
   });
   it('#async useObserve array', (done) => {
@@ -95,6 +130,7 @@ describe('Async', () => {
       },
       (e) => {
         console.error(e);
+        done(e);
         return e;
       },
     );

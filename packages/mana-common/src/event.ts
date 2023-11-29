@@ -117,7 +117,7 @@ export class Emitter<T = any> {
   protected _event?: Event<T>;
   protected _callbacks: CallbackList | undefined;
   protected _disposed = false;
-  protected _options: EmitterOptions | undefined;
+  protected _options?: EmitterOptions | undefined;
 
   constructor(_options?: EmitterOptions) {
     this._options = _options;

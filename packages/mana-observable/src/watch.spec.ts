@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import assert from 'assert';
 
 import { Disposable } from '@difizen/mana-common';
