@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getPropertyDescriptor, isPlainObject, noop } from '@difizen/mana-common';
+import { getPropertyDescriptor, isPlainObject } from '@difizen/mana-common';
 
 import { ObservableSymbol } from './core';
 import { Notifiable } from './notifiable';
@@ -22,29 +22,6 @@ function getValue<T extends Record<any, any>>(
     }
   }
   return target[property as any];
-}
-
-function handleNotifier<T extends Record<string, any>>(
-  notifier: Notifier,
-  act: Act,
-  target: T,
-  property?: string,
-) {
-  Notifier.once(
-    notifier,
-    () => {
-      if (property) {
-        act({
-          key: property as keyof T,
-          value: target[property],
-        });
-      } else {
-        act(target);
-      }
-    },
-    target,
-    property,
-  );
 }
 
 export type Trackable = {
@@ -177,7 +154,12 @@ export namespace Tracker {
         if (typeof property === 'string') {
           if (Observability.marked(target, property)) {
             notifier = Notifier.getOrCreate(target, property);
-            handleNotifier(notifier, act, target, property);
+            Notifier.once(notifier, act, () => {
+              act({
+                key: property as keyof T,
+                value: target[property],
+              });
+            });
             value = getValue(target, property, proxy, notifier);
             return track(value, act, true);
           }
@@ -212,7 +194,9 @@ export namespace Tracker {
     if (!asProperty && Notifiable.is(maybeNotifiable)) {
       const notifier = Notifiable.getNotifier(maybeNotifiable);
       activator = () => {
-        handleNotifier(notifier, act, origin);
+        Notifier.once(notifier, act, () => {
+          act(origin);
+        });
       };
       activator();
     }
