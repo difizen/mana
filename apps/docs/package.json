@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
-    "dumi": "^2.2.7",
+    "dumi": "^2.2.13",
     "execa": "^5.1.1"
   },
   "engines": {
