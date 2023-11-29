@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-react",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "description": "",
   "keywords": [
     "mana",
@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@difizen/mana-common": "^0.0.2-alpha.1",
+    "@difizen/mana-common": "^0.0.2-alpha.2",
     "classnames": "^2.3.2",
     "rc-dropdown": "^3.2.0",
     "rc-tabs": "^11.10.1",
