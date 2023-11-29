@@ -30,12 +30,7 @@ export namespace Event {
 }
 
 type Callback = (...args: any[]) => any;
-class CallbackList implements Iterable<Callback> {
-  protected mono = false;
-
-  constructor(mono = false) {
-    this.mono = mono;
-  }
+export class CallbackList implements Iterable<Callback> {
   protected _callbacks: [Callback, any][] | undefined;
 
   get length(): number {

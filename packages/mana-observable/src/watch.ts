@@ -38,11 +38,11 @@ function watchProp<T>(
   prop: Extract<keyof T, string>,
   callback: Notify,
 ): Disposable {
-  const data = getOrigin(target);
-  tryObservable(data);
-  const notifier = Notifier.find(data, prop);
+  const origin = getOrigin(target);
+  tryObservable(origin);
+  const notifier = Notifier.find(origin, prop);
   if (notifier) {
-    return notifier.onChange(callback, { async: false });
+    return notifier.onChangeSync(callback);
   }
   console.warn(
     `Cannot add watcher for unobservable property ${prop.toString()}`,
