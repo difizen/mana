@@ -34,6 +34,9 @@ export namespace Observability {
     if (obj instanceof RegExp) {
       return false;
     }
+    if (obj instanceof Element) {
+      return false;
+    }
     return true;
   }
   export function marked(obj: any, property?: string | symbol): boolean {
