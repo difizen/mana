@@ -160,6 +160,7 @@ describe('event', () => {
   });
 
   it('#error listener', (done) => {
+    console.error = noop;
     let times = 0;
     const emitter = new Emitter<void>();
     emitter.event(() => {
@@ -168,9 +169,14 @@ describe('event', () => {
     });
     emitter.event(() => {
       times += 1;
-      assert(times === 2); // all listener
-      done();
     });
-    emitter.fire();
+    try {
+      emitter.fire();
+      assert(times === 2); // all listener
+
+      done();
+    } catch (e) {
+      //
+    }
   });
 });

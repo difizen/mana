@@ -49,6 +49,7 @@ describe('disposable', () => {
   });
 
   it('#Disposable collection error disposable', () => {
+    console.error = noop;
     let disposeTimes = 0;
     try {
       const collection = new DisposableCollection(
