@@ -294,8 +294,8 @@ export class TreeView extends BaseView implements StatefulView {
             parentDepth === undefined
               ? 0
               : TreeNode.isVisible(node.parent)
-              ? parentDepth + 1
-              : parentDepth;
+                ? parentDepth + 1
+                : parentDepth;
           if (CompositeTreeNode.is(node)) {
             depths.set(node, depth);
           }
