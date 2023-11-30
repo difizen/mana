@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Disposable, Event } from '@difizen/mana-common';
 import { Emitter } from '@difizen/mana-common';
-import { prop } from '@difizen/mana-observable';
+import { getOrigin, prop } from '@difizen/mana-observable';
 import { inject, transient } from '@difizen/mana-syringe';
 
 import { CommandRegistry } from '../command/command-registry';
@@ -169,17 +169,17 @@ export class DefaultGeneralMenuItem implements MenuNode, Disposable {
    *
    * @returns a disposable which, when called, will remove the given node again.
    */
-  public addNode(item: MenuItem): MenuItem {
+  public addNode = (item: MenuItem): MenuItem => {
     this.children.push(item);
     const remove = () => {
-      const idx = this.children.indexOf(item);
+      const idx = this.children.indexOf(getOrigin(item));
       if (idx >= 0) {
         this.children.splice(idx, 1);
       }
     };
     item.onDisposed(remove);
     return item;
-  }
+  };
 
   /**
    * Removes the first node with the given id.

@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import {
   DefaultSlotView,
@@ -14,8 +13,10 @@ import { prop } from '@difizen/mana-observable';
 import { Tabs, Dropdown } from '@difizen/mana-react';
 import type { TabPaneProps, TabsProps } from '@difizen/mana-react';
 import { inject, transient } from '@difizen/mana-syringe';
-import './index.less';
 import classnames from 'classnames';
+import type { ReactNode } from 'react';
+import { forwardRef } from 'react';
+import './index.less';
 
 import { MenuRender } from '../../menu/menu-render';
 import { ToolbarRender } from '../../toolbar/toolbar-render';
@@ -50,9 +51,12 @@ export const TabViewComponent = forwardRef<HTMLDivElement, any>(
 
 const TabSlotViewId = 'tab-view';
 
+type TabProps = Record<string, number | string | boolean | ReactNode | undefined>;
+
 export interface TabOption extends SlotViewOption {
   sort?: boolean;
   showTabContent?: boolean;
+  tabProps: TabProps;
 }
 
 @transient()
@@ -83,11 +87,13 @@ export class TabSlotView extends DefaultSlotView {
   };
 
   getTabProps(): TabsProps {
+    const { tabProps = {} } = this.option;
     return {
       type: 'line',
       hideAdd: true,
       tabPosition: 'left',
       onChange: this.onChange,
+      ...tabProps,
     };
   }
 

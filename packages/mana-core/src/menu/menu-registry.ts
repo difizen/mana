@@ -236,36 +236,36 @@ export class MenuRegistry implements ApplicationContribution {
     return this.getOrCreateGroup(menuPath);
   }
 
-  isVisible(item: MenuItem, data: any): boolean {
+  isVisible(item: MenuItem, ...args: any[]): boolean {
     if (ExecutableMenuNode.is(item)) {
       if (item.isVisible) {
-        return item.isVisible(data);
+        return item.isVisible(...args);
       }
     }
     if (CommandMenuNode.is(item)) {
-      return this.commands.isVisible(item.command, data);
+      return this.commands.isVisible(item.command, ...args);
     }
     return true;
   }
 
-  isEnabled(item: MenuItem, data: any): boolean {
+  isEnabled(item: MenuItem, ...args: any[]): boolean {
     if (ExecutableMenuNode.is(item)) {
       if (item.isEnabled) {
-        return item.isEnabled(data);
+        return item.isEnabled(...args);
       }
     }
     if (CommandMenuNode.is(item)) {
-      return this.commands.isVisible(item.command, data);
+      return this.commands.isVisible(item.command, ...args);
     }
     return true;
   }
 
-  execute(item: MenuItem, data: any): MaybePromise<void> {
+  execute(item: MenuItem, ...args: any[]): MaybePromise<void> {
     if (ExecutableMenuNode.is(item)) {
-      return item.execute(data);
+      return item.execute(...args);
     }
     if (CommandMenuNode.is(item)) {
-      return this.commands.executeCommand(item.command, data);
+      return this.commands.executeCommand(item.command, ...args);
     }
   }
 }
