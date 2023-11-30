@@ -1,8 +1,6 @@
 import assert from 'assert';
 
-import { prop } from './decorator';
-import { Notifier } from './notifier';
-import { observable } from './observable';
+import { prop, Notifier, observable } from './index';
 
 describe('tarcker', () => {
   it('#create tracker', () => {
@@ -37,11 +35,13 @@ describe('tarcker', () => {
   it('#trigger', () => {
     class Foo {
       @prop() name?: string;
+      get onNameChange() {
+        return Notifier.toEvent(this, 'name');
+      }
     }
     const foo = observable(new Foo());
     let changed = false;
-    const event = Notifier.toEvent(foo, 'name');
-    event(() => {
+    foo.onNameChange(() => {
       changed = true;
     });
     Notifier.trigger(foo, 'name');
@@ -115,5 +115,21 @@ describe('tarcker', () => {
     tracker?.notify(foo, 'name');
     assert(times === 2);
     assert(once === 1);
+  });
+
+  it('#trigger', () => {
+    class Foo {
+      @prop() name?: string;
+    }
+    const foo = observable(new Foo());
+    const notifier = Notifier.find(foo, 'name');
+    const event0 = Notifier.toEvent(foo, 'name');
+    const event1 = Notifier.toEvent(foo, 'name', null);
+    const event2 = Notifier.toEvent(foo, 'name', true);
+    assert(event0 === notifier?.onChangeSync);
+    assert(event1 === notifier?.onChange);
+    assert(event2 === notifier?.onChangeAsync);
+    assert(event0 !== event2);
+    assert(event0 === event1);
   });
 });
