@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { ObservableProperties } from './utils';
-import { prop } from './decorator';
+
+import { prop, ObservableProperties } from './index';
 
 describe('decorator', () => {
   it('#prop', () => {

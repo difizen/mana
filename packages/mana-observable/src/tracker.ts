@@ -9,21 +9,6 @@ import { Observability } from './utils';
 
 type Act = (...args: any) => void;
 
-function getValue<T extends Record<any, any>>(
-  target: T,
-  property: string | symbol,
-  proxy: T,
-  notifier?: Notifier,
-) {
-  if (!notifier) {
-    const descriptor = getPropertyDescriptor(target, property);
-    if (descriptor?.get) {
-      return descriptor.get.call(proxy);
-    }
-  }
-  return target[property as any];
-}
-
 export type Trackable = {
   [ObservableSymbol.Tracker]: Record<string, any>;
   [Trackable.activator]?: (() => void) | undefined;
@@ -128,14 +113,7 @@ export namespace Tracker {
     });
   }
 
-  export function toInstanceTracker<T extends Record<any, any>>(
-    exist: T | undefined,
-    origin: T,
-    act: Act,
-  ) {
-    if (exist) {
-      return exist;
-    }
+  export function toInstanceTracker<T extends Record<any, any>>(origin: T, act: Act) {
     // try make observable
     if (!Observability.marked(origin)) {
       observable(origin);
@@ -160,7 +138,7 @@ export namespace Tracker {
                 value: target[property],
               });
             });
-            value = getValue(target, property, proxy, notifier);
+            value = target[property];
             return track(value, act, true);
           }
           const descriptor = getPropertyDescriptor(target, property);
@@ -176,14 +154,10 @@ export namespace Tracker {
     return proxy;
   }
   export function toNotifiableTracker<T extends Record<any, any>>(
-    exist: T | undefined,
     origin: T,
     act: Act,
     asProperty: boolean,
   ) {
-    if (exist) {
-      return exist;
-    }
     let maybeNotifiable: T = Notifiable.get(origin);
     if (!maybeNotifiable) {
       maybeNotifiable = Notifiable.transform(origin);
@@ -231,9 +205,9 @@ export namespace Tracker {
       }
     }
     if (Notifiable.canBeNotifiable(origin)) {
-      return toNotifiableTracker(exist, origin, act, asProperty);
+      return toNotifiableTracker(origin, act, asProperty);
     } else {
-      return toInstanceTracker(exist, origin, act);
+      return toInstanceTracker(origin, act);
     }
   }
 }

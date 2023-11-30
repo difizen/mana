@@ -2,8 +2,7 @@ import assert from 'assert';
 
 import { Disposable } from '@difizen/mana-common';
 
-import { prop } from './decorator';
-import { watch } from './watch';
+import { watch, prop } from './index';
 
 console.warn = () => {
   //
@@ -62,25 +61,35 @@ describe('watch', () => {
     foo.info = 'foo';
     assert(changed === 2);
   });
-  it('#watch unobservable prop', (done) => {
+  it('#watch unobservable prop', () => {
     class Foo {
       @prop() name?: string;
       info?: string;
     }
+    class Bar {
+      info?: string = '';
+    }
     const newName = 'new name';
-    let watchLatest: string | undefined;
     const foo = new Foo();
-    watchLatest = foo.info;
+    const bar = new Bar();
+    let fooNameChanged = false;
+    let fooInfoChanged = false;
+    let barChanged = false;
+    watch(bar, () => {
+      barChanged = true;
+    });
+    bar.info = 'bar';
+    assert(!barChanged);
     watch(foo, 'info', () => {
-      watchLatest = foo.info;
-      done();
+      fooInfoChanged = true;
     });
     foo.info = newName;
+    assert(!fooInfoChanged);
     watch(foo, 'name', () => {
-      assert(watchLatest !== newName);
-      done();
+      fooNameChanged = true;
     });
     foo.name = newName;
+    assert(fooNameChanged);
   });
 
   it('#invalid watch', () => {
@@ -88,11 +97,16 @@ describe('watch', () => {
       @prop() name?: string;
     }
     const foo = new Foo();
-    const toDispose = (watch as any)(foo, 'name');
-    const toDispose1 = watch(null, () => {
+    const p = Promise.resolve();
+    const toDispose0 = (watch as any)(foo, 'name');
+    const toDispose1 = watch(p, 'then', () => {
       //
     });
-    assert(toDispose === Disposable.NONE);
+    const toDispose2 = watch(null, () => {
+      //
+    });
+    assert(toDispose0 === Disposable.NONE);
     assert(toDispose1 === Disposable.NONE);
+    assert(toDispose2 === Disposable.NONE);
   });
 });
