@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unified-signatures */
 import { Disposable, DisposableCollection } from '@difizen/mana-common';
-import { equals, getOrigin, prop, useInject } from '@difizen/mana-observable';
+import { equals, getOrigin, Notifier, prop, useInject } from '@difizen/mana-observable';
 import { inject, transient } from '@difizen/mana-syringe';
 import * as React from 'react';
 
@@ -49,6 +49,10 @@ export class DefaultSlotView extends BaseView implements SlotView, StatefulView 
 
   @prop()
   active?: View | undefined;
+
+  get onActiveChange() {
+    return Notifier.toEvent(this, 'active');
+  }
 
   @prop()
   slots: string[] = [];
