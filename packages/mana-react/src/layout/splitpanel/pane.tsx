@@ -1,6 +1,6 @@
 export interface PaneProps {
   id: string;
-  className: string;
+  className?: string;
   minSize?: number;
   maxSize?: number;
   minResize?: number;
