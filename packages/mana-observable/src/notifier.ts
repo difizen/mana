@@ -102,10 +102,17 @@ export class Notifier implements Disposable {
     Observability.setDisposable(key, disposable, notifier);
   }
 
-  static toEvent(target: any, prop: any, async?: boolean) {
-    const notifier = Notifier.getOrCreate(target, prop);
+  /**
+   * Get event from target
+   * @param target
+   * @param prop
+   * @param async false by default
+   * @returns
+   */
+  static toEvent(target: any, prop?: any, async: boolean | null = false) {
+    const notifier = Notifier.find(target, prop);
     if (notifier) {
-      if (async === undefined) {
+      if (async === null) {
         return notifier.onChange;
       }
       if (async) {
