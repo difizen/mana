@@ -4,7 +4,7 @@ import { CallbackList } from '@difizen/mana-common';
 
 type Callback = (...args: any[]) => any;
 
-class AsyncCallbackList extends CallbackList {
+export class AsyncCallbackList extends CallbackList {
   protected called: Callback[] | undefined = undefined;
 
   public override invoke(...args: any[]): any[] {
@@ -51,11 +51,7 @@ export class AsyncEmitter<T = any> extends Emitter {
    */
   get eventAsync(): Event<T> {
     if (!this._eventAsync) {
-      this._eventAsync = (
-        listener: (e: T) => any,
-        context?: any,
-        disposables?: Disposable[],
-      ) => {
+      this._eventAsync = (listener: (e: T) => any, context?: any) => {
         const callbacks = () => {
           if (!this._asyncCallbacks) {
             this._asyncCallbacks = new AsyncCallbackList();
@@ -88,10 +84,6 @@ export class AsyncEmitter<T = any> extends Emitter {
             }
           },
         };
-        if (Array.isArray(disposables)) {
-          disposables.push(result);
-        }
-
         return result;
       };
     }

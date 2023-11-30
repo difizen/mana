@@ -2,9 +2,13 @@ import assert from 'assert';
 
 import { Disposable } from '@difizen/mana-common';
 
-import { ObservableProperties, Observability, InstanceValue } from './utils';
-
-import { equals, ObservableSymbol } from '.';
+import {
+  equals,
+  ObservableSymbol,
+  ObservableProperties,
+  Observability,
+  InstanceValue,
+} from './index';
 
 describe('utils', () => {
   it('#Observability', () => {

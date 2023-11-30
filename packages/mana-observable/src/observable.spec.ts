@@ -1,11 +1,14 @@
 import 'react';
 import assert from 'assert';
 
-import { prop } from './decorator';
-import { Notifiable } from './notifiable';
-import { Notifier } from './notifier';
-import { observable } from './observable';
-import { Observability, ObservableProperties } from './utils';
+import {
+  prop,
+  Notifiable,
+  Notifier,
+  observable,
+  Observability,
+  ObservableProperties,
+} from './index';
 
 describe('observable', () => {
   it('#observable properties', () => {
@@ -240,5 +243,23 @@ describe('observable', () => {
     f.a.b.c = 2;
     assert(fChangeTimes === 0);
     assert(bChangeTimes === 1);
+  });
+  it('#observable property set', () => {
+    const arr: string[] = [];
+    class ClassBasic {
+      @prop() arr = arr;
+    }
+    const instance = observable(new ClassBasic());
+    let times = 0;
+    const notifier = Notifier.find(instance, 'arr');
+    notifier?.onChange(() => {
+      times += 1;
+    });
+    const observavleArr = observable(arr);
+    observavleArr.push(''); // 2
+    assert(times === 2);
+    instance.arr = []; //3
+    observavleArr.push('');
+    assert(times === 3);
   });
 });

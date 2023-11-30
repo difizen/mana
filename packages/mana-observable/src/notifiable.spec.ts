@@ -3,9 +3,7 @@ import assert from 'assert';
 
 import { isPlainObject } from '@difizen/mana-common';
 
-import { Notifiable } from './notifiable';
-import { Notifier } from './notifier';
-import { Observability } from './utils';
+import { Notifiable, Notifier, Observability } from './index';
 
 describe('reactivity', () => {
   it('#can be reactable', () => {

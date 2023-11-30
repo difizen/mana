@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'assert';
 
-import { prop } from './decorator';
-import { Trackable, Tracker } from './tracker';
-import { Observability } from './utils';
+import { prop, Trackable, Tracker, Observability } from './index';
 
 describe('Tracker', () => {
   it('#trackable', () => {

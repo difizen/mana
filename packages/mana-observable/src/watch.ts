@@ -1,4 +1,4 @@
-import { Disposable } from '@difizen/mana-common';
+import { Disposable, Event } from '@difizen/mana-common';
 
 import type { Notify } from './core';
 import { Notifier } from './notifier';
@@ -22,15 +22,16 @@ function watchAll<T>(target: T, callback: Notify): Disposable {
     return Disposable.NONE;
   }
   tryObservable(data);
-  const notifier = Notifier.find(data);
-  if (!notifier) {
+  const event = Notifier.toEvent(data);
+  if (event === Event.None) {
+    console.warn('Cannot add watcher for unobservable target', target);
     return Disposable.NONE;
   }
   const props: string[] = Object.keys(data);
   if (props) {
     props.forEach((prop) => Notifier.find(target, prop));
   }
-  return notifier.onChange(callback);
+  return event(callback);
 }
 
 function watchProp<T>(
@@ -40,15 +41,15 @@ function watchProp<T>(
 ): Disposable {
   const origin = getOrigin(target);
   tryObservable(origin);
-  const notifier = Notifier.find(origin, prop);
-  if (notifier) {
-    return notifier.onChangeSync(callback);
+  const event = Notifier.toEvent(origin, prop);
+  if (event === Event.None) {
+    console.warn(
+      `Cannot add watcher for unobservable property ${prop.toString()}`,
+      target,
+    );
+    return Disposable.NONE;
   }
-  console.warn(
-    `Cannot add watcher for unobservable property ${prop.toString()}`,
-    target,
-  );
-  return Disposable.NONE;
+  return event(callback);
 }
 
 export function watch<T>(target: T, callback: Notify): Disposable;

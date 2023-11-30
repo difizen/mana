@@ -8,15 +8,14 @@ import type { ErrorInfo, ReactNode } from 'react';
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
 
-import { defaultObservableContext, ObservableContext } from './context';
-import { useInject } from './context';
-import { prop } from './decorator';
-import { useObserve } from './hooks';
-import { getOrigin } from './utils';
-
-console.error = () => {
-  //
-};
+import {
+  defaultObservableContext,
+  ObservableContext,
+  useInject,
+  prop,
+  useObserve,
+  getOrigin,
+} from './index';
 
 class ErrorBoundary extends React.Component<{ children?: ReactNode }> {
   override state: { error: Error | undefined; errorInfo: ErrorInfo | undefined } = {
@@ -41,6 +40,11 @@ class ErrorBoundary extends React.Component<{ children?: ReactNode }> {
 }
 
 describe('error context', () => {
+  beforeAll(() => {
+    console.error = () => {
+      //
+    };
+  });
   it('#without initial', () => {
     @singleton()
     class FooModel {

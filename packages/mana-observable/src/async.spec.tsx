@@ -1,13 +1,16 @@
 import assert from 'assert';
 
+import type { ReactElement } from 'react';
 import renderer, { act } from 'react-test-renderer';
 
-import { ObservableConfig } from './config';
-import { prop } from './decorator';
-import { useObserve } from './hooks';
-import { Notifier } from './notifier';
-import { observable } from './observable';
-import { watch } from './watch';
+import {
+  ObservableConfig,
+  prop,
+  useObserve,
+  Notifier,
+  observable,
+  watch,
+} from './index';
 
 describe('Async', () => {
   beforeAll(() => {
@@ -110,11 +113,12 @@ describe('Async', () => {
     };
     let component: renderer.ReactTestRenderer;
     act(() => {
-      component = renderer.create(
+      const element = (
         <>
           <FooRender />
-        </>,
+        </>
       );
+      component = renderer.create(element as ReactElement);
       const json = component.toJSON();
       assert(json === null);
     });

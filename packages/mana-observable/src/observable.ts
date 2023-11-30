@@ -3,10 +3,11 @@ import { Notifiable } from './notifiable';
 import { Notifier } from './notifier';
 import { InstanceValue, ObservableProperties, Observability } from './utils';
 
-//
+const propertyRelatedNotifier = Symbol('propertyRelatedNotifier');
 
 // redefine observable properties
 export function defineProperty(target: any, property: string, defaultValue?: any) {
+  const notifier = Notifier.getOrCreate(target, property);
   /**
    * notify notifier when property changed
    */
@@ -20,15 +21,17 @@ export function defineProperty(target: any, property: string, defaultValue?: any
    */
   const handleValue = (value: any) => {
     InstanceValue.set(target, property, value);
+    if (notifier) {
+      const last = Observability.getDisposable(propertyRelatedNotifier, notifier);
+      if (last) {
+        last.dispose();
+      }
+    }
     if (Notifiable.is(value)) {
-      const notifier = Notifiable.getNotifier(value);
-      if (notifier) {
-        const last = Observability.getDisposable(notifier, target, property);
-        if (last) {
-          last.dispose();
-        }
-        const toDispose = notifier.onChangeSync(onChange);
-        Observability.setDisposable(notifier, toDispose, target, property);
+      const valueNotifier = Notifiable.getNotifier(value);
+      if (notifier && valueNotifier) {
+        const toDispose = valueNotifier.onChangeSync(onChange);
+        Observability.setDisposable(propertyRelatedNotifier, toDispose, notifier);
       }
     }
   };
@@ -43,18 +46,8 @@ export function defineProperty(target: any, property: string, defaultValue?: any
   const setter = function setter(this: any, value: any): void {
     const notifiableValue = Notifiable.transform(value);
     const oldValue = InstanceValue.get(target, property);
-    if (Notifiable.is(oldValue)) {
-      const toDispose = Observability.getDisposable(
-        Notifiable.getNotifier(oldValue),
-        target,
-        property,
-      );
-      if (toDispose) {
-        toDispose.dispose();
-      }
-    }
-    handleValue(notifiableValue);
     if (notifiableValue !== oldValue) {
+      handleValue(notifiableValue);
       onChange();
     }
   };
@@ -80,7 +73,9 @@ export function observable<T extends Record<any, any>>(target: T): T {
   const properties = ObservableProperties.find(origin);
   if (!properties) {
     const notifiableValue = Notifiable.transform(origin);
-    Observability.mark(origin);
+    if (Notifiable.is(notifiableValue)) {
+      Observability.mark(origin);
+    }
     return notifiableValue;
   }
   properties.forEach((property) => defineProperty(origin, property));
