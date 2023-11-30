@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-core",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "sideEffects": false,
   "description": "",
   "keywords": [
@@ -45,9 +45,9 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@difizen/mana-common": "^0.0.2-alpha.2",
-    "@difizen/mana-observable": "^0.0.2-alpha.2",
-    "@difizen/mana-syringe": "^0.0.2-alpha.2",
+    "@difizen/mana-common": "^0.0.2-alpha.3",
+    "@difizen/mana-observable": "^0.0.2-alpha.3",
+    "@difizen/mana-syringe": "^0.0.2-alpha.3",
     "ahooks": "^3.7.8",
     "ajv": "^8.12.0",
     "debug": "^4.3.1",

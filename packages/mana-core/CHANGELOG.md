@@ -1,5 +1,16 @@
 # @difizen/mana-core
 
+## 0.0.2-alpha.3
+
+### Patch Changes
+
+- 1. (core) add onActiveChange event in DefaultSlotView.
+  2. (observable) update Notifier api & increased coverage.
+- Updated dependencies
+  - @difizen/mana-observable@0.0.2-alpha.3
+  - @difizen/mana-syringe@0.0.2-alpha.3
+  - @difizen/mana-common@0.0.2-alpha.3
+
 ## 0.0.2-alpha.2
 
 ### Patch Changes

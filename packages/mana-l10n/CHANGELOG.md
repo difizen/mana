@@ -1,5 +1,12 @@
 # @difizen/mana-l10n
 
+## 0.0.2-alpha.3
+
+### Patch Changes
+
+- 1. (core) add onActiveChange event in DefaultSlotView.
+  2. (observable) update Notifier api & increased coverage.
+
 ## 0.0.2-alpha.2
 
 ### Patch Changes
