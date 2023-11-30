@@ -25,6 +25,15 @@ export namespace Observability {
     if (obj instanceof WeakMap) {
       return false;
     }
+    if (obj instanceof Date) {
+      return false;
+    }
+    if (obj instanceof Set) {
+      return false;
+    }
+    if (obj instanceof RegExp) {
+      return false;
+    }
     return true;
   }
   export function marked(obj: any, property?: string | symbol): boolean {

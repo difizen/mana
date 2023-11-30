@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'assert';
 
+import { noop } from '@difizen/mana-common';
+
 import { prop, Trackable, Tracker, Observability } from './index';
 
 describe('Tracker', () => {
@@ -524,5 +526,29 @@ describe('Tracker', () => {
     model.enabled = true; // 2
     assert(changeTimes === 2);
     assert(changeTimes1 === 2);
+  });
+  it('#track skip Date object', () => {
+    const now = new Date();
+    const obj = { arr: [0, 1, 2], key: 'obj', now };
+    const tracked = Tracker.track(obj, noop);
+    const objStr = JSON.stringify(tracked);
+    assert(objStr);
+  });
+  it('#track skip Set object', () => {
+    const set = new Set();
+    const obj = { arr: [0, 1, 2], key: 'obj', set };
+    const tracked = Tracker.track(obj, noop);
+    const objStr = JSON.stringify(tracked);
+    assert(tracked.set.add(1));
+    assert(objStr);
+  });
+
+  it('#track skip RegExp object', () => {
+    const reg = new RegExp('[\\w]*');
+    const obj = { arr: [0, 1, 2], key: 'obj', reg };
+    const tracked = Tracker.track(obj, noop);
+    const objStr = JSON.stringify(tracked);
+    assert(tracked.reg.test('test'));
+    assert(objStr);
   });
 });
