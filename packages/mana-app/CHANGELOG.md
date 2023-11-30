@@ -1,5 +1,18 @@
 # @difizen/mana-app
 
+## 0.1.2
+
+### Patch Changes
+
+- 1. [observable] Do not track dom element object.
+- Updated dependencies
+  - @difizen/mana-common@0.1.2
+  - @difizen/mana-core@0.1.2
+  - @difizen/mana-l10n@0.1.2
+  - @difizen/mana-observable@0.1.2
+  - @difizen/mana-react@0.1.2
+  - @difizen/mana-syringe@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.2
+
+### Patch Changes
+
+- 1. [observable] Do not track dom element object.
+
 ## 0.1.1
 
 ### Patch Changes
