@@ -19,5 +19,5 @@ pnpm run docs
 ```
 pnpm changeset
 pnpm changeset version
-pnpm changeset publish
+pnpm changeset publish # --tag
 ```
