@@ -260,6 +260,6 @@ describe('observable', () => {
     assert(times === 2);
     instance.arr = []; //3
     observavleArr.push('');
-    assert(times === 3);
+    assert((times as number) === 3);
   });
 });
