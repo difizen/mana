@@ -1,5 +1,20 @@
 # @difizen/mana-app
 
+## 0.1.1
+
+### Patch Changes
+
+- 1. [observable] Optimize the handling of frozen objects and some built-in types.
+  2. [observable] Support pausing property change events.
+  3. Support tab props & support multi-parameter method to handle menu status.
+- Updated dependencies
+  - @difizen/mana-common@0.1.1
+  - @difizen/mana-core@0.1.1
+  - @difizen/mana-l10n@0.1.1
+  - @difizen/mana-observable@0.1.1
+  - @difizen/mana-react@0.1.1
+  - @difizen/mana-syringe@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

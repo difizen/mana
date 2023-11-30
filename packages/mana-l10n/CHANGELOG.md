@@ -1,5 +1,13 @@
 # @difizen/mana-l10n
 
+## 0.1.1
+
+### Patch Changes
+
+- 1. [observable] Optimize the handling of frozen objects and some built-in types.
+  2. [observable] Support pausing property change events.
+  3. Support tab props & support multi-parameter method to handle menu status.
+
 ## 0.1.0
 
 ### Minor Changes
