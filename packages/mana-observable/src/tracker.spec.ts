@@ -273,7 +273,7 @@ describe('Tracker', () => {
 
   it('#track plainObject deep', () => {
     const obj: Record<string, any> = {};
-    obj['info'] = {};
+    obj['info'] = { a: { b: { c: {} } } };
     obj['arr'] = [];
     let changeTimes = 0;
     const reaction = () => {
@@ -285,8 +285,9 @@ describe('Tracker', () => {
     assert(a === a1);
     a['a'] = 'a';
     a1['info'].a1 = 'a1';
+    a1['info'].a.b.c = 'c';
     a1['arr'].push('a');
-    assert(changeTimes === 3);
+    assert(changeTimes === 4);
   });
   it('#track plainObject deep with class instance', () => {
     class Foo {

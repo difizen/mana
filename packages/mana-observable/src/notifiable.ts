@@ -35,6 +35,9 @@ export namespace Notifiable {
     if (!Observability.isObject(value)) {
       return false;
     }
+    if (Object.isFrozen(value)) {
+      return false;
+    }
     if (value instanceof Array) {
       return true;
     }

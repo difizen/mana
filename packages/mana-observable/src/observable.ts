@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ObservableConfig } from './config';
 import { Notifiable } from './notifiable';
 import { Notifier } from './notifier';
 import { InstanceValue, ObservableProperties, Observability } from './utils';
@@ -12,6 +13,9 @@ export function defineProperty(target: any, property: string, defaultValue?: any
    * notify notifier when property changed
    */
   const onChange = () => {
+    if (ObservableConfig.paused) {
+      return;
+    }
     Notifier.trigger(target, property);
   };
   /**
