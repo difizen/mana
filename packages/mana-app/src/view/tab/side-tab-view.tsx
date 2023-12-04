@@ -1,4 +1,5 @@
 import type { View } from '@difizen/mana-core';
+import { ViewRender } from '@difizen/mana-core';
 import { ViewManager } from '@difizen/mana-core';
 import { view, ViewOption, ViewContext } from '@difizen/mana-core';
 import { equals, prop } from '@difizen/mana-observable';
@@ -82,7 +83,7 @@ export class SideTabView extends TabSlotView {
           </div>
         )}
         <div className="mana-tab-side-pane-content">
-          <item.view />
+          <ViewRender view={item} />
         </div>
       </div>
     );

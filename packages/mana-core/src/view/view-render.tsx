@@ -1,5 +1,6 @@
 import { useInject } from '@difizen/mana-observable';
 import type { ReactNode } from 'react';
+import { memo } from 'react';
 
 import { isWrapperViewComponent } from './view-container';
 import { ViewContext } from './view-context';
@@ -25,7 +26,7 @@ const ViewComponentRender = (props: ViewRenderProps) => {
     <Component {...props}>{children}</Component>
   );
 };
-export const ViewRender = (props: ViewRenderProps) => {
+export const ViewRender = memo(function ViewRender(props: ViewRenderProps) {
   const { view, shadow } = props;
   if (isWrapperViewComponent(view.view) && !shadow) {
     return <view.view {...props} />;
@@ -35,4 +36,4 @@ export const ViewRender = (props: ViewRenderProps) => {
       <ViewComponentRender {...props} />
     </ViewContext>
   );
-};
+});

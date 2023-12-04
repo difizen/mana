@@ -18,6 +18,7 @@ import type {
   SlotViewOption,
   View,
 } from './view-protocol';
+import { ViewRender } from './view-render';
 
 export const DefaultSlotViewId = 'default-slot-view';
 
@@ -27,7 +28,7 @@ export const DefaultSlotViewComponent: React.FC = () => {
     (item) => layout.active && equals(item, layout.active),
   );
   if (activeView) {
-    return <activeView.view />;
+    return <ViewRender view={activeView} />;
   }
   return <></>;
 };

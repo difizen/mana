@@ -6,6 +6,7 @@ import {
   ViewInstance,
   ViewContext,
   ViewManager,
+  ViewRender,
 } from '@difizen/mana-core';
 import type { View, SlotViewOption } from '@difizen/mana-core';
 import { useInject } from '@difizen/mana-observable';
@@ -111,7 +112,7 @@ export class TabSlotView extends DefaultSlotView {
     };
   }
   renderTabContent(item: View) {
-    return <item.view />;
+    return <ViewRender view={item} />;
   }
   close(item: View) {
     item.dispose();

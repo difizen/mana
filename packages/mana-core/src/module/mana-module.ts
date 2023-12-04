@@ -16,10 +16,6 @@ export class ManaModule extends SyringeModule<MaybePromise<ManaModule>> {
     return this.loadDefer.promise;
   }
 
-  constructor(name?: string) {
-    super(name);
-  }
-
   canload(fn: CanloadModule) {
     this.canloadMethod = fn;
     return this;

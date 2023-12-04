@@ -1,4 +1,10 @@
-import { DefaultSlotView, view, ViewManager, ViewOption } from '@difizen/mana-core';
+import {
+  DefaultSlotView,
+  view,
+  ViewManager,
+  ViewOption,
+  ViewRender,
+} from '@difizen/mana-core';
 import { ViewInstance } from '@difizen/mana-core';
 import type { SlotViewOption } from '@difizen/mana-core';
 import { prop, useInject } from '@difizen/mana-observable';
@@ -21,7 +27,7 @@ export const FlexViewComponent = React.forwardRef(function FlexViewComponent(
     <div className={cls('mana-flex', instance.className)} ref={ref}>
       {children.map((item) => (
         <div className={'mana-flex-item'} key={item.id}>
-          <item.view />
+          <ViewRender view={item} />
         </div>
       ))}
     </div>

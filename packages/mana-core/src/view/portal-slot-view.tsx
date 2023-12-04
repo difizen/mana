@@ -14,6 +14,7 @@ import type {
   View,
 } from './view-protocol';
 import { ViewOption, ViewInstance } from './view-protocol';
+import { ViewRender } from './view-render';
 
 export const PortalViewComponent: React.FC = React.forwardRef(
   function PortalViewComponent() {
@@ -21,7 +22,7 @@ export const PortalViewComponent: React.FC = React.forwardRef(
     return (
       <>
         {instance.children.map((viewItem) => (
-          <viewItem.view key={viewItem.id} />
+          <ViewRender view={viewItem} key={viewItem.id} />
         ))}
       </>
     );

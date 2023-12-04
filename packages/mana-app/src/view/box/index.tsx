@@ -1,4 +1,10 @@
-import { DefaultSlotView, view, ViewManager, ViewOption } from '@difizen/mana-core';
+import {
+  DefaultSlotView,
+  view,
+  ViewManager,
+  ViewOption,
+  ViewRender,
+} from '@difizen/mana-core';
 import { ViewInstance } from '@difizen/mana-core';
 import type { SlotViewOption } from '@difizen/mana-core';
 import { prop, useInject } from '@difizen/mana-observable';
@@ -26,7 +32,7 @@ export const BoxViewComponent = React.forwardRef(function BoxViewComponent(
     >
       {children.map((item) => (
         <BoxPanel.Pane flex={1} key={item.id}>
-          <item.view />
+          <ViewRender view={item} />
         </BoxPanel.Pane>
       ))}
     </BoxPanel>
