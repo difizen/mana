@@ -5,11 +5,10 @@ import { DefaultTreeNodeComponents, TreeModule, TreeNodeComponents } from '../tr
 import { FileService } from './file-service';
 import { TreeNodeIcon } from './file-tree-icon';
 import { FileTreeLabelProvider } from './file-tree-label-provider';
-import { FileTreeMenuContribution } from './file-tree-menu';
 import { FileTreeView } from './file-tree-view';
 
 export const FileTreeModule = ManaModule.create()
-  .register(FileTreeView, FileTreeMenuContribution)
+  .register(FileTreeView)
   .register(FileService, FileTreeLabelProvider)
   .register({
     token: TreeNodeComponents,
