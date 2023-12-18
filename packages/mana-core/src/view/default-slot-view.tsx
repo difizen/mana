@@ -158,7 +158,7 @@ export class DefaultSlotView extends BaseView implements SlotView, StatefulView 
   }
 
   protected handleViewOpen(instance: View, option: ViewOpenOption = { reveal: true }) {
-    if (option?.reveal) {
+    if ({ reveal: true, ...option }.reveal) {
       this.active = instance;
     }
   }
