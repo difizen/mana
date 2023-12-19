@@ -35,7 +35,7 @@ import {
   IContextKeyService,
 } from './contextkey';
 
-const KEYBINDING_CONTEXT_ATTR = 'data-keybinding-context';
+const KEYBINDING_CONTEXT_ATTR = 'data-mana-keybinding-context';
 
 export class Context implements IContext {
   protected _parent: Context | null;
