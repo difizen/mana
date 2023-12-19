@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.3
+
+### Patch Changes
+
+- Performance optimization of view rendering and issue fixing of file tree
+
 ## 0.1.2
 
 ### Patch Changes

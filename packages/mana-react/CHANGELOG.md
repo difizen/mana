@@ -1,5 +1,13 @@
 # @difizen/mana-react
 
+## 0.1.3
+
+### Patch Changes
+
+- Performance optimization of view rendering and issue fixing of file tree
+- Updated dependencies
+  - @difizen/mana-common@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

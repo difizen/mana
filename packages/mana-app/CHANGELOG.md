@@ -1,5 +1,18 @@
 # @difizen/mana-app
 
+## 0.1.3
+
+### Patch Changes
+
+- Performance optimization of view rendering and issue fixing of file tree
+- Updated dependencies
+  - @difizen/mana-common@0.1.3
+  - @difizen/mana-core@0.1.3
+  - @difizen/mana-l10n@0.1.3
+  - @difizen/mana-observable@0.1.3
+  - @difizen/mana-react@0.1.3
+  - @difizen/mana-syringe@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes
