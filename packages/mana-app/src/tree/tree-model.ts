@@ -284,14 +284,14 @@ export class TreeModelImpl
     return false;
   }
 
-  async toggleNodeExpansion(raw?: Readonly<ExpandableTreeNode>): Promise<void> {
+  toggleNodeExpansion = async (raw?: Readonly<ExpandableTreeNode>): Promise<void> => {
     for (const node of raw ? [raw] : this.selectedNodes) {
       if (ExpandableTreeNode.is(node)) {
         await this.expansionService.toggleNodeExpansion(node);
         return;
       }
     }
-  }
+  };
 
   selectPrevNode(
     type: TreeSelection.SelectionType = TreeSelection.SelectionType.DEFAULT,
