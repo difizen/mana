@@ -42,9 +42,13 @@
   display: flex;
   align-items: center;
   width: calc(100% - var(--mana-scrollbar-rail-width));
+
+  * {
+    box-sizing: border-box;
+  }
 }
 
-.mana-ExpansionToggle {
+.mana-expansion-toggle {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,7 +58,7 @@
   padding-left: calc(var(--mana-ui-padding) / 2);
 }
 
-.mana-ExpansionToggle .tree-switcher {
+.mana-expansion-toggle .tree-switcher {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,15 +66,15 @@
   height: 12px;
 }
 
-.mana-ExpansionToggle.mana-mod-busy {
+.mana-expansion-toggle.mana-mod-busy {
   animation: mana-spin 1.25s linear infinite;
 }
 
-.mana-ExpansionToggle:not(.mana-mod-busy):hover {
+.mana-expansion-toggle:not(.mana-mod-busy):hover {
   cursor: pointer;
 }
 
-.mana-ExpansionToggle.mana-mod-collapsed:not(.mana-mod-busy) {
+.mana-expansion-toggle.mana-mod-collapsed:not(.mana-mod-busy) {
   transform: rotate(-90deg);
 }
 

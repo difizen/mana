@@ -4,6 +4,7 @@ import { CancellationTokenSource } from '@difizen/mana-common';
 import { DisposableCollection } from '@difizen/mana-common';
 import { Emitter, WaitUntilEvent } from '@difizen/mana-common';
 import { singleton } from '@difizen/mana-syringe';
+
 import type { TreeNode } from './tree';
 import { Tree, CompositeTreeNode } from './tree';
 

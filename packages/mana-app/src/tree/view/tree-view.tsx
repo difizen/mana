@@ -504,12 +504,30 @@ export class TreeView extends BaseView implements StatefulView {
    * Toggle the node.
    */
   readonly toggle = (event: React.MouseEvent<HTMLElement>) => this.doToggle(event);
+
+  protected findNodeAttr(
+    domNode: (EventTarget & HTMLElement) | null,
+  ): string | undefined {
+    const nodeKey = 'data-node-id';
+    while (domNode) {
+      if (domNode.hasAttribute(nodeKey)) {
+        const attr = domNode.getAttribute(nodeKey);
+        if (attr) {
+          return attr;
+        }
+        return undefined;
+      }
+      domNode = domNode.parentElement;
+    }
+    return undefined;
+  }
+
   /**
    * Actually toggle the tree node.
    * @param event the mouse click event.
    */
   protected doToggle(event: React.MouseEvent<HTMLElement>): void {
-    const nodeId = event.currentTarget.getAttribute('data-node-id');
+    const nodeId = this.findNodeAttr(event.currentTarget);
     if (nodeId) {
       const node = this.model.getNode(nodeId);
       this.handleClickEvent(node, event);
@@ -547,13 +565,14 @@ export class TreeView extends BaseView implements StatefulView {
    * @param event the mouse single-click event.
    */
   handleClickEvent(
-    node: TreeNode | undefined,
+    maybeProxyNode: TreeNode | undefined,
     event: React.MouseEvent<HTMLElement>,
   ): void {
+    const node = getOrigin(maybeProxyNode);
     if (node) {
+      const shiftMask = this.hasShiftMask(event);
+      const ctrlCmdMask = this.hasCtrlCmdMask(event);
       if (this.props.multiSelect) {
-        const shiftMask = this.hasShiftMask(event);
-        const ctrlCmdMask = this.hasCtrlCmdMask(event);
         if (SelectableTreeNode.is(node)) {
           if (shiftMask) {
             this.model.selectRange(node);
@@ -570,14 +589,11 @@ export class TreeView extends BaseView implements StatefulView {
         if (SelectableTreeNode.is(node)) {
           this.model.selectNode(node);
         }
-        if (
-          ExpandableTreeNode.is(node) &&
-          !this.hasCtrlCmdMask(event) &&
-          !this.hasShiftMask(event)
-        ) {
-          this.model.toggleNodeExpansion(node);
+        if (ExpandableTreeNode.is(node) && !ctrlCmdMask && !shiftMask) {
+          this.model.toggleNodeExpansion(getOrigin(node));
         }
       }
+
       event.stopPropagation();
     }
   }
