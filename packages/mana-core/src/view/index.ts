@@ -17,4 +17,5 @@ export * from './view-context';
 export * from './view-render';
 export * from './view-decoration';
 export * from './view-storage';
+export * from './stateful-view';
 export * from './utils';
