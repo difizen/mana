@@ -99,7 +99,13 @@ export const TreeViewRow = (props: TreeViewRowProps) => {
         trigger={['contextMenu']}
         overlay={<MenuRender data={[node]} menuPath={treeView.contextMenuPath} />}
       >
-        <div key={key} style={style}>
+        <div
+          key={key}
+          style={style}
+          onContextMenu={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <TreeIdent node={node} nodeProps={{ depth }} />
           <TreeNodeComponent node={node} nodeProps={{ depth }} />
         </div>
