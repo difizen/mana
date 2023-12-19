@@ -94,16 +94,16 @@ export const TreeViewRow = (props: TreeViewRowProps) => {
       parent={parent}
       rowIndex={index}
     >
-      <Dropdown
-        className="mana-tree-node-dropdown"
-        trigger={['contextMenu']}
-        overlay={<MenuRender data={[node]} menuPath={treeView.contextMenuPath} />}
+      <div
+        onContextMenu={(event) => {
+          treeView.handleContextMenuEvent(node, event);
+        }}
+        key={key}
+        style={style}
       >
-        <div key={key} style={style}>
-          <TreeIdent node={node} nodeProps={{ depth }} />
-          <TreeNodeComponent node={node} nodeProps={{ depth }} />
-        </div>
-      </Dropdown>
+        <TreeIdent node={node} nodeProps={{ depth }} />
+        <TreeNodeComponent node={node} nodeProps={{ depth }} />
+      </div>
     </CellMeasurer>
   );
 };
@@ -135,10 +135,24 @@ export const TreeViewComponent = forwardRef<HTMLDivElement>(
       <Dropdown
         className="mana-tree-node-dropdown"
         trigger={['contextMenu']}
-        overlay={<MenuRender data={[treeView]} menuPath={treeView.contextMenuPath} />}
+        visible={!!treeView.contextMenuData}
+        onVisibleChange={(visible) => {
+          if (!visible) {
+            treeView.setContextMenuArgs(undefined);
+          }
+        }}
+        overlay={
+          <MenuRender
+            data={treeView.contextMenuData}
+            menuPath={treeView.contextMenuPath}
+          />
+        }
       >
         <div
           ref={ref}
+          onContextMenu={(event) => {
+            treeView.handleContextMenuEvent(treeView, event);
+          }}
           {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
         >
           <List
@@ -180,6 +194,9 @@ export class TreeView extends BaseView implements StatefulView {
 
   @prop()
   rows = new Map<string, NodeRow>();
+
+  @prop()
+  contextMenuData: any = undefined;
 
   scrollOptions: PerfectScrollbar.Options = DEFAULT_SCROLL_OPTIONS;
   protected override toDispose = new DisposableCollection();
@@ -383,49 +400,40 @@ export class TreeView extends BaseView implements StatefulView {
    * @param node the tree node if available.
    * @param event the right-click mouse event.
    */
-  handleContextMenuEvent(
-    node: TreeNode | undefined,
+  handleContextMenuEvent = (
+    nodeOrTree: TreeNode | TreeView | undefined,
     event: React.MouseEvent<HTMLElement>,
-  ): void {
-    if (SelectableTreeNode.is(node)) {
-      // Keep the selection for the context menu, if the widget support multi-selection and the right click happens on an already selected node.
-      if (!this.props.multiSelect || !node.selected) {
-        const type =
-          !!this.props.multiSelect && this.hasCtrlCmdMask(event)
-            ? TreeSelection.SelectionType.TOGGLE
-            : TreeSelection.SelectionType.DEFAULT;
-        this.model.addSelection({ node, type });
+  ): void => {
+    if (TreeNode.is(nodeOrTree)) {
+      const node = nodeOrTree;
+      if (SelectableTreeNode.is(node)) {
+        // Keep the selection for the context menu, if the widget support multi-selection and the right click happens on an already selected node.
+        if (!this.props.multiSelect || !node.selected) {
+          const type =
+            !!this.props.multiSelect && this.hasCtrlCmdMask(event)
+              ? TreeSelection.SelectionType.TOGGLE
+              : TreeSelection.SelectionType.DEFAULT;
+          this.model.addSelection({ node, type });
+        }
+        this.doFocus();
       }
-      const { contextMenuPath } = this.props;
-      if (contextMenuPath) {
-        // const { x, y } = event.nativeEvent;
-        // const args = this.toContextMenuArgs(node);
-        // this.onRender.push(
-        //   Disposable.create(() =>
-        //     setTimeout(() =>
-        //       this.contextMenuRenderer.render({
-        //         menuPath: contextMenuPath,
-        //         anchor: { x, y },
-        //         args,
-        //       }),
-        //     ),
-        //   ),
-        // );
+      this.setContextMenuArgs(nodeOrTree);
+    } else {
+      if (!this.contextMenuData) {
+        this.setContextMenuArgs(nodeOrTree);
       }
-      this.doFocus();
+      event.preventDefault();
+      event.stopPropagation();
     }
-    event.stopPropagation();
-    event.preventDefault();
-  }
+  };
   /**
    * Convert the tree node to context menu arguments.
    * @param _node the selectable tree node.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected toContextMenuArgs(_node: SelectableTreeNode): any[] | undefined {
-    return undefined;
-  }
+  setContextMenuArgs = (nodeOrTree: TreeNode | TreeView | undefined): any => {
+    this.contextMenuData = nodeOrTree ? [getOrigin(nodeOrTree)] : undefined;
+    return this.contextMenuData;
+  };
   /**
    * Actually focus the tree node.
    */
