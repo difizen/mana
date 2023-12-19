@@ -5,7 +5,7 @@ import { isOSX, notEmpty } from '@difizen/mana-common';
 import { BaseView, SelectionService, view, ViewInstance } from '@difizen/mana-core';
 import type { StatefulView, ViewSize } from '@difizen/mana-core';
 import type { MenuPath } from '@difizen/mana-core';
-import { prop, useInject } from '@difizen/mana-observable';
+import { getOrigin, prop, useInject } from '@difizen/mana-observable';
 import { Dropdown } from '@difizen/mana-react';
 import { inject, postConstruct, singleton } from '@difizen/mana-syringe';
 import debounce from 'lodash.debounce';
@@ -142,7 +142,6 @@ export const TreeViewComponent = forwardRef<HTMLDivElement>(
           {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
         >
           <List
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ref={listRef}
             width={treeView.offsetWidth || 100}
             height={treeView.offsetHeight || 100}
@@ -288,7 +287,7 @@ export class TreeView extends BaseView implements StatefulView {
         pruneSiblings: true,
       })) {
         if (this.shouldDisplayNode(node)) {
-          const parentDepth = depths.get(node.parent);
+          const parentDepth = depths.get(getOrigin(node.parent));
           const depth =
             // eslint-disable-next-line no-nested-ternary
             parentDepth === undefined
@@ -297,7 +296,7 @@ export class TreeView extends BaseView implements StatefulView {
                 ? parentDepth + 1
                 : parentDepth;
           if (CompositeTreeNode.is(node)) {
-            depths.set(node, depth);
+            depths.set(getOrigin(node), depth);
           }
           rowsToUpdate.push([
             node.id,
@@ -360,7 +359,7 @@ export class TreeView extends BaseView implements StatefulView {
    * Create the container attributes for the widget.
    */
   createContainerAttributes(): React.HTMLAttributes<HTMLElement> {
-    const classNames = [TREE_CONTAINER_CLASS];
+    const classNames = [TREE_CONTAINER_CLASS, this.className];
     if (!this.rows.size) {
       classNames.push('empty');
     }
