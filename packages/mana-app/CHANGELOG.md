@@ -1,5 +1,18 @@
 # @difizen/mana-app
 
+## 0.1.4
+
+### Patch Changes
+
+- d36870f: 1. Add slot related events. 2. Add implementation of basic stateful views.
+- Updated dependencies [d36870f]
+  - @difizen/mana-common@0.1.4
+  - @difizen/mana-core@0.1.4
+  - @difizen/mana-l10n@0.1.4
+  - @difizen/mana-observable@0.1.4
+  - @difizen/mana-react@0.1.4
+  - @difizen/mana-syringe@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes

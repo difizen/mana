@@ -1,5 +1,11 @@
 # @difizen/mana-common
 
+## 0.1.4
+
+### Patch Changes
+
+- d36870f: 1. Add slot related events. 2. Add implementation of basic stateful views.
+
 ## 0.1.3
 
 ### Patch Changes
