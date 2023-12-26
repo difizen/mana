@@ -1,4 +1,5 @@
 import type { Newable } from '@difizen/mana-common';
+import { Emitter } from '@difizen/mana-common';
 import { Deferred } from '@difizen/mana-common';
 import { Disposable, Priority } from '@difizen/mana-common';
 import { prop } from '@difizen/mana-observable';
@@ -13,11 +14,33 @@ import type { View } from './view-protocol';
 import type { SlotPreference, ViewOpenOption } from './view-protocol';
 import { SlotPreferenceContribution, SlotView } from './view-protocol';
 
+interface ViewAddArgs {
+  view?: View;
+  slot: string;
+  option?: ViewOpenOption;
+}
+
+interface SlotSetArgs {
+  view?: View;
+  slot: string;
+}
+
 @singleton()
 export class SlotViewManager {
   protected preferences: Map<string, SlotPreference> = new Map();
   protected componentPreferences: Map<string, SlotPreference> = new Map();
   protected slotRenderingDeferred: Map<string, Deferred<void>> = new Map();
+
+  protected onViewAddedEmitter: Emitter<ViewAddArgs> = new Emitter<ViewAddArgs>();
+  protected onSlotChangedEmitter: Emitter<SlotSetArgs> = new Emitter<SlotSetArgs>();
+
+  get onViewAdded() {
+    return this.onViewAddedEmitter.event;
+  }
+
+  get onSlotChanged() {
+    return this.onSlotChangedEmitter.event;
+  }
 
   /**
    * slot -> slotview
@@ -127,9 +150,11 @@ export class SlotViewManager {
 
   setSlotView(slot: string, view: View): Disposable {
     this.slotViewMap.set(slot, view);
+    this.onSlotChangedEmitter.fire({ view, slot });
     return Disposable.create(() => {
       if (this.slotViewMap.get(slot) === view) {
         this.slotViewMap.delete(slot);
+        this.onSlotChangedEmitter.fire({ view: undefined, slot });
       }
     });
   }
@@ -138,6 +163,7 @@ export class SlotViewManager {
     const slotView = await this.getOrCreateSlotView(slot);
     if (SlotView.is(slotView)) {
       await slotView.addView(view, option);
+      this.onViewAddedEmitter.fire({ view, slot, option });
     }
   }
 
