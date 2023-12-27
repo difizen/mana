@@ -70,10 +70,10 @@ export class Notifier implements Disposable {
     return ntf;
   }
   static find(target: any, prop?: any): Notifier | undefined {
-    if (!Observability.marked(target, prop)) {
-      return undefined;
+    if (Observability.marked(target, prop) || Observability.canBeObservable(target)) {
+      return Notifier.getOrCreate(target, prop);
     }
-    return Notifier.getOrCreate(target, prop);
+    return undefined;
   }
   static get(target: any, property?: any): Notifier | undefined {
     if (property === undefined) {

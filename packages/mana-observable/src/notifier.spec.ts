@@ -2,7 +2,7 @@ import assert from 'assert';
 
 import { prop, Notifier, observable } from './index';
 
-describe('tarcker', () => {
+describe('tracker', () => {
   it('#create tracker', () => {
     class Foo {
       @prop() name?: string;
@@ -10,12 +10,14 @@ describe('tarcker', () => {
     class Bar {
       name?: string;
     }
-    const foo = observable(new Foo());
+    const fooRaw = new Foo();
+    const foo = observable(fooRaw);
     const bar = new Bar();
     Notifier.find(foo, 'name');
     assert(Notifier.find(observable([])));
     assert(!!Notifier.find(foo, 'name'));
-    assert(!Notifier.find(bar, 'name'));
+    assert(!!Notifier.find(fooRaw, 'name'));
+    assert(!!Notifier.find(bar, 'name'));
   });
 
   it('#trigger', () => {
@@ -121,11 +123,15 @@ describe('tarcker', () => {
     class Foo {
       @prop() name?: string;
     }
-    const foo = observable(new Foo());
-    const notifier = Notifier.find(foo, 'name');
-    const event0 = Notifier.toEvent(foo, 'name');
-    const event1 = Notifier.toEvent(foo, 'name', null);
-    const event2 = Notifier.toEvent(foo, 'name', true);
+    const raw = new Foo();
+
+    const event0 = Notifier.toEvent(raw, 'name');
+    const event1 = Notifier.toEvent(raw, 'name', null);
+    const event2 = Notifier.toEvent(raw, 'name', true);
+    const foo = observable(raw);
+
+    const notifier = Notifier.getOrCreate(foo, 'name');
+
     assert(event0 === notifier?.onChangeSync);
     assert(event1 === notifier?.onChange);
     assert(event2 === notifier?.onChangeAsync);
