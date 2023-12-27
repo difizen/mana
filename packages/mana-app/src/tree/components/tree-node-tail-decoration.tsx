@@ -31,8 +31,8 @@ export function TreeNodeTailDecorations(props: TreeNodeProps) {
           const style = fontData
             ? treeView.applyFontStyles({}, fontData)
             : color
-              ? { color }
-              : undefined;
+            ? { color }
+            : undefined;
           const content =
             data ||
             (icon ? (
