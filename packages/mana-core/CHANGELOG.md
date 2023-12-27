@@ -1,5 +1,15 @@
 # @difizen/mana-core
 
+## 0.1.5
+
+### Patch Changes
+
+- 530df5c: Get notifier before observable transform.
+- Updated dependencies [530df5c]
+  - @difizen/mana-common@0.1.5
+  - @difizen/mana-observable@0.1.5
+  - @difizen/mana-syringe@0.1.5
+
 ## 0.1.4
 
 ### Patch Changes

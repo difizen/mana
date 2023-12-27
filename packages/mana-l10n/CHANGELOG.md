@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.5
+
+### Patch Changes
+
+- 530df5c: Get notifier before observable transform.
+
 ## 0.1.4
 
 ### Patch Changes
