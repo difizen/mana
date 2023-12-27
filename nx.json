@@ -66,11 +66,11 @@
     "lint:prettier": {
       "inputs": [":default", ":prettier"]
     },
-    "lint:tsc": {
+    "typecheck:tsc": {
       "inputs": [":default", ":tsc"]
     },
     "lint": {
-      "dependsOn": ["lint:eslint", "lint:stylelint", "lint:prettier", "lint:tsc"]
+      "dependsOn": ["lint:eslint", "lint:stylelint", "lint:prettier"]
     },
     "test:vitest": {
       "inputs": [":default", ":vitest"]
@@ -106,6 +106,7 @@
           "lint:prettier",
           "lint:tsc",
           "lint",
+          "typecheck:tsc",
           "test:vitest",
           "test",
           "coverage:vitest",
