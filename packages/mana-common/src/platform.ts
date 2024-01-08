@@ -257,8 +257,8 @@ export const OS =
   _isMacintosh || _isIOS
     ? OperatingSystem.Macintosh
     : _isWindows
-    ? OperatingSystem.Windows
-    : OperatingSystem.Linux;
+      ? OperatingSystem.Windows
+      : OperatingSystem.Linux;
 
 let _isLittleEndian = true;
 let _isLittleEndianComputed = false;
