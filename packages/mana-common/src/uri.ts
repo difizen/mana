@@ -1,4 +1,4 @@
-import { URI as Uri } from 'vscode-uri';
+import { URI as Uri } from './vscode-uri/uri';
 
 import { Path } from './path';
 

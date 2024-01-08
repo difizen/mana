@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type { URI, UriComponents } from 'vscode-uri';
+import type { URI, UriComponents } from './vscode-uri/uri';
 
 /**
  * @returns whether the provided parameter is a JavaScript Array or not.
@@ -289,8 +289,8 @@ export type UriDto<T> = {
 export type Dto<T> = T extends { toJSON: () => infer U }
   ? U
   : T extends object
-  ? { [k in keyof T]: Dto<T[k]> }
-  : T;
+    ? { [k in keyof T]: Dto<T[k]> }
+    : T;
 
 export function NotImplementedProxy<T>(name: string): { new (): T } {
   return <any>class {
