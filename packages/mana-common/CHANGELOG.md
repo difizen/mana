@@ -1,5 +1,11 @@
 # @difizen/mana-common
 
+## 0.1.6
+
+### Patch Changes
+
+- b6bac8e: add vscode uri and add parameters in parse function
+
 ## 0.1.5
 
 ### Patch Changes
