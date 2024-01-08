@@ -86,8 +86,8 @@ export class ConfigurationService
     const overrides = isConfigurationOverrides(arg1)
       ? arg1
       : isConfigurationOverrides(arg2)
-      ? arg2
-      : {};
+        ? arg2
+        : {};
     return this.configuration.getValue(section, overrides, undefined);
   }
 
