@@ -43,9 +43,7 @@
     "lint:eslint": "eslint src",
     "lint:tsc": "tsc --noEmit"
   },
-  "dependencies": {
-    "vscode-uri": "^2.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "rimraf": "latest"
   },
