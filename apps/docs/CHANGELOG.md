@@ -1,5 +1,14 @@
 # @difizen/mana-docs
 
+## 0.1.7
+
+### Patch Changes
+
+- 1650890: add simple mode for uri which not escape & unescape
+- Updated dependencies [1650890]
+  - @difizen/mana-app@0.1.7
+  - @difizen/mana-react@0.1.7
+
 ## 0.1.6
 
 ### Patch Changes

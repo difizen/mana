@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.7
+
+### Patch Changes
+
+- 1650890: add simple mode for uri which not escape & unescape
+
 ## 0.1.6
 
 ### Patch Changes
