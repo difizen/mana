@@ -24,3 +24,4 @@ export * from './charCode';
 export * from './objects';
 export * from './path';
 export * from './promise-util';
+export * from './vscode-uri';

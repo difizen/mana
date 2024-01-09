@@ -1,16 +1,15 @@
-import { URI as Uri } from './vscode-uri/uri';
-
 import { Path } from './path';
+import { URI as Uri } from './vscode-uri/uri';
 
 export class URI {
   private readonly codeUri: Uri;
   private _path: Path | undefined;
 
-  constructor(uri: string | Uri = '') {
+  constructor(uri: string | Uri = '', options?: { simpleMode: boolean }) {
     if (uri instanceof Uri) {
       this.codeUri = uri;
     } else {
-      this.codeUri = Uri.parse(uri);
+      this.codeUri = Uri.parse(uri, false, options);
     }
   }
 
