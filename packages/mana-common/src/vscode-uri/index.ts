@@ -7,5 +7,5 @@ import { URI } from './uri';
 import type { UriComponents } from './uri';
 import { Utils } from './utils';
 
-export { URI as VscodeURI, Utils };
+export { URI as VscodeURI, Utils as VscodeUriUtils };
 export type { UriComponents };

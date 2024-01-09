@@ -81,6 +81,7 @@ function _referenceResolution(scheme: string, path: string): string {
 const _empty = '';
 const _slash = '/';
 const _regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+const _regexpSimple = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?(.*?)$/;
 
 /**
  * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
@@ -145,6 +146,8 @@ export class URI implements UriComponents {
    */
   readonly fragment: string;
 
+  readonly simpleMode: boolean;
+
   /**
    * @internal
    */
@@ -155,6 +158,7 @@ export class URI implements UriComponents {
     query?: string,
     fragment?: string,
     _strict?: boolean,
+    options?: object,
   );
 
   /**
@@ -172,6 +176,7 @@ export class URI implements UriComponents {
     query?: string,
     fragment?: string,
     _strict = false,
+    options = { simpleMode: true },
   ) {
     if (typeof schemeOrData === 'object') {
       this.scheme = schemeOrData.scheme || _empty;
@@ -191,6 +196,7 @@ export class URI implements UriComponents {
 
       _validateUri(this, _strict);
     }
+    this.simpleMode = options.simpleMode;
   }
 
   // ---- filesystem path -----------------------
@@ -287,12 +293,26 @@ export class URI implements UriComponents {
    *
    * @param value A string which represents an URI (see `URI#toString`).
    */
-  static parse(value: string, _strict = false, decode = false): URI {
-    const match = _regexp.exec(value);
-    if (!match) {
-      return new Uri(_empty, _empty, _empty, _empty, _empty);
-    }
-    if (decode) {
+  static parse(value: string, _strict = false, options = { simpleMode: true }): URI {
+    if (options.simpleMode) {
+      const match = _regexpSimple.exec(value);
+      if (!match) {
+        return new Uri(_empty, _empty, _empty, _empty, _empty);
+      }
+      return new Uri(
+        match[2] || _empty,
+        match[4] || _empty,
+        match[5] || _empty,
+        _empty,
+        _empty,
+        _strict,
+        options,
+      );
+    } else {
+      const match = _regexp.exec(value);
+      if (!match) {
+        return new Uri(_empty, _empty, _empty, _empty, _empty);
+      }
       return new Uri(
         match[2] || _empty,
         percentDecode(match[4] || _empty),
@@ -300,16 +320,9 @@ export class URI implements UriComponents {
         percentDecode(match[7] || _empty),
         percentDecode(match[9] || _empty),
         _strict,
+        options,
       );
     }
-    return new Uri(
-      match[2] || _empty,
-      match[4] || _empty,
-      match[5] || _empty,
-      match[7] || _empty,
-      match[9] || _empty,
-      _strict,
-    );
   }
 
   /**
@@ -635,7 +648,8 @@ function _asFormatted(uri: URI, skipEncoding: boolean): string {
   const encoder = !skipEncoding ? encodeURIComponentFast : encodeURIComponentMinimal;
 
   let res = '';
-  const { scheme, query, fragment } = uri;
+  const { scheme, query, fragment, simpleMode } = uri;
+
   let { authority, path } = uri;
   if (scheme) {
     res += scheme;
@@ -653,22 +667,28 @@ function _asFormatted(uri: URI, skipEncoding: boolean): string {
       authority = authority.substr(idx + 1);
       idx = userinfo.lastIndexOf(':');
       if (idx === -1) {
-        res += encoder(userinfo, false, false);
+        res += simpleMode ? userinfo : encoder(userinfo, false, false);
       } else {
         // <user>:<pass>@<auth>
-        res += encoder(userinfo.substr(0, idx), false, false);
+        res += simpleMode
+          ? userinfo.substr(0, idx)
+          : encoder(userinfo.substr(0, idx), false, false);
         res += ':';
-        res += encoder(userinfo.substr(idx + 1), false, true);
+        res += simpleMode
+          ? userinfo.substr(idx + 1)
+          : encoder(userinfo.substr(idx + 1), false, true);
       }
       res += '@';
     }
     authority = authority.toLowerCase();
     idx = authority.lastIndexOf(':');
     if (idx === -1) {
-      res += encoder(authority, false, true);
+      res += simpleMode ? authority : encoder(authority, false, true);
     } else {
       // <auth>:<port>
-      res += encoder(authority.substr(0, idx), false, true);
+      res += simpleMode
+        ? authority.substr(0, idx)
+        : encoder(authority.substr(0, idx), false, true);
       res += authority.substr(idx);
     }
   }
@@ -690,15 +710,18 @@ function _asFormatted(uri: URI, skipEncoding: boolean): string {
       }
     }
     // encode the rest of the path
-    res += encoder(path, true, false);
+    res += simpleMode ? path : encoder(path, true, false);
   }
   if (query) {
     res += '?';
-    res += encoder(query, false, false);
+    res += simpleMode ? query : encoder(query, false, false);
   }
   if (fragment) {
     res += '#';
-    res += !skipEncoding ? encodeURIComponentFast(fragment, false, false) : fragment;
+    res +=
+      !skipEncoding || !simpleMode
+        ? encodeURIComponentFast(fragment, false, false)
+        : fragment;
   }
   return res;
 }
