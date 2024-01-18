@@ -1,5 +1,18 @@
 # @difizen/mana-app
 
+## 0.1.8
+
+### Patch Changes
+
+- 9c87e44: 1. Once a menu is activated, clicking it again will no longer deactivate it. 2. Even with proxy objects, the original notifier can be found.
+- Updated dependencies [9c87e44]
+  - @difizen/mana-observable@0.1.8
+  - @difizen/mana-syringe@0.1.8
+  - @difizen/mana-common@0.1.8
+  - @difizen/mana-react@0.1.8
+  - @difizen/mana-core@0.1.8
+  - @difizen/mana-l10n@0.1.8
+
 ## 0.1.7
 
 ### Patch Changes
