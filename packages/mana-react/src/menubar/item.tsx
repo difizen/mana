@@ -1,8 +1,13 @@
 import classnames from 'classnames';
 import * as React from 'react';
+import { useEffect } from 'react';
 import * as ReactDom from 'react-dom';
 
 import { MenubarContext } from './context';
+
+function stopPropagation(e: MouseEvent) {
+  e.stopPropagation();
+}
 
 export const MenubarItem = (props: MenubarItemProps) => {
   const context = React.useContext(MenubarContext);
@@ -17,19 +22,31 @@ export const MenubarItem = (props: MenubarItemProps) => {
   const baseCls = `${prefixCls}-item`;
   const popupClassName = `${context.prefixCls}-item-dropdown`;
 
+  useEffect(()=>{
+    const element = menubarItemRef.current;
+    if (element) {
+      element.addEventListener('mousedown', stopPropagation);
+    }
+    return ()=>{
+      if (element) {
+        element.removeEventListener('mousedown', stopPropagation);
+      }
+    }
+  }, [])
+
   const doActive = () => {
     context.setActiveElementRef(menubarItemRef);
   };
+
   const doDeactive = () => {
     context.setActiveElementRef();
   };
 
-  const onToggleActive = () => {
+  const onToggleActive = (e:React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (!currentMenuActived) {
       context.activeMenubar();
       doActive();
-    } else {
-      doDeactive();
     }
   };
 
