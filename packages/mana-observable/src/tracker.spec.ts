@@ -3,7 +3,7 @@ import assert from 'assert';
 
 import { noop } from '@difizen/mana-common';
 
-import { prop, Trackable, Tracker, Observability } from './index';
+import { prop, Trackable, Tracker, Observability, Notifier } from './index';
 
 describe('Tracker', () => {
   it('#trackable', () => {
@@ -551,5 +551,18 @@ describe('Tracker', () => {
     const objStr = JSON.stringify(tracked);
     assert(tracked.reg.test('test'));
     assert(objStr);
+  });
+
+  it('#find same notifer after track', () => {
+    class Foo {
+      @prop() name?: string;
+    }
+    const raw = new Foo();
+    const tracked = Tracker.track(raw, noop);
+
+    const event0 = Notifier.toEvent(raw, 'name');
+    const event1 = Notifier.toEvent(tracked, 'name');
+
+    assert(event0 === event1);
   });
 });
