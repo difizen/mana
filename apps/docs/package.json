@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-docs",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "license": "MIT",
   "description": "Document site for mana",
@@ -21,8 +21,8 @@
     "react": "^18.2.0"
   },
   "dependencies": {
-    "@difizen/mana-app": "^0.1.7",
-    "@difizen/mana-react": "^0.1.7",
+    "@difizen/mana-app": "^0.1.8",
+    "@difizen/mana-react": "^0.1.8",
     "@ant-design/icons": "^4.7.0",
     "antd": "^5.8.6",
     "styled-components": "^6.0.7"
