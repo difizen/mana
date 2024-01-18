@@ -61,7 +61,7 @@ export class Notifier implements Disposable {
       return notifier;
     }
     const origin = Observability.getOrigin(target);
-    const exist = Notifier.get(target, prop);
+    const exist = Notifier.get(origin, prop);
     if (exist && !exist.disposed) {
       return exist;
     }
