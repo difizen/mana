@@ -46,10 +46,10 @@ export const Commands = {
 };
 export namespace CommonMenus {
   export const MAIN_MENU = [...MAIN_MENU_BAR, 'a_main_menu'];
-  export const SUB = [...MAIN_MENU, 'main_submenu'];
+  export const SUB = [...MAIN_MENU, 'a_main_submenu'];
   export const HELP = [...MAIN_MENU_BAR, 'b_help_menus'];
-  export const ACTION_GROUP = [...MAIN_MENU, 'action_group'];
-  export const ENABLE_GROUP = [...MAIN_MENU, 'enable_group'];
+  export const ACTION_GROUP = [...MAIN_MENU, 'b_action_group'];
+  export const ENABLE_GROUP = [...MAIN_MENU, 'c_enable_group'];
 }
 
 @singleton({ contrib: [MenuContribution, CommandContribution] })

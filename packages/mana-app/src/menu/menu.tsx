@@ -109,7 +109,7 @@ export class Menu implements Disposable {
     list.forEach((child, index) => {
       if (MenuItem.isGeneralMenuItem(child)) {
         if (this.isGroup(child)) {
-          if (index > 0 && index < list.length - 1) {
+          if (index > 0) {
             childNodes.push(
               <MenuComponent.Divider key={`${child.id}-divider-before`} />,
             );
