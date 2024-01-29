@@ -3,11 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { posix } from 'path-browserify';
+
 import { CharCode } from './char-code';
 import type { URI } from './uri';
-import * as nodePath from 'path';
 
-const posixPath = nodePath.posix || nodePath;
+const posixPath = posix;
 const slash = '/';
 
 export namespace Utils {
