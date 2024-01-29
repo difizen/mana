@@ -76,8 +76,8 @@ export class FileCommandContribution implements CommandContribution, MenuContrib
                 }
                 return;
               })
-              .catch(() => {
-                throw Error();
+              .catch((e) => {
+                throw e;
               });
           }
         } catch {
