@@ -6,7 +6,8 @@
   "description": "Document site for mana",
   "scripts": {
     "start": "dumi dev",
-    "release": "dumi build"
+    "analyze": "ANALYZE=1 dumi build",
+    "build": "dumi build"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
@@ -23,8 +24,7 @@
   "dependencies": {
     "@difizen/mana-app": "^0.1.8",
     "@difizen/mana-react": "^0.1.8",
-    "@ant-design/icons": "^4.7.0",
-    "antd": "^5.8.6",
-    "styled-components": "^6.0.7"
+    "@ant-design/icons": "^5.1.0",
+    "antd": "^5.8.6"
   }
 }

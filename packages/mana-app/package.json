@@ -44,7 +44,7 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
+    "@ant-design/icons": "^5.1.0",
     "@difizen/mana-common": "^0.1.8",
     "@difizen/mana-core": "^0.1.8",
     "@difizen/mana-observable": "^0.1.8",

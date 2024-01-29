@@ -43,8 +43,11 @@
     "lint:eslint": "eslint src",
     "lint:tsc": "tsc --noEmit"
   },
-  "dependencies": {},
+  "dependencies": {
+    "path-browserify": "^1.0.0"
+  },
   "devDependencies": {
+    "@types/path-browserify": "^1.0.0",
     "rimraf": "latest"
   },
   "publishConfig": {
