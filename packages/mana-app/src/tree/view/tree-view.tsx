@@ -96,7 +96,7 @@ export const TreeViewRow = (props: TreeViewRowProps) => {
     >
       <div
         onContextMenu={(event) => {
-          treeView.handleContextMenuEvent(node, event);
+          treeView.handleContextMenuEvent(event, treeView, node);
         }}
         key={key}
         style={style}
@@ -151,7 +151,7 @@ export const TreeViewComponent = forwardRef<HTMLDivElement>(
         <div
           ref={ref}
           onContextMenu={(event) => {
-            treeView.handleContextMenuEvent(treeView, event);
+            treeView.handleContextMenuEvent(event, treeView, undefined);
           }}
           {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
         >
@@ -369,7 +369,6 @@ export class TreeView extends BaseView implements StatefulView {
       style,
       onClick: (event) => this.handleClickEvent(node, event),
       onDoubleClick: (event) => this.handleDblClickEvent(node, event),
-      // onContextMenu: event => this.handleContextMenuEvent(node, event),
     };
   }
   /**
@@ -382,7 +381,6 @@ export class TreeView extends BaseView implements StatefulView {
     }
     return {
       className: classNames.join(' '),
-      // onContextMenu: event => this.handleContextMenuEvent(this.getContainerTreeNode(), event),
     };
   }
   /**
@@ -401,11 +399,12 @@ export class TreeView extends BaseView implements StatefulView {
    * @param event the right-click mouse event.
    */
   handleContextMenuEvent = (
-    nodeOrTree: TreeNode | TreeView | undefined,
     event: React.MouseEvent<HTMLElement>,
+    tree: TreeView | undefined,
+    n: TreeNode | TreeView | undefined,
   ): void => {
-    if (TreeNode.is(nodeOrTree)) {
-      const node = nodeOrTree;
+    if (TreeNode.is(n)) {
+      const node = n;
       if (SelectableTreeNode.is(node)) {
         // Keep the selection for the context menu, if the widget support multi-selection and the right click happens on an already selected node.
         if (!this.props.multiSelect || !node.selected) {
@@ -417,10 +416,10 @@ export class TreeView extends BaseView implements StatefulView {
         }
         this.doFocus();
       }
-      this.setContextMenuArgs(nodeOrTree);
+      this.setContextMenuArgs(n, tree);
     } else {
       if (!this.contextMenuData) {
-        this.setContextMenuArgs(nodeOrTree);
+        this.setContextMenuArgs(undefined, tree);
       }
       event.preventDefault();
       event.stopPropagation();
@@ -430,8 +429,13 @@ export class TreeView extends BaseView implements StatefulView {
    * Convert the tree node to context menu arguments.
    * @param _node the selectable tree node.
    */
-  setContextMenuArgs = (nodeOrTree: TreeNode | TreeView | undefined): any => {
-    this.contextMenuData = nodeOrTree ? [getOrigin(nodeOrTree)] : undefined;
+  setContextMenuArgs = (
+    node: TreeNode | undefined,
+    tree?: TreeView | undefined,
+  ): any => {
+    const nodeOrTree = node || tree;
+    const args = [getOrigin(nodeOrTree), getOrigin(tree)];
+    this.contextMenuData = args.findIndex((item) => !!item) > -1 ? args : undefined;
     return this.contextMenuData;
   };
   /**
