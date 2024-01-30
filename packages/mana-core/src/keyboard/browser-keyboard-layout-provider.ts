@@ -14,7 +14,7 @@ import type {
   KeyValidator,
   NativeKeyboardLayout,
 } from './keyboard-protocol';
-import { loadAllLayouts } from './layouts';
+import { layoutRawDataLoader, en_US_mac, en_US_pc } from './layouts';
 
 export type KeyboardLayoutSource =
   | 'navigator.keyboard'
@@ -25,10 +25,19 @@ export type KeyboardLayoutSource =
 export class BrowserKeyboardLayoutProvider
   implements KeyboardLayoutProvider, KeyboardLayoutChangeNotifier, KeyValidator
 {
+  layoutDatas: KeyboardLayoutData[];
+  pendingLayoutMap: Map<string, Promise<KeyboardLayoutData>> = new Map();
+  protected tester: KeyboardTester;
+
   @inject(LocalStorageService)
   protected readonly storageService: LocalStorageService;
   constructor(@inject(LocalStorageService) storageService: LocalStorageService) {
     this.storageService = storageService;
+    this.layoutDatas = [
+      this.getLayoutData('en-US-pc', en_US_pc),
+      this.getLayoutData('en-US-mac', en_US_mac),
+    ];
+    this.tester = new KeyboardTester(this.layoutDatas);
   }
 
   protected readonly initialized = new Deferred<void>();
@@ -38,9 +47,52 @@ export class BrowserKeyboardLayoutProvider
     return this.nativeLayoutChanged.event;
   }
 
-  protected readonly tester = new KeyboardTester(loadAllLayouts());
   protected source: KeyboardLayoutSource = 'pressed-keys';
   protected currentLayout: KeyboardLayoutData = DEFAULT_LAYOUT_DATA;
+
+  protected updateTester(): void {
+    this.tester = new KeyboardTester(this.layoutDatas);
+  }
+
+  /**
+   * Keyboard layout files are expected to have the following name scheme:
+   *     `language-name-hardware.json`
+   *
+   * - `language`: A language subtag according to IETF BCP 47
+   * - `name`:     Display name of the keyboard layout (without dashes)
+   * - `hardware`: `pc` or `mac`
+   */
+  protected getLayoutData(
+    layoutId: string,
+    raw: NativeKeyboardLayout,
+  ): KeyboardLayoutData {
+    const [language, name, hardware] = layoutId.split('-');
+    return {
+      name: name.replace('_', ' '),
+      hardware: hardware as 'pc' | 'mac',
+      language,
+      // Webpack knows what to do here and it should bundle all files under `../../../src/common/keyboard/layouts/`
+      raw: raw,
+    };
+  }
+  protected async loadLayout(layoutId: string): Promise<KeyboardLayoutData> {
+    const loader = layoutRawDataLoader[layoutId];
+    return this.getLayoutData(layoutId, await loader());
+  }
+
+  async addLayout(layoutId: string) {
+    if (this.layoutDatas.find((layout) => getLayoutId(layout) === layoutId)) {
+      return;
+    }
+    if (!this.pendingLayoutMap.has(layoutId)) {
+      this.pendingLayoutMap.set(layoutId, this.loadLayout(layoutId));
+    }
+    const layout = await this.pendingLayoutMap.get(layoutId);
+    if (layout) {
+      this.layoutDatas.push(layout);
+      this.updateTester();
+    }
+  }
 
   get allLayoutData(): KeyboardLayoutData[] {
     return this.tester.candidates.slice();
@@ -56,7 +108,7 @@ export class BrowserKeyboardLayoutProvider
 
   @postConstruct()
   protected async initialize(): Promise<void> {
-    await this.loadState();
+    // await this.loadState();
     const keyboard = (navigator as NavigatorExtension).keyboard;
     if (keyboard && keyboard.addEventListener) {
       keyboard.addEventListener('layoutchange', async () => {
@@ -124,7 +176,7 @@ export class BrowserKeyboardLayoutProvider
   protected setCurrent(layout: KeyboardLayoutData, source: KeyboardLayoutSource): void {
     this.currentLayout = layout;
     this.source = source;
-    this.saveState();
+    // this.saveState();
     if (
       this.tester.inputCount &&
       (source === 'pressed-keys' || source === 'navigator.keyboard')
