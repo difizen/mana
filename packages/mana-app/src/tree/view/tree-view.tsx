@@ -107,72 +107,81 @@ export const TreeViewRow = (props: TreeViewRowProps) => {
     </CellMeasurer>
   );
 };
+export function TreeViewContent() {
+  const treeView = useInject<TreeView>(ViewInstance);
+  const listRef = React.createRef<List>();
+  const cache = React.useMemo(() => {
+    return new CellMeasurerCache({
+      fixedWidth: true,
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (listRef && listRef.current) {
+      if (treeView.isVisible) {
+        cache.clearAll();
+        listRef.current.recomputeRowHeights();
+      } else {
+        listRef.current.forceUpdateGrid();
+      }
+    }
+  }, [treeView.scrollToRow, treeView.isVisible, listRef, cache]);
+
+  const rows = Array.from(treeView.rows.values());
+  const TreeRow = treeView.treeRowComponent;
+  return (
+    <Dropdown
+      className="mana-tree-node-dropdown"
+      trigger={['contextMenu']}
+      visible={!!treeView.contextMenuData}
+      onVisibleChange={(visible) => {
+        if (!visible) {
+          treeView.setContextMenuArgs(undefined);
+        }
+      }}
+      overlay={
+        <MenuRender
+          data={treeView.contextMenuData}
+          menuPath={treeView.contextMenuPath}
+        />
+      }
+    >
+      <div className="mana-tree-content">
+        <List
+          ref={listRef}
+          width={treeView.offsetWidth || 100}
+          height={treeView.offsetHeight || 100}
+          rowCount={rows.length}
+          rowHeight={cache.rowHeight}
+          rowRenderer={(rowProps) => (
+            <TreeRow {...rowProps} cache={cache} row={rows[rowProps.index]} />
+          )}
+          scrollToIndex={treeView.scrollToRow}
+          onScroll={treeView.handleScroll.bind(treeView)}
+          tabIndex={-1}
+          style={{
+            overflow: 'auto',
+          }}
+        />
+      </div>
+    </Dropdown>
+  );
+}
 
 export const TreeViewComponent = forwardRef<HTMLDivElement>(
   function TreeViewComponent(_props, ref) {
     const treeView = useInject<TreeView>(ViewInstance);
-    const listRef = React.createRef<List>();
-    const cache = React.useMemo(() => {
-      return new CellMeasurerCache({
-        fixedWidth: true,
-      });
-    }, []);
 
-    React.useEffect(() => {
-      if (listRef && listRef.current) {
-        if (treeView.isVisible) {
-          cache.clearAll();
-          listRef.current.recomputeRowHeights();
-        } else {
-          listRef.current.forceUpdateGrid();
-        }
-      }
-    }, [treeView.scrollToRow, treeView.isVisible, listRef, cache]);
-
-    const rows = Array.from(treeView.rows.values());
-    const TreeRow = treeView.treeRowComponent;
     return (
-      <Dropdown
-        className="mana-tree-node-dropdown"
-        trigger={['contextMenu']}
-        visible={!!treeView.contextMenuData}
-        onVisibleChange={(visible) => {
-          if (!visible) {
-            treeView.setContextMenuArgs(undefined);
-          }
+      <div
+        ref={ref}
+        onContextMenu={(event) => {
+          treeView.handleContextMenuEvent(event, treeView, undefined);
         }}
-        overlay={
-          <MenuRender
-            data={treeView.contextMenuData}
-            menuPath={treeView.contextMenuPath}
-          />
-        }
+        {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
       >
-        <div
-          ref={ref}
-          onContextMenu={(event) => {
-            treeView.handleContextMenuEvent(event, treeView, undefined);
-          }}
-          {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
-        >
-          <List
-            ref={listRef}
-            width={treeView.offsetWidth || 100}
-            height={treeView.offsetHeight || 100}
-            rowCount={rows.length}
-            rowHeight={cache.rowHeight}
-            rowRenderer={(rowProps) => (
-              <TreeRow {...rowProps} cache={cache} row={rows[rowProps.index]} />
-            )}
-            scrollToIndex={treeView.scrollToRow}
-            onScroll={treeView.handleScroll.bind(treeView)}
-            tabIndex={-1}
-            style={{
-              overflow: 'auto',
-            }}
-          />
-        </div>
-      </Dropdown>
+        <TreeViewContent />
+      </div>
     );
   },
 );

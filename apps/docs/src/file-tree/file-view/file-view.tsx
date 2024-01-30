@@ -1,6 +1,5 @@
 import type { TreeNode } from '@difizen/mana-app';
 import { FileTreeViewFactory } from '@difizen/mana-app';
-import { TreeViewComponent } from '@difizen/mana-app';
 import { isOSX, FileTreeModel } from '@difizen/mana-app';
 import {
   FileTreeView,

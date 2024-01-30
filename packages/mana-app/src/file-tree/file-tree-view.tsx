@@ -2,10 +2,13 @@ import { FileOutlined } from '@ant-design/icons';
 import { Disposable, DisposableCollection, isCancelled } from '@difizen/mana-common';
 import { URI } from '@difizen/mana-common';
 import type { MenuPath } from '@difizen/mana-core';
+import { ViewInstance } from '@difizen/mana-core';
 import { ManaModule, SelectionService, view } from '@difizen/mana-core';
 import { l10n } from '@difizen/mana-l10n'; /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useInject } from '@difizen/mana-observable';
 import { singleton, inject } from '@difizen/mana-syringe';
 import * as React from 'react';
+import { forwardRef, lazy, Suspense } from 'react';
 
 import { LabelProvider } from '../label';
 import { TreeModel } from '../tree';
@@ -20,9 +23,6 @@ import { FileTreeModel } from './file-tree-model';
 import { FileTreeContextMenuPath, URINode } from './file-tree-protocol';
 import { FileStat, FileType } from './files';
 
-import 'font-awesome/css/font-awesome.min.css';
-import 'file-icons-js/css/style.css';
-
 export const FILE_TREE_CLASS = 'mana-file-tree';
 export const FILE_STAT_NODE_CLASS = 'mana-FileStatNode';
 export const DIR_NODE_CLASS = 'mana-DirNode';
@@ -31,12 +31,39 @@ export const FILE_STAT_ICON_CLASS = 'mana-FileStatIcon';
 export const FileTreeViewFactory = 'file-tree-view-fatory';
 import './style/file-icon.less';
 
+const LazyTreeComponent = lazy(() =>
+  import('./file-tree-component.js').then(({ TreeViewContent }) => ({
+    default: TreeViewContent,
+  })),
+);
+
+export const FileTreeViewComponent = forwardRef<HTMLDivElement>(
+  function FileTreeViewComponent(_props, ref) {
+    const treeView = useInject<TreeView>(ViewInstance);
+
+    return (
+      <div
+        ref={ref}
+        onContextMenu={(event) => {
+          treeView.handleContextMenuEvent(event, treeView, undefined);
+        }}
+        {...(treeView.createContainerAttributes() as React.HTMLAttributes<HTMLDivElement>)}
+      >
+        <Suspense fallback={<div>Loading...</div>}>
+          <LazyTreeComponent />
+        </Suspense>
+      </div>
+    );
+  },
+);
+
 export const FileTreeViewModule = ManaModule.create()
   .register(FileTree, FileTreeModel)
   .dependOn(TreeViewModule);
 @singleton()
 @view(FileTreeViewFactory, FileTreeViewModule)
 export class FileTreeView extends TreeView {
+  override view = FileTreeViewComponent;
   override id = FileTreeViewFactory;
   override label = (<FileOutlined />);
   protected readonly toCancelNodeExpansion = new DisposableCollection();
