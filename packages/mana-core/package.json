@@ -48,7 +48,6 @@
     "@difizen/mana-common": "^0.1.8",
     "@difizen/mana-observable": "^0.1.8",
     "@difizen/mana-syringe": "^0.1.8",
-    "ahooks": "^3.7.8",
     "ajv": "^8.12.0",
     "debug": "^4.3.1",
     "resize-observer-polyfill": "^1.5.1",

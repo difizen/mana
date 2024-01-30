@@ -1,7 +1,8 @@
 import { ObservableContext, useInject } from '@difizen/mana-observable';
 import type { Syringe } from '@difizen/mana-syringe';
-import { useUnmount, useMount } from 'ahooks';
 import * as React from 'react';
+
+import { useMount, useUnmount } from '../utils/hooks';
 
 import { useSize } from './hooks';
 import { isForwardRefComponent } from './utils';
