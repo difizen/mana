@@ -1,5 +1,13 @@
 # @difizen/mana-l10n
 
+## 0.1.9
+
+### Patch Changes
+
+- b5ec5a9: Fix: Divider display between menu groups.
+- 4d9bc01: 1. Once a menu is activated, clicking it again will no longer deactivate it. 2. Even with proxy objects, the original notifier can be found.
+- 4722513: The file tree can be accessed contextually via the file tree menu
+
 ## 0.1.8
 
 ### Patch Changes
