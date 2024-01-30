@@ -1,8 +1,9 @@
 import type { Newable } from '@difizen/mana-common';
 import { useInject, getOrigin } from '@difizen/mana-observable';
-import { useUnmount, useMount } from 'ahooks';
 import type { ReactNode } from 'react';
 import { memo } from 'react';
+
+import { useMount, useUnmount } from '../utils/hooks';
 
 import { SlotViewManager } from './slot-view-manager';
 import { ViewInstance } from './view-protocol';

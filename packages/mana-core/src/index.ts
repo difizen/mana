@@ -26,6 +26,7 @@ export * from './toolbar';
 export * from './keybinding';
 export * from './keyboard';
 export * from './configuration';
+export * from './utils';
 
 export const ManaPreset = ManaModule.create().dependOn(
   CommonModule,

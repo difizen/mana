@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useMount, useUnmount } from 'ahooks';
 import * as React from 'react';
 
 import { ApplicationState, ApplicationStateService } from '../application';
 import { Application, ApplicationModule } from '../application';
 import type { ManaContext } from '../module';
 import { ManaModule } from '../module';
+import { useMount, useUnmount } from '../utils/hooks';
 import { createSlotPreference, PortalSlotId, Slot } from '../view';
 import { PortalSlotView } from '../view/portal-slot-view';
 import { RootComponents } from '../view/root-view';

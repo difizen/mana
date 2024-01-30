@@ -19,3 +19,4 @@ export * from './view-decoration';
 export * from './view-storage';
 export * from './stateful-view';
 export * from './utils';
+export * from './hooks';

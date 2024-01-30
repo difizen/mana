@@ -1,6 +1,7 @@
-import { useLatest } from 'ahooks';
 import { useLayoutEffect } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
+
+import { useLatest } from '../utils/index';
 
 import type { View } from './view-protocol';
 

@@ -1,9 +1,9 @@
 import { ObservableContext } from '@difizen/mana-observable';
 import type { Syringe } from '@difizen/mana-syringe';
-import { useMount } from 'ahooks';
 import * as React from 'react';
 
 import type { ManaContext } from '../module/mana-module-context';
+import { useMount } from '../utils/hooks';
 
 import { useCreateManaContext } from './hooks';
 
