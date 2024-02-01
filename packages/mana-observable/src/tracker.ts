@@ -9,6 +9,17 @@ import { Observability } from './utils';
 
 type Act = (...args: any) => void;
 
+export function tryInvokeGetter(getter: () => any, proxy: any, origin: any) {
+  try {
+    return getter.call(proxy);
+  } catch (e: any) {
+    if (e instanceof TypeError && e.message.includes('Illegal invocation')) {
+      return getter.call(origin);
+    }
+    throw e;
+  }
+}
+
 export type Trackable = {
   [ObservableSymbol.Tracker]: Record<string, any>;
   [Trackable.activator]?: (() => void) | undefined;
@@ -143,7 +154,7 @@ export namespace Tracker {
           }
           const descriptor = getPropertyDescriptor(target, property);
           if (descriptor?.get) {
-            return descriptor.get.call(proxy);
+            return tryInvokeGetter(descriptor.get, proxy, target);
           }
         }
         value = target[property];

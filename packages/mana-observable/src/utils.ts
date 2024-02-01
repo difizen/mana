@@ -37,6 +37,12 @@ export namespace Observability {
     if (obj instanceof Element) {
       return false;
     }
+    if (obj instanceof Performance) {
+      return false;
+    }
+    if ('$$typeof' in obj) {
+      return false;
+    }
     return true;
   }
   export function marked(obj: any, property?: string | symbol): boolean {

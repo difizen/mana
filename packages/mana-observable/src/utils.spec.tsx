@@ -14,6 +14,7 @@ describe('utils', () => {
   it('#Observability', () => {
     class Foo {
       info = '';
+      element = (<div></div>);
     }
     const foo = new Foo();
     const meta = 'meta';
@@ -29,6 +30,7 @@ describe('utils', () => {
         return (target as any)[propertyKey];
       },
     });
+
     assert(toDispose === Disposable.NONE);
     assert(toDispose1 === Disposable.NONE);
     assert(Observability.getOrigin(fooProxy) === foo);
@@ -39,6 +41,7 @@ describe('utils', () => {
     assert(Observability.canBeObservable({}));
     assert(!Observability.canBeObservable(new WeakMap()));
     assert(!Observability.canBeObservable(Promise.resolve()));
+    assert(!Observability.canBeObservable(foo.element));
     Observability.mark(foo, 'info');
     Observability.mark(foo);
     assert(Observability.marked(foo, 'info'));

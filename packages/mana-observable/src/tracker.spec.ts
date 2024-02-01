@@ -3,7 +3,14 @@ import assert from 'assert';
 
 import { noop } from '@difizen/mana-common';
 
-import { prop, Trackable, Tracker, Observability, Notifier } from './index';
+import {
+  prop,
+  Trackable,
+  Tracker,
+  Observability,
+  Notifier,
+  tryInvokeGetter,
+} from './index';
 
 describe('Tracker', () => {
   it('#trackable', () => {
@@ -564,5 +571,29 @@ describe('Tracker', () => {
     const event1 = Notifier.toEvent(tracked, 'name');
 
     assert(event0 === event1);
+  });
+
+  it('#invoke getter origin', () => {
+    let baz: any = undefined;
+    class Foo {
+      bar() {
+        if (this !== baz) {
+          throw new TypeError('Illegal invocation');
+        }
+        return true;
+      }
+    }
+    baz = new Foo();
+
+    const proxyBaz = new Proxy(baz, {});
+    try {
+      proxyBaz.bar();
+      assert(false);
+    } catch (e) {
+      assert(e instanceof TypeError);
+      assert(e.message === 'Illegal invocation');
+    }
+
+    assert(!!tryInvokeGetter(proxyBaz.bar, proxyBaz, baz));
   });
 });
