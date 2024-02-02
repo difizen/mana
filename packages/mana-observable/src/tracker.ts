@@ -153,6 +153,10 @@ export namespace Tracker {
             return track(value, act, true);
           }
           const descriptor = getPropertyDescriptor(target, property);
+          if (descriptor?.configurable === false && descriptor?.writable === false) {
+            // non-configurable and non-writable property should return the actual value
+            return target[property];
+          }
           if (descriptor?.get) {
             return tryInvokeGetter(descriptor.get, proxy, target);
           }

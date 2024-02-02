@@ -596,4 +596,36 @@ describe('Tracker', () => {
 
     assert(!!tryInvokeGetter(proxyBaz.bar, proxyBaz, baz));
   });
+
+  it('#get readonly & non-configurable property', () => {
+    class Foo {}
+
+    class Bar {
+      name = 'Bar';
+    }
+    const foo = new Foo();
+    const bar = new Bar();
+
+    Object.defineProperty(foo, 'prop', {
+      value: bar,
+      writable: false,
+      configurable: false,
+    });
+
+    try {
+      let changeCount = 0;
+      const reaction = () => {
+        const trackable = Tracker.track(foo, reaction);
+        if ('prop' in trackable) {
+          const b = trackable['prop'] as Bar;
+          b.name;
+        }
+        changeCount += 1;
+      };
+      reaction(); // 1
+      assert(changeCount === 1);
+    } catch (e) {
+      assert(!e);
+    }
+  });
 });
