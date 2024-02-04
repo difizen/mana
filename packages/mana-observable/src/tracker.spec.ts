@@ -628,4 +628,42 @@ describe('Tracker', () => {
       assert(!e);
     }
   });
+
+  it('#target frozen', () => {
+    const t = {};
+    const arr = [0, t];
+    const map = new Map();
+    const obj = { arr: [] };
+    map.set('obj', t);
+    class Foo {
+      @prop()
+      obj = obj;
+      @prop()
+      arr = arr;
+      @prop()
+      map = map;
+    }
+
+    const foo = new Foo();
+
+    let changeCount = 0;
+    let trackable: any;
+    const reaction = () => {
+      trackable = Tracker.track(foo, reaction);
+      Object.freeze(obj);
+      Object.freeze(arr);
+      Object.freeze(map);
+      changeCount += 1;
+    };
+    reaction(); // 1
+    trackable.obj;
+    const arr1 = trackable.obj.arr;
+    const obj1 = trackable.map.get('obj');
+    const t1 = trackable.arr[1];
+
+    assert(changeCount === 1);
+    assert(arr1 === obj.arr);
+    assert(Observability.getOrigin(obj1) === map.get('obj'));
+    assert(t1 === arr[1]);
+  });
 });

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 import type { Disposable } from '@difizen/mana-common';
+import { getPropertyDescriptor } from '@difizen/mana-common';
 
 import type { Traceable } from './core';
 import { ObservableSymbol } from './core';
@@ -149,3 +150,12 @@ export type DesignType =
 
 export const getOrigin = Observability.getOrigin;
 export const equals = Observability.equals;
+
+export function isReadonly(target: object, property: string | symbol): boolean {
+  const descriptor = getPropertyDescriptor(target, property);
+  if (descriptor?.configurable === false && descriptor?.writable === false) {
+    // non-configurable and non-writable property should return the actual value
+    return true;
+  }
+  return false;
+}
