@@ -19,6 +19,9 @@ export namespace Observability {
     if (!isObject(obj)) {
       return false;
     }
+    if (Object.isFrozen(obj)) {
+      return false;
+    }
     if (obj instanceof Promise) {
       return false;
     }
