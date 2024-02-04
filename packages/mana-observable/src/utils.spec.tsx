@@ -42,6 +42,12 @@ describe('utils', () => {
     assert(!Observability.canBeObservable(new WeakMap()));
     assert(!Observability.canBeObservable(Promise.resolve()));
     assert(!Observability.canBeObservable(foo.element));
+
+    const arr: any[] = [];
+    const frozen = Object.freeze([]);
+    assert(Observability.canBeObservable(arr));
+    assert(!Observability.canBeObservable(frozen));
+
     Observability.mark(foo, 'info');
     Observability.mark(foo);
     assert(Observability.marked(foo, 'info'));

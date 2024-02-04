@@ -49,6 +49,18 @@ describe('reactivity', () => {
     assert(a === objValue);
   });
 
+  it('#do not transform frozen', () => {
+    const fArr = Object.freeze([]);
+    const fObj = Object.freeze({});
+    const obj = {
+      a: fArr,
+      o: fObj,
+    };
+    const tValue = Notifiable.transform(obj);
+    assert(tValue.a === fArr);
+    assert(tValue.o === fObj);
+  });
+
   it('#transform array', () => {
     const v: any[] = [];
     const tValue = Notifiable.transform(v);
