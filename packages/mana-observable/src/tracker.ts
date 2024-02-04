@@ -76,6 +76,9 @@ export namespace Tracker {
         if (property === ObservableSymbol.Self) {
           return value;
         }
+        if (Object.isFrozen(target)) {
+          return value;
+        }
         if (property === Trackable.activator) {
           return activator;
         }
@@ -89,6 +92,9 @@ export namespace Tracker {
       get(target: any, property: string | symbol): any {
         const value = target[property];
         if (property === ObservableSymbol.Self) {
+          return value;
+        }
+        if (Object.isFrozen(target)) {
           return value;
         }
         if (property === Trackable.activator) {
@@ -108,6 +114,9 @@ export namespace Tracker {
       get(target: any, property: string | symbol): any {
         const value = target[property];
         if (property === ObservableSymbol.Self) {
+          return value;
+        }
+        if (Object.isFrozen(target)) {
           return value;
         }
         if (property === Trackable.activator) {
@@ -141,6 +150,11 @@ export namespace Tracker {
         let notifier;
         let value;
         if (typeof property === 'string') {
+          const descriptor = getPropertyDescriptor(target, property);
+          if (descriptor?.configurable === false && descriptor?.writable === false) {
+            // non-configurable and non-writable property should return the actual value
+            return target[property];
+          }
           if (Observability.marked(target, property)) {
             notifier = Notifier.getOrCreate(target, property);
             Notifier.once(notifier, act, () => {
@@ -151,11 +165,6 @@ export namespace Tracker {
             });
             value = target[property];
             return track(value, act, true);
-          }
-          const descriptor = getPropertyDescriptor(target, property);
-          if (descriptor?.configurable === false && descriptor?.writable === false) {
-            // non-configurable and non-writable property should return the actual value
-            return target[property];
           }
           if (descriptor?.get) {
             return tryInvokeGetter(descriptor.get, proxy, target);

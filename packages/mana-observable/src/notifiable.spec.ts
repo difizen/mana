@@ -50,15 +50,37 @@ describe('reactivity', () => {
   });
 
   it('#do not transform frozen', () => {
-    const fArr = Object.freeze([]);
     const fObj = Object.freeze({});
+    const fArr = Object.freeze([fObj]);
     const obj = {
       a: fArr,
       o: fObj,
     };
+    const arr = [fArr, fObj];
     const tValue = Notifiable.transform(obj);
+    const tArr = Notifiable.transform(arr);
+    const tFArr = Notifiable.transform(fArr);
     assert(tValue.a === fArr);
     assert(tValue.o === fObj);
+    assert(tArr[0] === fArr);
+    assert(tArr[1] === fObj);
+    assert(tFArr[0] === fObj);
+  });
+
+  it('#runtime frozen', () => {
+    const obj = {};
+    const arr = [obj];
+    const foo = {
+      a: arr,
+      o: obj,
+    };
+    Object.freeze(obj);
+    Object.freeze(arr);
+    const tValue = Notifiable.transform(foo);
+    const tArr = Notifiable.transform(arr);
+    assert(tValue.a === arr);
+    assert(tValue.o === obj);
+    assert(tArr[0] === obj);
   });
 
   it('#transform array', () => {

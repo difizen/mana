@@ -4,7 +4,7 @@ import { isPlainObject } from '@difizen/mana-common';
 
 import { ObservableSymbol } from './core';
 import { Notifier } from './notifier';
-import { Observability } from './utils';
+import { isReadonly, Observability } from './utils';
 
 export interface Notifiable {
   [ObservableSymbol.Notifier]: Notifier;
@@ -76,14 +76,17 @@ export namespace Notifiable {
   export function transformArray<T extends Array<any>>(target: T): T & Notifiable {
     const notifier = Notifier.getOrCreate(target);
     const notifiable = new Proxy(target, {
-      get(self: any, prop: string | symbol): any {
-        if (prop === ObservableSymbol.Notifier) {
+      get(self: any, property: string | symbol): any {
+        if (property === ObservableSymbol.Notifier) {
           return notifier;
         }
-        if (prop === ObservableSymbol.Self) {
+        if (property === ObservableSymbol.Self) {
           return self;
         }
-        const result = Reflect.get(self, prop);
+        const result = Reflect.get(self, property);
+        if (isReadonly(target, property)) {
+          return result;
+        }
         const origin = Observability.getOrigin(result);
         return Notifiable.transform(origin);
       },
@@ -100,14 +103,17 @@ export namespace Notifiable {
   export function transformPlainObject<T extends object>(target: T): T & Notifiable {
     const notifier = Notifier.getOrCreate(target);
     const notifiable = new Proxy(target, {
-      get(self: any, prop: string | symbol): any {
-        if (prop === ObservableSymbol.Notifier) {
+      get(self: any, property: string | symbol): any {
+        if (property === ObservableSymbol.Notifier) {
           return notifier;
         }
-        if (prop === ObservableSymbol.Self) {
+        if (property === ObservableSymbol.Self) {
           return self;
         }
-        const result = Reflect.get(self, prop);
+        const result = Reflect.get(self, property);
+        if (isReadonly(target, property)) {
+          return result;
+        }
         const origin = Observability.getOrigin(result);
         return Notifiable.transform(origin);
       },
