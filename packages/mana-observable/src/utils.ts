@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import type { Disposable } from '@difizen/mana-common';
 import { getPropertyDescriptor } from '@difizen/mana-common';
 
+import { ObservableConfig } from './config';
 import type { Traceable } from './core';
 import { ObservableSymbol } from './core';
 
@@ -20,31 +21,7 @@ export namespace Observability {
     if (!isObject(obj)) {
       return false;
     }
-    if (Object.isFrozen(obj)) {
-      return false;
-    }
-    if (obj instanceof Promise) {
-      return false;
-    }
-    if (obj instanceof WeakMap) {
-      return false;
-    }
-    if (obj instanceof Date) {
-      return false;
-    }
-    if (obj instanceof Set) {
-      return false;
-    }
-    if (obj instanceof RegExp) {
-      return false;
-    }
-    if (obj instanceof Element) {
-      return false;
-    }
-    if (obj instanceof Performance) {
-      return false;
-    }
-    if ('$$typeof' in obj) {
+    if (ObservableConfig.shouldExclude(obj)) {
       return false;
     }
     return true;
