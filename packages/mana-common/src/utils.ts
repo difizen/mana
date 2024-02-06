@@ -25,8 +25,8 @@ export function isPlainObject(obj: any): boolean {
   if (proto === null) {
     return true;
   }
-  // eslint-disable-next-line no-prototype-builtins
-  const ctor = proto.hasOwnProperty('constructor') && proto.constructor;
+  const ctor =
+    Object.prototype.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
   return (
     typeof ctor === 'function' &&
     ctor instanceof ctor &&
