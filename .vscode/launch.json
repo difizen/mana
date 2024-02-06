@@ -18,6 +18,20 @@
       "port": 9229
     },
     {
+      "name": "Debug mana-common Jest Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "./packages/mana-common"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229
+    },
+    {
       "name": "Debug mana-syringe Jest Tests",
       "type": "node",
       "request": "launch",
@@ -42,7 +56,6 @@
         "./packages/mana-observable"
       ],
       "console": "integratedTerminal",
-      "runtimeExecutable": "/Users/brokun/.nvm/versions/node/v16.20.0/bin/node",
       "internalConsoleOptions": "neverOpen",
       "port": 9229
     }
