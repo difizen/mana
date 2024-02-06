@@ -1,3 +1,5 @@
+import { equals } from '@difizen/mana-observable';
+
 import type { TreeNode } from './tree';
 import { CompositeTreeNode } from './tree';
 import { ExpandableTreeNode } from './tree-expansion';
@@ -193,7 +195,7 @@ export class TopDownTreeIterator extends AbstractTreeIterator {
     if (!node) {
       return undefined;
     }
-    if (this.options.pruneSiblings && node === this.root) {
+    if (this.options.pruneSiblings && equals(node, this.root)) {
       return undefined;
     }
     if (node.nextSibling) {

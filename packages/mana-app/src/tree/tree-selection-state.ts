@@ -1,3 +1,5 @@
+import { equals } from '@difizen/mana-observable';
+
 import type { Tree, TreeNode } from './tree';
 import { DepthFirstTreeIterator } from './tree-iterator';
 import { TreeSelection, SelectableTreeNode } from './tree-selection';
@@ -121,7 +123,7 @@ export class TreeSelectionState {
             ? this.selectionRange(latestRangeSelection)
             : [];
         if (latestRange.indexOf(node) !== -1) {
-          if (this.focus === latestRangeSelection.focus) {
+          if (equals(this.focus, latestRangeSelection.focus)) {
             return latestRangeSelection.focus || node;
           }
           return this.focus;
@@ -205,7 +207,7 @@ export class TreeSelectionState {
         break;
       }
       // Only collect items which are between (inclusive) the `from` node and the `to` node.
-      if (node === from || node === to) {
+      if (equals(node, from) || equals(node, to)) {
         if (started) {
           finished = true;
         } else {
