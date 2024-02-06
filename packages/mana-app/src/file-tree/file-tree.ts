@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import type { URI } from '@difizen/mana-common';
+import { getOrigin } from '@difizen/mana-observable';
 import { inject, singleton } from '@difizen/mana-syringe';
 
 import type { TreeNode, CompositeTreeNode } from '../tree/tree';
@@ -27,7 +28,8 @@ export class FileTree extends TreeImpl {
     this.fileService = fileService;
   }
 
-  override async resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
+  override async resolveChildren(raw: CompositeTreeNode): Promise<TreeNode[]> {
+    const parent = getOrigin(raw);
     if (FileStatNode.is(parent)) {
       const fileStat = await this.resolveFileStat(parent);
       if (fileStat) {

@@ -3,6 +3,7 @@ import { timeout } from '@difizen/mana-common';
 import { CancellationTokenSource } from '@difizen/mana-common';
 import { DisposableCollection } from '@difizen/mana-common';
 import { Emitter, WaitUntilEvent } from '@difizen/mana-common';
+import { getOrigin, equals } from '@difizen/mana-observable';
 import { singleton } from '@difizen/mana-syringe';
 
 import type { TreeNode } from './tree';
@@ -64,14 +65,14 @@ export class TreeImpl implements Tree {
     this.fireChanged();
   }
 
-  getNode(id: string | undefined): TreeNode | undefined {
+  getNode = (id: string | undefined): TreeNode | undefined => {
     return id !== undefined ? this.nodes[id] : undefined;
-  }
+  };
 
-  validateNode(node: TreeNode | undefined): TreeNode | undefined {
+  validateNode = (node: TreeNode | undefined): TreeNode | undefined => {
     const id = node ? node.id : undefined;
     return this.getNode(id);
-  }
+  };
 
   async refresh(raw?: CompositeTreeNode): Promise<CompositeTreeNode | undefined> {
     const parent = !raw ? this._root : this.validateNode(raw);
@@ -95,12 +96,12 @@ export class TreeImpl implements Tree {
     return Promise.resolve(Array.from(parent.children));
   }
 
-  protected async setChildren(
+  protected setChildren = async (
     parent: CompositeTreeNode,
     children: TreeNode[],
-  ): Promise<CompositeTreeNode | undefined> {
+  ): Promise<CompositeTreeNode | undefined> => {
     const root = this.getRootNode(parent);
-    if (this.nodes[root.id] && this.nodes[root.id] !== root) {
+    if (this.nodes[root.id] && !equals(this.nodes[root.id], root)) {
       console.error(
         `Child node '${parent.id}' does not belong to this '${root.id}' tree.`,
       );
@@ -111,16 +112,16 @@ export class TreeImpl implements Tree {
     this.addNode(parent);
     await this.fireNodeRefreshed(parent);
     return parent;
-  }
+  };
 
-  protected removeNode(node: TreeNode | undefined): void {
+  protected removeNode = (node: TreeNode | undefined): void => {
     if (CompositeTreeNode.is(node)) {
       node.children.forEach((child) => this.removeNode(child));
     }
     if (node) {
       delete this.nodes[node.id];
     }
-  }
+  };
 
   protected getRootNode(node: TreeNode): TreeNode {
     if (node.parent === undefined) {
@@ -134,7 +135,7 @@ export class TreeImpl implements Tree {
       this.nodes[node.id] = node;
     }
     if (CompositeTreeNode.is(node)) {
-      const { children } = node;
+      const { children } = getOrigin(node);
       children.forEach((child, index) => {
         CompositeTreeNode.setParent(child, index, node);
         this.addNode(child);
