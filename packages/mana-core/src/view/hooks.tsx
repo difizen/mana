@@ -7,7 +7,7 @@ import type { View } from './view-protocol';
 
 export type Size = { width?: number; height?: number };
 
-export function useSize(view: View, ref: React.ForwardedRef<HTMLDivElement>): void {
+export function useViewSize(view: View, ref: React.ForwardedRef<HTMLDivElement>): void {
   const callback = useLatest((size: Size) => {
     view.onViewResize?.(size);
   });

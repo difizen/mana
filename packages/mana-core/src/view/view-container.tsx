@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { useMount, useUnmount } from '../utils/hooks';
 
-import { useSize } from './hooks';
+import { useViewSize } from './hooks';
 import { isForwardRefComponent } from './utils';
 import type { View } from './view-protocol';
 import type { ViewComponent } from './view-protocol';
@@ -37,7 +37,7 @@ export const ViewContainer = React.forwardRef<HTMLDivElement, ViewContainerProps
       viewInstance.onViewUnmount?.();
     });
 
-    useSize(viewInstance, containerRef);
+    useViewSize(viewInstance, containerRef);
 
     if (isForwardRefComponent(Component)) {
       return (
