@@ -1,5 +1,32 @@
 # @difizen/mana-app
 
+## 0.1.10
+
+### Patch Changes
+
+- 9f85eb3: App: No longer use proxy to operate tree nodes to improve performance.
+- 5c2f9f3: Workaround on Illegal invocation errors
+- 1e70032: Fix: Object.prototype methods should not be called directly on the object
+- 4cb40cf: Avoid adjacent dividing lines in menus.
+- f090577: No longer proxies access to forzen objects
+- 9fed876: Allow custom modal rendering logic.
+- 395394b: Observable: Allows users to add custom exclusion rules for observable transformations
+- 36bd4ee: Readonly & non-configurable property should return the actual value
+- Updated dependencies [9f85eb3]
+- Updated dependencies [5c2f9f3]
+- Updated dependencies [1e70032]
+- Updated dependencies [4cb40cf]
+- Updated dependencies [f090577]
+- Updated dependencies [9fed876]
+- Updated dependencies [395394b]
+- Updated dependencies [36bd4ee]
+  - @difizen/mana-observable@0.1.10
+  - @difizen/mana-syringe@0.1.10
+  - @difizen/mana-common@0.1.10
+  - @difizen/mana-react@0.1.10
+  - @difizen/mana-core@0.1.10
+  - @difizen/mana-l10n@0.1.10
+
 ## 0.1.9
 
 ### Patch Changes
