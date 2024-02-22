@@ -104,15 +104,21 @@ export class Menu implements Disposable {
     return MenuItem.isGeneralMenuItem(item) && !item.isSubmenu;
   }
 
-  renderMenuList = (list: readonly MenuItem[], inMenu = false): React.ReactNode => {
+  protected doRenderList(list: readonly MenuItem[]): React.ReactNode {
     const childNodes: React.ReactNode[] = [];
-    list.forEach((child, index) => {
+    let lastItemIsDivider = false;
+    for (let index = 0; index < list.length; index++) {
+      const child = list[index];
       if (MenuItem.isGeneralMenuItem(child)) {
         if (this.isGroup(child)) {
-          if (index > 0) {
+          if (index > 0 && !lastItemIsDivider) {
             childNodes.push(
               <MenuComponent.Divider key={`${child.id}-divider-before`} />,
             );
+            lastItemIsDivider = true;
+          }
+          if (child.children.length === 0) {
+            continue;
           }
           const children = this.renderMenuList(
             [...child.children].sort(this.sort),
@@ -123,18 +129,28 @@ export class Menu implements Disposable {
           } else {
             childNodes.push(children);
           }
-          if (index < list.length - 1 && !this.isGroup(list[index + 1])) {
+          lastItemIsDivider = false;
+          if (
+            index < list.length - 1 &&
+            !this.isGroup(list[index + 1]) &&
+            !lastItemIsDivider
+          ) {
             childNodes.push(
               <MenuComponent.Divider key={`${child.id}-divider-after`} />,
             );
+            lastItemIsDivider = true;
           }
-        } else {
-          childNodes.push(<MenuItemRender key={child.id} item={child} root={false} />);
+          continue;
         }
-      } else {
-        childNodes.push(<MenuItemRender key={child.id} item={child} root={false} />);
       }
-    });
+      childNodes.push(<MenuItemRender key={child.id} item={child} root={false} />);
+      lastItemIsDivider = false;
+    }
+    return childNodes;
+  }
+
+  renderMenuList = (list: readonly MenuItem[], inMenu = false): React.ReactNode => {
+    const childNodes = this.doRenderList(list);
     if (inMenu) {
       return childNodes;
     }
