@@ -1,23 +1,12 @@
 import type { Disposable } from '@difizen/mana-common';
-import { ApplicationContribution } from '@difizen/mana-core';
 import { prop } from '@difizen/mana-observable';
 import type { Contribution } from '@difizen/mana-syringe';
-import { contrib, singleton, Syringe } from '@difizen/mana-syringe';
+import { contrib, singleton } from '@difizen/mana-syringe';
 
-export interface ModalItemProps<T> {
-  modalItem: ModalItem<T>;
-  data: T;
-  visible: boolean;
-  close: () => void;
-}
+import type { ModalItem, ModalItemProps } from './modal-protocol';
+import { renderModal, ModalContribution } from './modal-protocol';
 
-export interface ModalItem<T = void> {
-  id: string;
-  component: React.FC<ModalItemProps<T>>;
-  __data?: T;
-}
-
-export class ModalItemView<T> implements Disposable {
+export class ModalItemView<T = any> implements Disposable {
   @prop()
   modalItem: ModalItem<T>;
 
@@ -25,21 +14,45 @@ export class ModalItemView<T> implements Disposable {
   modalVisible = false;
 
   @prop()
-  modalData?: T | undefined;
+  modalData?: T;
 
   constructor(modalItem: ModalItem<T>) {
     this.modalItem = modalItem;
   }
 
-  open = (data?: T) => {
-    this.modalVisible = true;
+  open = (data: T) => {
     this.modalData = data;
+    this.modalVisible = true;
   };
 
   close = () => {
     this.modalVisible = false;
     this.modalData = undefined;
   };
+
+  shouldRender() {
+    if (this.modalVisible !== true || this.disposed) {
+      return false;
+    }
+    if (!this.modalItem.component) {
+      console.warn(`${this.modalItem.id} is not valid modal`);
+      return false;
+    }
+    if (this.modalItem.shouldRender) {
+      return this.modalItem.shouldRender(this.modalData);
+    }
+    return true;
+  }
+
+  getModalProps(): ModalItemProps<T> {
+    const props: ModalItemProps<T> = {
+      modalItem: this.modalItem,
+      data: this.modalData,
+      visible: this.modalVisible,
+      close: this.close,
+    };
+    return props;
+  }
 
   disposed = false;
   dispose() {
@@ -48,14 +61,8 @@ export class ModalItemView<T> implements Disposable {
   }
 }
 
-export const ModalContribution = Syringe.defineToken('ModalContribution');
-export interface ModalContribution {
-  registerModal?: () => ModalItem<any>;
-  registerModals?: () => ModalItem<any>[];
-}
-
-@singleton({ contrib: [ApplicationContribution] })
-export class ModalService implements ApplicationContribution {
+@singleton()
+export class ModalService {
   protected modals = new Map<string, ModalItem>();
 
   @prop()
@@ -69,7 +76,7 @@ export class ModalService implements ApplicationContribution {
     this.contributions = contributions;
   }
 
-  onStart() {
+  init() {
     this.contributions.getContributions().forEach((contribution) => {
       if (contribution.registerModal) {
         const modalItem = contribution.registerModal();
@@ -133,4 +140,22 @@ export class ModalService implements ApplicationContribution {
   closeAllModal = () => {
     this.modalViewList.forEach((item) => item.close());
   };
+
+  getModalProps = <T>(itemView: ModalItemView<T>): ModalItemProps<T> => {
+    return itemView.getModalProps();
+  };
+
+  shouldRenderModal = <T>(itemView: ModalItemView<T>): boolean => {
+    return itemView.shouldRender();
+  };
+
+  renderModal<T>(itemView: ModalItemView<T>): React.ReactNode {
+    if (!this.shouldRenderModal(itemView)) {
+      return null;
+    }
+    if (itemView.modalItem.render) {
+      return itemView.modalItem.render(this.getModalProps(itemView));
+    }
+    return renderModal(itemView.modalItem.component, this.getModalProps(itemView));
+  }
 }

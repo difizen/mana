@@ -4,7 +4,7 @@ import { ModalService, useInject } from '@difizen/mana-app';
 import { Button } from 'antd';
 import React from 'react';
 
-import { demoModal } from './modal-contribution';
+import { fooModal, barModal } from './modal-contribution';
 
 export const ModalContainerComponent: React.FC = () => {
   const modalService = useInject(ModalService);
@@ -12,7 +12,15 @@ export const ModalContainerComponent: React.FC = () => {
     <div>
       <Button
         onClick={() => {
-          modalService.openModal(demoModal, 'a new modal!');
+          modalService.openModal(fooModal, 'a new modal!');
+        }}
+      >
+        打开弹窗
+      </Button>
+
+      <Button
+        onClick={() => {
+          modalService.openModal(barModal, 'a green modal!');
         }}
       >
         打开弹窗
