@@ -9,6 +9,8 @@
 
     /* code quality */
     "strict": true,
+    "strictPropertyInitialization": false,
+
     "exactOptionalPropertyTypes": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": false,
