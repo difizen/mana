@@ -48,8 +48,9 @@ export namespace CommonMenus {
   export const MAIN_MENU = [...MAIN_MENU_BAR, 'a_main_menu'];
   export const SUB = [...MAIN_MENU, 'a_main_submenu'];
   export const HELP = [...MAIN_MENU_BAR, 'b_help_menus'];
-  export const ACTION_GROUP = [...MAIN_MENU, 'b_action_group'];
-  export const ENABLE_GROUP = [...MAIN_MENU, 'c_enable_group'];
+  export const TEST_GROUP = [...MAIN_MENU, 'b_test_group'];
+  export const ACTION_GROUP = [...MAIN_MENU, 'c_action_group'];
+  export const ENABLE_GROUP = [...MAIN_MENU, 'd_enable_group'];
 }
 
 @singleton({ contrib: [MenuContribution, CommandContribution] })
@@ -85,6 +86,7 @@ export class Menus implements MenuContribution, CommandContribution {
   registerMenus(menu: MenuRegistry) {
     menu.registerGroupMenu(CommonMenus.ACTION_GROUP, {});
     menu.registerGroupMenu(CommonMenus.ENABLE_GROUP, {});
+    menu.registerGroupMenu(CommonMenus.TEST_GROUP, {});
     menu.registerSubmenu(CommonMenus.MAIN_MENU, { label: '主菜单' });
     menu.registerSubmenu(CommonMenus.SUB, { label: '子菜单' });
     menu.registerSubmenu(CommonMenus.HELP, { label: '帮助' });
