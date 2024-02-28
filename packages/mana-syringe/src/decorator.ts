@@ -40,12 +40,15 @@ export function transient<T = any>(
 
 export function inject(
   token: Syringe.Token<any>,
-): (target: any, targetKey: string, index?: number | undefined) => void {
+  // Typescript 5 makes type-checking more accurate for decorators under --experimentalDecorators,
+  // We can get a type error: Parameters of type undefined cannot be assigned to parameters of type string,
+  // Let's leave the targetKey type loose and wait for inversify to fix the type problem.
+): (target: any, targetKey: any, index?: number | undefined) => void {
   return inversifyInject(tokenToIdentifier(token));
 }
 export function named(
   name: Syringe.Named,
-): (target: any, targetKey: string, index?: number | undefined) => void {
+): (target: any, targetKey: any, index?: number | undefined) => void {
   return inversifyNamed(namedToIdentifier(name));
 }
 export { postConstruct, optional, unmanaged, decorate } from 'inversify';
