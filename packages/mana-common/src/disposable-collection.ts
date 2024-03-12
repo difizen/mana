@@ -77,4 +77,11 @@ export class DisposableCollection implements Disposable {
       return disposables.map((toDispose) => this.doPush(toDispose));
     }
   }
+
+  /**
+   * @deprecated use push instead
+   */
+  pushAll(disposables: Disposable[]): Disposable[] {
+    return this.push(...disposables);
+  }
 }
