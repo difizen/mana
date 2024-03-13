@@ -1,6 +1,7 @@
 import assert from 'assert';
+import 'reflect-metadata';
 
-import { prop, ObservableProperties } from './index';
+import { prop, ObservableProperties, Observability, origin } from './index';
 
 describe('decorator', () => {
   it('#prop', () => {
@@ -23,5 +24,18 @@ describe('decorator', () => {
     assert(extextProperties?.length === 2);
     const instanceProperties = ObservableProperties.find(foo);
     assert(instanceProperties?.length === 1 && instanceProperties.includes('name'));
+  });
+  it('#origin', () => {
+    class Foo {
+      @origin()
+      a?: string;
+      b?: string;
+    }
+    class Bar extends Foo {}
+
+    const foo = new Foo();
+    const bar = new Bar();
+    assert(Observability.shouldKeepOrigin(foo, 'a'));
+    assert(Observability.shouldKeepOrigin(bar, 'a'));
   });
 });

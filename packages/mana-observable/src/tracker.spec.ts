@@ -5,6 +5,7 @@ import { noop } from '@difizen/mana-common';
 
 import {
   prop,
+  origin,
   Trackable,
   Tracker,
   Observability,
@@ -665,5 +666,32 @@ describe('Tracker', () => {
     assert(arr1 === obj.arr);
     assert(Observability.getOrigin(obj1) === map.get('obj'));
     assert(t1 === arr[1]);
+  });
+
+  it('#origin property', () => {
+    const t = {};
+    const arr = [0, t];
+    const map = new Map();
+    const obj = { arr: [] };
+    map.set('obj', t);
+    class Foo {
+      @origin()
+      obj = obj;
+      @origin()
+      arr = arr;
+      @prop()
+      map = map;
+    }
+    const foo = new Foo();
+
+    let trackable: Foo;
+    const reaction = () => {
+      trackable = Tracker.track(foo, reaction);
+    };
+    reaction(); // 1
+
+    assert(trackable!.arr === arr);
+    assert(trackable!.map !== map);
+    assert(trackable!.obj === obj);
   });
 });
