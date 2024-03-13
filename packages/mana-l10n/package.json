@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-l10n",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "keywords": [],
   "exports": {
     ".": {
