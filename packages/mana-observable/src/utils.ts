@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 import type { Disposable } from '@difizen/mana-common';
-import { getPropertyDescriptor } from '@difizen/mana-common';
+import { isPlainObject, getPropertyDescriptor } from '@difizen/mana-common';
 
 import { ObservableConfig } from './config';
 import type { Traceable } from './core';
@@ -15,6 +14,7 @@ export namespace Observability {
   export function isObject(obj: any): obj is Record<string | number | symbol, any> {
     return !!obj && typeof obj === 'object';
   }
+
   export function canBeObservable(
     obj: any,
   ): obj is Record<string | number | symbol, any> {
@@ -26,6 +26,7 @@ export namespace Observability {
     }
     return true;
   }
+
   export function marked(obj: any, property?: string | symbol): boolean {
     if (!isObject(obj)) {
       return false;
@@ -36,11 +37,31 @@ export namespace Observability {
     }
     return Reflect.hasOwnMetadata(ObservableSymbol.Observable, origin);
   }
+
   export function mark(obj: Record<any, any>, property?: string | symbol) {
     Reflect.defineMetadata(ObservableSymbol.Observable, true, obj);
     if (property) {
       Reflect.defineMetadata(ObservableSymbol.Observable, true, obj, property);
     }
+  }
+
+  export function defineOrigin(obj: Record<any, any>, property: string | symbol) {
+    Reflect.defineMetadata(ObservableSymbol.KeepOrigin, true, obj, property);
+  }
+
+  export function shouldKeepOrigin(obj: any, property: string | symbol): boolean {
+    if (!isObject(obj)) {
+      return false;
+    }
+    const origin = getOrigin(obj);
+    if (isPlainObject(origin)) {
+      return false;
+    }
+    return Reflect.hasMetadata(
+      ObservableSymbol.KeepOrigin,
+      origin.constructor,
+      property,
+    );
   }
 
   export function getOrigin<T = any>(obj: T): T {
@@ -49,6 +70,7 @@ export namespace Observability {
     }
     return obj[ObservableSymbol.Self];
   }
+
   export function equals(a: any, b: any) {
     return getOrigin(a) === getOrigin(b);
   }

@@ -150,6 +150,9 @@ export namespace Tracker {
         let notifier;
         let value;
         if (typeof property === 'string') {
+          if (Observability.shouldKeepOrigin(target, property)) {
+            return target[property];
+          }
           const descriptor = getPropertyDescriptor(target, property);
           if (descriptor?.configurable === false && descriptor?.writable === false) {
             // non-configurable and non-writable property should return the actual value

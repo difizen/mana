@@ -6,6 +6,7 @@ export namespace ObservableSymbol {
   export const Notifier = Symbol('Notifier');
   export const Observable = Symbol('Observable');
   export const ObservableProperties = Symbol('ObservableProperties');
+  export const KeepOrigin = Symbol('KeepOrigin');
   export const Self = Symbol('Self');
 }
 
