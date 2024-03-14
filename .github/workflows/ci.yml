@@ -8,6 +8,9 @@ on:
       - reopened
       - synchronize
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: false
 
 jobs:
   ci-javascript:
@@ -21,3 +24,5 @@ jobs:
       matrix:
         node-version: ['16']
         python-version: ['3.8']
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -24,13 +24,13 @@ jobs:
     needs: [changesets]
     if: |
       needs.changesets.outputs.should-release == 'true'
-
     name: Prerelease CI
     uses: ./.github/workflows/ci.yml
-
     permissions:
       contents: read
       actions: read
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   publish:
     needs: [ci]
