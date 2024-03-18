@@ -1,3 +1,6 @@
+import { GlobalContainer, type Syringe } from '@difizen/mana-syringe';
+
+import { Application, ApplicationState, ApplicationStateService } from './application';
 import { ApplicationModule } from './application';
 import { CommandModule } from './command';
 import { CommonModule } from './common';
@@ -5,6 +8,7 @@ import { ConfigurationModule } from './configuration';
 import { ContextModule } from './context';
 import { KeybindModule } from './keybinding';
 import { CoreMenuModule } from './menu';
+import { ManaContext } from './module';
 import { ManaModule } from './module';
 import { SelectionModule } from './selection';
 import { ThemeVariableModule } from './theme';
@@ -54,4 +58,44 @@ export const ManaModules = {
   Context: ContextModule,
   Keybind: KeybindModule,
   Configuration: ConfigurationModule,
+};
+
+export const startManaApplication = (
+  modules?: Syringe.Module[],
+  context?: Syringe.Context,
+  onReady?: (ctx: ManaContext, app: Application) => void,
+) => {
+  const container = context?.container || GlobalContainer;
+  const manaContext = new ManaContext(container);
+  const loadModules = async () => {
+    if (modules) {
+      for (const moduleOption of modules) {
+        await manaContext.load(moduleOption);
+      }
+    }
+  };
+  const onModuleReady = (ctx: ManaContext) => {
+    const app = ctx.container.get(Application);
+    const appState = ctx.container.get(ApplicationStateService);
+    app.start();
+    appState
+      .reachedState(ApplicationState.Ready)
+      .then(() => {
+        if (onReady) {
+          onReady(ctx, app);
+        }
+        return;
+      })
+      .catch((_e) => {
+        //
+      });
+  };
+  loadModules()
+    .then(() => {
+      onModuleReady(manaContext);
+      return;
+    })
+    .catch((_e) => {
+      //
+    });
 };
