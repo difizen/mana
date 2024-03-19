@@ -1,5 +1,11 @@
 # @difizen/mana-common
 
+## 0.1.12
+
+### Patch Changes
+
+- 8eee617: chore: update the peerDependencies about react
+
 ## 0.1.11
 
 ### Patch Changes
