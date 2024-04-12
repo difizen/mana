@@ -3,13 +3,15 @@
 import 'reflect-metadata';
 import assert from 'assert';
 
-import { Contribution, contrib } from '..';
+import { Contribution, contrib, Module } from '..';
 import { GlobalContainer } from '../container';
 import { register } from '../container';
 import { Syringe } from '../core';
 import { inject, singleton } from '../decorator';
 
 import { DefaultContributionProvider } from './contribution-provider';
+
+import { ContributionOptionConfig } from './index';
 
 describe('contribution', () => {
   it('#register contribution', () => {
@@ -123,5 +125,49 @@ describe('contribution', () => {
     childContainer.register(Foo1);
 
     assert(bar.contributionChanged);
+  });
+
+  it('#contirbution config', () => {
+    ContributionOptionConfig.recursive = true;
+    const p = GlobalContainer.createChild();
+    const fooContainer = p.createChild();
+    const barContainer = p.createChild();
+    const DemoContribution = Syringe.defineToken('FooContribution');
+    interface DemoContribution {
+      name: string;
+    }
+    @singleton({ contrib: DemoContribution })
+    class Foo implements DemoContribution {
+      name = 'foo';
+    }
+
+    @singleton({ contrib: DemoContribution })
+    class Bar implements DemoContribution {
+      name = 'bar';
+    }
+
+    @singleton({ contrib: DemoContribution })
+    class Baz implements DemoContribution {
+      name = 'baz';
+    }
+    const BazModule = Module().register(Baz);
+    const FooModule = Module().register(Foo).contribution(DemoContribution);
+    const BarModule = Module().register(Bar).contribution(DemoContribution);
+    p.load(BazModule);
+    fooContainer.load(FooModule);
+    barContainer.load(BarModule);
+    const fooProvider = fooContainer.getNamed<Contribution.Provider<DemoContribution>>(
+      Contribution.Provider,
+      DemoContribution,
+    );
+    const barProvider = barContainer.getNamed<Contribution.Provider<DemoContribution>>(
+      Contribution.Provider,
+      DemoContribution,
+    );
+    const foos = fooProvider.getContributions();
+    assert(foos.length === 2);
+    assert(foos.find((item) => item.name === 'foo'));
+    assert(foos.find((item) => item.name === 'baz'));
+    assert(barProvider.getContributions().length === 2);
   });
 });

@@ -20,7 +20,7 @@ export const Provider = Syringe.defineToken('SyringeContributionProvider', {
   global: true,
 });
 
-export class ContributionOptionConfigImpl {
+class ContributionOptionConfigImpl {
   recursive = false;
   cache = true;
 }
