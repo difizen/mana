@@ -1,5 +1,18 @@
 # @difizen/mana-ui
 
+## 0.1.14
+
+### Patch Changes
+
+- 1b880fe: fix: attributes in ContributionOptionConfig
+- Updated dependencies [1b880fe]
+  - @difizen/mana-syringe@0.1.14
+  - @difizen/mana-app@0.1.14
+  - @difizen/mana-common@0.1.14
+  - @difizen/mana-core@0.1.14
+  - @difizen/mana-observable@0.1.14
+  - @difizen/mana-react@0.1.14
+
 ## 0.1.13
 
 ### Patch Changes
