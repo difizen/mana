@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.13
+
+### Patch Changes
+
+- 76745bd: feat: add ContributionOptionConfig
+
 ## 0.1.12
 
 ### Patch Changes

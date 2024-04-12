@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-ui",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "keywords": [
     "mana",
     "difizen",
@@ -41,12 +41,12 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@difizen/mana-common": "^0.1.12",
-    "@difizen/mana-syringe": "^0.1.12",
-    "@difizen/mana-core": "^0.1.12",
-    "@difizen/mana-observable": "^0.1.12",
-    "@difizen/mana-react": "^0.1.12",
-    "@difizen/mana-app": "^0.1.12",
+    "@difizen/mana-common": "^0.1.13",
+    "@difizen/mana-syringe": "^0.1.13",
+    "@difizen/mana-core": "^0.1.13",
+    "@difizen/mana-observable": "^0.1.13",
+    "@difizen/mana-react": "^0.1.13",
+    "@difizen/mana-app": "^0.1.13",
     "classnames": "^2.3.2"
   },
   "devDependencies": {
