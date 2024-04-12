@@ -21,8 +21,8 @@ export const Provider = Syringe.defineToken('SyringeContributionProvider', {
 });
 
 export class ContributionOptionConfigImpl {
-  recursive: false;
-  cache: true;
+  recursive = false;
+  cache = true;
 }
 
 export const ContributionOptionConfig = new ContributionOptionConfigImpl();
