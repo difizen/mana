@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-observable",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "",
   "keywords": [
     "mana",
@@ -42,8 +42,8 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@difizen/mana-common": "^0.1.13",
-    "@difizen/mana-syringe": "^0.1.13",
+    "@difizen/mana-common": "^0.1.14",
+    "@difizen/mana-syringe": "^0.1.14",
     "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
