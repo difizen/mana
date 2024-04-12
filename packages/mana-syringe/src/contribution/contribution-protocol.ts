@@ -19,3 +19,10 @@ export type Provider<T extends Record<string, any>> = {
 export const Provider = Syringe.defineToken('SyringeContributionProvider', {
   global: true,
 });
+
+export class ContributionOptionConfigImpl {
+  recursive: false;
+  cache: true;
+}
+
+export const ContributionOptionConfig = new ContributionOptionConfigImpl();

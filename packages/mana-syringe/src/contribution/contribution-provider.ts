@@ -4,7 +4,11 @@ import { DisposableCollection } from '@difizen/mana-common';
 
 import type { Syringe } from '../core';
 
-import type { Option, Provider } from './contribution-protocol';
+import {
+  ContributionOptionConfig,
+  type Option,
+  type Provider,
+} from './contribution-protocol';
 
 export class DefaultContributionProvider<T extends Record<string, any>>
   implements Provider<T>, Disposable
@@ -13,7 +17,10 @@ export class DefaultContributionProvider<T extends Record<string, any>>
   get onChanged() {
     return this.onChangedEmitter.event;
   }
-  protected option: Option = { recursive: false, cache: true };
+  protected option: Option = {
+    recursive: ContributionOptionConfig.recursive,
+    cache: ContributionOptionConfig.cache,
+  };
   protected services: T[] | undefined;
   protected readonly serviceIdentifier: Syringe.Token<T>;
   protected readonly container: Syringe.Container;
