@@ -1,5 +1,18 @@
 # @difizen/mana-app
 
+## 0.1.13
+
+### Patch Changes
+
+- 76745bd: feat: add ContributionOptionConfig
+- Updated dependencies [76745bd]
+  - @difizen/mana-syringe@0.1.13
+  - @difizen/mana-common@0.1.13
+  - @difizen/mana-core@0.1.13
+  - @difizen/mana-l10n@0.1.13
+  - @difizen/mana-observable@0.1.13
+  - @difizen/mana-react@0.1.13
+
 ## 0.1.12
 
 ### Patch Changes
