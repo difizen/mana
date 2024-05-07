@@ -1,5 +1,13 @@
 # @difizen/mana-react
 
+## 0.1.15
+
+### Patch Changes
+
+- 95eb30c: chore: add father config
+- Updated dependencies [95eb30c]
+  - @difizen/mana-common@0.1.15
+
 ## 0.1.14
 
 ### Patch Changes

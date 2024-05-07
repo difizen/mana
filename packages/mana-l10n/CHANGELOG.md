@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.15
+
+### Patch Changes
+
+- 95eb30c: chore: add father config
+
 ## 0.1.14
 
 ### Patch Changes
