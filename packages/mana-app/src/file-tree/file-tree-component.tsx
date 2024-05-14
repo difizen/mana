@@ -1,6 +1,5 @@
 import 'font-awesome/css/font-awesome.min.css';
 import 'file-icons-js/css/style.css';
-import './file-tree-style.less';
 
 import type { ComponentType } from 'react';
 
