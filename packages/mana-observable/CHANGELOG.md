@@ -1,5 +1,14 @@
 # @difizen/mana-observable
 
+## 0.1.16
+
+### Patch Changes
+
+- 84f7cd8: No longer import font-awesome styles through less file.
+- Updated dependencies [84f7cd8]
+  - @difizen/mana-syringe@0.1.16
+  - @difizen/mana-common@0.1.16
+
 ## 0.1.15
 
 ### Patch Changes
