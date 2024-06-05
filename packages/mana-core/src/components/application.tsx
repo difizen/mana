@@ -20,6 +20,7 @@ const PortalModule = ManaModule.create().register(
 );
 
 export interface ApplicationProps extends ContextProps {
+  onInitialized?: (ctx: ManaContext, app: Application) => void;
   onReady?: (ctx: ManaContext, app: Application) => void;
   /**
    * 使用路由模式时需要开启
@@ -31,6 +32,7 @@ export interface ApplicationProps extends ContextProps {
 export const ApplicationComponent = (props: ApplicationProps) => {
   const {
     onReady,
+    onInitialized,
     modules = [],
     loading,
     renderChildren = false,
@@ -61,6 +63,18 @@ export const ApplicationComponent = (props: ApplicationProps) => {
     if (current && app) {
       app.host = current;
     }
+    appState
+      .reachedState(ApplicationState.Initialized)
+      .then(() => {
+        if (onInitialized) {
+          onInitialized(ctx, app);
+        }
+        return;
+      })
+      .catch((_e) => {
+        //
+      });
+
     app.start();
     appState
       .reachedState(ApplicationState.Ready)
