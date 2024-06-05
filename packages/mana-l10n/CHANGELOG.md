@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.17
+
+### Patch Changes
+
+- 1acf757: feat: add onInitialized hooks for ApplicationComponent
+
 ## 0.1.16
 
 ### Patch Changes

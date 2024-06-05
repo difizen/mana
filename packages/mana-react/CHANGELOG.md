@@ -1,5 +1,13 @@
 # @difizen/mana-react
 
+## 0.1.17
+
+### Patch Changes
+
+- 1acf757: feat: add onInitialized hooks for ApplicationComponent
+- Updated dependencies [1acf757]
+  - @difizen/mana-common@0.1.17
+
 ## 0.1.16
 
 ### Patch Changes
