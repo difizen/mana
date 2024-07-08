@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-syringe",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "",
   "keywords": [
     "mana",
@@ -44,7 +44,7 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@difizen/mana-common": "^0.1.17",
+    "@difizen/mana-common": "^0.1.18",
     "inversify": "^5.1.1",
     "reflect-metadata": "^0.1.13"
   },

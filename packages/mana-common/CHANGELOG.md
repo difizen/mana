@@ -1,5 +1,11 @@
 # @difizen/mana-common
 
+## 0.1.18
+
+### Patch Changes
+
+- 02ef50f: basic styles no longer affect global styles.
+
 ## 0.1.17
 
 ### Patch Changes
