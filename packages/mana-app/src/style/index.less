@@ -29,6 +29,26 @@ body,
   }
 }
 
+.mana-view-container {
+  a {
+    color: var(--mana-textLink-foreground);
+  }
+
+  a:active,
+  a:hover {
+    color: var(--mana-textLink-activeForeground);
+  }
+
+  code {
+    color: var(--mana-textPreformat-foreground);
+  }
+
+  blockquote {
+    background: var(--vscode-textBlockQuote-background);
+    border: var(--mana-border-width) solid var(--mana-textBlockQuote-border);
+  }
+}
+
 .mana-input {
   padding-left: 5px;
   color: var(--mana-input-foreground);
