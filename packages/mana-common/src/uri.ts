@@ -102,7 +102,7 @@ export class URI {
     return left.includes(right);
   }
 
-  protected sameOrigin(uri: URI): boolean {
+  sameOrigin(uri: URI): boolean {
     return this.authority === uri.authority && this.scheme === uri.scheme;
   }
 
@@ -163,5 +163,22 @@ export class URI {
       fragment,
     });
     return new URI(newCodeUri);
+  }
+
+  static sameOrigin(uriA: URI, uriB: URI): boolean {
+    return uriA.authority === uriB.authority && uriA.scheme === uriB.scheme;
+  }
+
+  static isEqualOrParent(uriA: URI, uriB: URI, caseSensitive = true): boolean {
+    if (!URI.sameOrigin(uriA, uriB)) {
+      return false;
+    }
+    let left = uriA.path;
+    let right = uriB.path;
+    if (!caseSensitive) {
+      left = new Path(left.toString().toLowerCase());
+      right = new Path(right.toString().toLowerCase());
+    }
+    return !!Path.relative(left, right);
   }
 }

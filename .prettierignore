@@ -21,3 +21,4 @@ pnpm-lock.yaml
 **/*/mana-react/src/**
 tinyColor.less
 
+.changeset
