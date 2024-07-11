@@ -1,5 +1,13 @@
 # @difizen/mana-react
 
+## 0.1.19
+
+### Patch Changes
+
+- 43f310a: Remove global style css
+- Updated dependencies [43f310a]
+  - @difizen/mana-common@0.1.19
+
 ## 0.1.18
 
 ### Patch Changes
