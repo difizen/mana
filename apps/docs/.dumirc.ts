@@ -84,15 +84,11 @@ export default defineConfig({
   favicons: [
     'https://gw-office.alipayobjects.com/bmw-prod/0e2a3424-71b6-40e4-bb34-364aec782200.ico',
   ],
-  extraBabelPlugins: [
-    ['@babel/plugin-proposal-decorators', { legacy: true }],
-    ['@babel/plugin-transform-flow-strip-types', { allowDeclareFields: true }],
-    ['@babel/plugin-transform-class-properties', { loose: true }],
-    ['@babel/plugin-transform-private-methods', { loose: true }],
-    ['@babel/plugin-transform-private-property-in-object', { loose: true }],
-    'babel-plugin-parameter-decorator',
-  ],
-  plugins: ['./dumi-plugin-alias', './dumi-plugin-nodenext'],
+  plugins: ['@difizen/umi-plugin-mana', './dumi-plugin-alias'],
+  mana: {
+    decorator: true,
+    nodenext: true,
+  },
   exportStatic: {},
   resolve: {
     docDirs: ['docs'],
