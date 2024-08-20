@@ -24,6 +24,7 @@
   "dependencies": {
     "@difizen/mana-app": "^0.1.19",
     "@difizen/mana-react": "^0.1.19",
+    "@difizen/umi-plugin-mana": "workspace:*",
     "@ant-design/icons": "^5.1.0",
     "antd": "^5.8.6"
   }
