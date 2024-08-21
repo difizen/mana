@@ -117,11 +117,12 @@ export class Menu implements Disposable {
             );
             lastItemIsDivider = true;
           }
-          if (child.children.length === 0) {
+          const visibleChildren = child.children.filter((item) => this.isVisible(item));
+          if (visibleChildren.length === 0) {
             continue;
           }
           const children = this.renderMenuList(
-            [...child.children].sort(this.sort),
+            [...visibleChildren].sort(this.sort),
             true,
           );
           if (children instanceof Array) {
