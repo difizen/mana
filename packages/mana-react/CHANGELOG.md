@@ -1,5 +1,13 @@
 # @difizen/mana-react
 
+## 0.1.20
+
+### Patch Changes
+
+- 690a2aa: Added umi plug-in, now you can use mana in umi project more easily.
+- Updated dependencies [690a2aa]
+  - @difizen/mana-common@0.1.20
+
 ## 0.1.19
 
 ### Patch Changes
