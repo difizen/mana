@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.20
+
+### Patch Changes
+
+- 690a2aa: Added umi plug-in, now you can use mana in umi project more easily.
+
 ## 0.1.19
 
 ### Patch Changes
