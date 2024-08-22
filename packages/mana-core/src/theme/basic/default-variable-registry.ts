@@ -13,6 +13,16 @@ export class DefaultVariableRegistry implements VariableContribution {
         description: '',
       },
       {
+        id: 'border.radius',
+        defaults: { dark: '4px', light: '4px' },
+        description: '',
+      },
+      {
+        id: 'border.radius.lg',
+        defaults: { dark: '8px', light: '8px' },
+        description: '',
+      },
+      {
         id: 'panel.border.width',
         defaults: { dark: '2px', light: '2px' },
         description: '',

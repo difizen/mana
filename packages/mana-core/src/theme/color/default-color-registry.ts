@@ -17,6 +17,23 @@ export class DefaultColorRegistry implements ColorContribution {
         },
         description: '',
       },
+      // {
+      //   id: 'color.text.disabled',
+      //   defaults: {
+      //     dark: Color.rgba(255, 255, 255, 0.85),
+      //     light: Color.rgba(0, 0, 0, 0.25),
+      //   },
+      //   description: '',
+      // },
+      // {
+      //   id: 'color.bg.container.disabled',
+      //   defaults: {
+      //     dark: Color.rgba(255, 255, 255, 0.85),
+      //     light: Color.rgba(0, 0, 0, 0.25),
+      //   },
+      //   description: '',
+      // },
+
       {
         id: 'text.secondary',
         defaults: {
@@ -40,6 +57,15 @@ export class DefaultColorRegistry implements ColorContribution {
           light: Color.rgba(0, 0, 0, 0.25),
         },
         description: '',
+      },
+      {
+        id: 'menu.active.background',
+        defaults: {
+          dark: Color.transparent('primary.color.hover', 0.5),
+          light: Color.transparent('primary.color.hover', 0.7),
+        },
+        description:
+          'Inactive tab foreground color in an active group. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.',
       },
       {
         id: 'color.border',
@@ -327,7 +353,25 @@ export class DefaultColorRegistry implements ColorContribution {
           'Inactive tab background color. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.',
       },
       {
+        id: 'tab.inactive.background',
+        defaults: {
+          dark: '#2D2D2D',
+          light: '#ECECEC',
+        },
+        description:
+          'Inactive tab background color. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.',
+      },
+      {
         id: 'tab.activeForeground',
+        defaults: {
+          dark: Color.white,
+          light: '#333333',
+        },
+        description:
+          'Active tab foreground color in an active group. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.',
+      },
+      {
+        id: 'tab.active.foreground',
         defaults: {
           dark: Color.white,
           light: '#333333',
@@ -383,8 +427,19 @@ export class DefaultColorRegistry implements ColorContribution {
         description: 'List/Tree background when hovering over items using the mouse.',
       },
       {
+        id: 'list.hover.background',
+        defaults: { dark: Color.rgba(255, 255, 255, 0.08), light: '#f5f5f5' },
+        description: 'List/Tree background when hovering over items using the mouse.',
+      },
+      {
         id: 'list.activeSelectionForeground',
         defaults: { dark: '#FFF', light: '#FFF' },
+        description:
+          'List/Tree foreground color for the selected item when the list/tree is active. An active list/tree has keyboard focus, an inactive does not.',
+      },
+      {
+        id: 'list.active.selection.foreground',
+        defaults: { dark: '#fff', light: '#FFF' },
         description:
           'List/Tree foreground color for the selected item when the list/tree is active. An active list/tree has keyboard focus, an inactive does not.',
       },
