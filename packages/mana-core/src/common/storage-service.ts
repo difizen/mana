@@ -1,12 +1,19 @@
-import type { MaybePromise } from '@difizen/mana-common';
+import type { MaybePromise, Event } from '@difizen/mana-common';
+import { Emitter } from '@difizen/mana-common';
 
 import type { DebugService } from './debug';
 import { debug } from './debug';
 import type { LocalStorage, StorageService } from './storage-protocol';
 
 export class LocalStorageService implements StorageService {
+  public usePathInPrefix = false;
   private storage: LocalStorage = {};
   protected logger: DebugService;
+
+  protected onDiskQuotaExceededEmitter = new Emitter<void>();
+  get onDiskQuotaExceeded(): Event<void> {
+    return this.onDiskQuotaExceededEmitter.event;
+  }
 
   constructor() {
     this.logger = debug;
@@ -22,9 +29,10 @@ export class LocalStorageService implements StorageService {
   setData<T>(key: string, data?: T): MaybePromise<void> {
     if (data !== undefined) {
       try {
-        this.storage[this.prefix(key)] = JSON.stringify(data);
+        const value = typeof data === 'string' ? data : JSON.stringify(data);
+        this.storage[this.prefix(key)] = value;
       } catch (e) {
-        this.showDiskQuotaExceededMessage();
+        this.onDiskQuotaExceededEmitter.fire();
       }
     } else {
       delete this.storage[this.prefix(key)];
@@ -37,17 +45,17 @@ export class LocalStorageService implements StorageService {
     if (result === undefined) {
       return defaultValue as any;
     }
-    return JSON.parse(result) as any;
+    try {
+      return JSON.parse(result) as any;
+    } catch (e) {
+      return result;
+    }
   }
 
   protected prefix(key: string): string {
     const pathname = typeof window === 'undefined' ? '' : window.location.pathname;
-    return `mana:${pathname}:${key}`;
-  }
-
-  // TODO
-  private async showDiskQuotaExceededMessage(): Promise<void> {
-    //
+    const prefix = this.usePathInPrefix ? `mana:${pathname}` : 'mana';
+    return `${prefix}:${key}`;
   }
 
   /**
@@ -59,7 +67,7 @@ export class LocalStorageService implements StorageService {
     try {
       this.storage[keyTest] = JSON.stringify(new Array(60000));
     } catch (error) {
-      this.showDiskQuotaExceededMessage();
+      this.onDiskQuotaExceededEmitter.fire();
     } finally {
       this.storage.removeItem?.(keyTest);
     }
