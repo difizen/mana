@@ -4,11 +4,13 @@
 @menu-prefix-cls: ~'@{mana-prefix}-menu';
 @menubar-prefix-cls: ~'@{mana-prefix}-menubar';
 
-@menubar-menu-item-color: #333333;
-@menubar-menu-item-hover-color: #212121;
-@menubar-menu-item-hover-bg: rgba(255, 255, 255, 0);
-@menubar-menu-item-active-color: #212121;
-@menubar-menu-item-active-bg: #ffffff;
+@menubar-menu-item-color: var(--mana-menu-item-color);
+@menubar-menu-item-hover-color: var(--mana-menu-item-hover-color);
+@menubar-menu-item-hover-bg: var(--mana-menu-item-hover-bg);
+@menubar-menu-item-active-color: var(--mana-menu-item-active-color);
+@menubar-menu-item-active-bg: var(--mana-menu-item-active-bg);
+
+
 @menubar-item-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
 
 .@{menubar-prefix-cls} {

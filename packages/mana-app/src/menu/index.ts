@@ -3,9 +3,10 @@ import { ManaModule } from '@difizen/mana-core';
 
 import { Menu, MenuFactory, MenuPathSymbol } from './menu';
 import 'rc-tooltip/assets/bootstrap.css';
+import { MenuColorRegistry } from './menu-color-registry';
 
 export const MenuModule = ManaModule.create()
-  .register(Menu)
+  .register(Menu, MenuColorRegistry)
   .register({
     token: MenuFactory,
     useDynamic: (ctx) => {

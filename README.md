@@ -13,11 +13,3 @@ pnpm bootstrap
 ```
 pnpm run docs
 ```
-
-# release
-
-```
-pnpm changeset
-pnpm changeset version
-pnpm changeset publish # --tag
-```
