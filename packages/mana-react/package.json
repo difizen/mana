@@ -45,11 +45,13 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.0",
-    "@difizen/mana-common": "^0.1.20",
+    "@difizen/mana-common": "workspace:*",
     "classnames": "^2.3.2",
     "rc-dropdown": "^3.2.0",
+    "rc-motion": "^2.9.2",
+    "rc-notification": "^5.6.0",
     "rc-tabs": "^11.10.1",
-    "rc-util": "^4.15.7"
+    "rc-util": "^4.21.1"
   },
   "peerDependencies": {
     "react": ">=16.8.6",
