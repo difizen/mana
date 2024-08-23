@@ -5,7 +5,7 @@ import type { ColorRegistry } from './color-registry';
 import { Color } from './color-registry';
 
 @singleton({ contrib: ColorContribution })
-export class DefaultColorRegistry implements ColorContribution {
+export class DefaultColorContribution implements ColorContribution {
   registerColors(colors: ColorRegistry): void {
     colors.register(
       // #region antd variable

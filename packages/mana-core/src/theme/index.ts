@@ -1,14 +1,14 @@
 import { ManaModule } from '../module';
 
-import { DefaultVariableRegistry } from './basic/default-variable-registry';
-import { VariableApplication } from './basic/variable-application';
+import { AntdVariableContribution } from './basic/antd-variable-contribution';
+import { DefaultVariableContribution } from './basic/default-variable-contribution';
 import { VariableContribution } from './basic/variable-protocol';
 import { VariableRegistry } from './basic/variable-registry';
-import { AntdColorRegistry } from './color/antd-color-registry';
-import { ColorApplication } from './color/color-application';
+import { AntdColorContribution } from './color/antd-color-contribution';
 import { ColorContribution } from './color/color-protocol';
 import { ColorRegistry } from './color/color-registry';
-import { DefaultColorRegistry } from './color/default-color-registry';
+import { DefaultColorContribution } from './color/default-color-contribution';
+import { ThemeApplication } from './theme-app';
 import { ThemeService } from './theme-service';
 
 export * from './basic';
@@ -26,9 +26,11 @@ export const ThemeVariableModule = ManaModule.create()
   .contribution(VariableContribution, ColorContribution)
   .register(
     VariableRegistry,
-    VariableApplication,
-    DefaultVariableRegistry,
-    AntdColorRegistry,
+    ColorRegistry,
+    DefaultColorContribution,
+    ThemeApplication,
+    DefaultVariableContribution,
+    AntdColorContribution,
+    AntdVariableContribution,
   )
-  .register(ColorRegistry, ColorApplication, DefaultColorRegistry)
   .dependOn(ThemeModule);

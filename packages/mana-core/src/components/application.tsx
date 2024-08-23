@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as React from 'react';
+import { useMemo, useState, createRef } from 'react';
 
 import { ApplicationState, ApplicationStateService } from '../application';
 import { Application, ApplicationModule } from '../application';
@@ -38,16 +38,14 @@ export const ApplicationComponent = (props: ApplicationProps) => {
     renderChildren = false,
     renderAfterReady = false,
   } = props;
-  const nextModels = React.useMemo(() => {
+  const nextModels = useMemo(() => {
     return [ApplicationModule, PortalModule, ...modules];
   }, [modules]);
 
-  const hostRef = React.createRef<HTMLDivElement>();
-  const [ready, setReady] = React.useState(false);
-  const [appReady, setAppReady] = React.useState(false);
-  const [application, setApplication] = React.useState<Application | undefined>(
-    undefined,
-  );
+  const hostRef = createRef<HTMLDivElement>();
+  const [ready, setReady] = useState(false);
+  const [appReady, setAppReady] = useState(false);
+  const [application, setApplication] = useState<Application | undefined>(undefined);
   const LoadingComponent = () =>
     loading ? <div className="mana-preload">{loading}</div> : null;
   const onModuleReady = (ctx: ManaContext) => {
@@ -128,7 +126,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
     return loadingValue;
   };
   return (
-    <div ref={hostRef} className="mana-app" tabIndex={1}>
+    <div ref={hostRef} className={`mana-app`} tabIndex={1}>
       <ContextComponent
         {...props}
         loading={loadingValue}
