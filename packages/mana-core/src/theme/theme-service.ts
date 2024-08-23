@@ -1,10 +1,12 @@
 import type { Event } from '@difizen/mana-common';
 import { isPromiseLike } from '@difizen/mana-common';
 import { Emitter, Disposable, objects } from '@difizen/mana-common';
+import { prop } from '@difizen/mana-observable';
 import { singleton } from '@difizen/mana-syringe';
 
 import { localStorageService } from '../common';
 import type { StorageService } from '../common';
+
 import './style/theme-base.less';
 
 export const ThemeServiceSymbol = Symbol('ThemeService');
@@ -53,14 +55,28 @@ export class BuiltinThemeProvider {
     BuiltinThemeProvider.hcTheme,
   ];
 }
+
 @singleton()
 export class ThemeService {
   protected themes: Record<string, Theme> = {};
+  @prop()
   protected activeTheme: Theme | undefined;
   protected storageService: StorageService = localStorageService;
   protected readonly themeChange = new Emitter<ThemeChangeEvent>();
 
   readonly onDidColorThemeChange: Event<ThemeChangeEvent> = this.themeChange.event;
+
+  get themeClassName(): string {
+    return `mana-${this.getCurrentTheme().type}`;
+  }
+
+  constructor() {
+    if (typeof window !== undefined) {
+      window.addEventListener('mana-theme-change', (event) => {
+        // this.setCurrentTheme(event.);
+      });
+    }
+  }
 
   static get(): ThemeService {
     const global = window as any; // eslint-disable-line @typescript-eslint/no-explicit-any

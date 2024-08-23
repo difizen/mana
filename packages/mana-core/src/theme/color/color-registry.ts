@@ -1,6 +1,9 @@
-import { DisposableCollection, Disposable, Emitter } from '@difizen/mana-common';
+import type { Disposable } from '@difizen/mana-common';
+import { DisposableCollection, Emitter } from '@difizen/mana-common';
 import { singleton, inject } from '@difizen/mana-syringe';
 
+import { BaseVariableRegistry } from '../base-variable-registry';
+import type { CssVariable, VariableDefinition } from '../protocol';
 import { ThemeService } from '../theme-service';
 
 import * as VSColor from './color';
@@ -73,96 +76,39 @@ export type HSLA = {
   readonly a: number;
 };
 
-export interface ColorDefinition {
-  id: string;
-  defaults?:
-    | {
-        light?: Color;
-        dark?: Color;
-        hc?: Color;
-        [key: string]: Color | undefined;
-      }
-    | undefined;
-  description: string;
-}
-
-export type ColorCssVariable = {
-  name: string;
-  value: string;
-};
-
 /**
  * It should be implemented by an extension, e.g. by the monaco extension.
  */
 @singleton()
-export class ColorRegistry {
-  private definitionList: ColorDefinition[] = [];
+export class ColorRegistry extends BaseVariableRegistry {
+  protected override get definitionList(): VariableDefinition<Color>[] {
+    return [...this.definitionMap.values()];
+  }
+  protected override definitionMap: Map<string, VariableDefinition<Color>> = new Map();
 
-  protected readonly onDidChangeEmitter = new Emitter<void>();
-
-  readonly onDidChange = this.onDidChangeEmitter.event;
-
-  protected readonly themeService: ThemeService;
-
-  constructor(
-    @inject(ThemeService)
-    themeService: ThemeService,
-  ) {
-    this.themeService = themeService;
+  override register(...definitions: VariableDefinition<Color>[]): Disposable {
+    return super.register(...definitions);
   }
 
-  protected fireDidChange(): void {
-    this.onDidChangeEmitter.fire(undefined);
+  protected override doRegister(definition: VariableDefinition<Color>): Disposable {
+    return super.doRegister(definition);
   }
 
-  *getColors(): IterableIterator<string> {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const definition of this.definitionList) {
-      yield definition.id;
-    }
+  getColors() {
+    return this.getDefinitionIds();
   }
 
-  getCurrentCssVariable(id: string): ColorCssVariable | undefined {
-    const value = this.getCurrentColor(id);
-    if (!value) {
-      return undefined;
-    }
-    const name = this.toCssVariableName(id);
-    return { name, value };
-  }
-
-  toCssVariableName(id: string, prefix = 'mana'): string {
-    return `--${prefix}-${id.replace(/\./g, '-')}`;
-  }
-
-  getCurrentColor(id: string): string | undefined {
+  override getCurrentDefinitionValue(id: string): string | undefined {
     const theme = this.themeService.getActiveTheme();
     const { type, extraTokens } = theme;
     if (extraTokens && extraTokens.color && extraTokens.color[id]) {
       return this.toColor(extraTokens.color[id])?.toString();
     }
-    const definition = this.definitionList.find((definition) => definition.id === id);
+    const definition = this.definitionMap.get(id);
     if (definition && definition.defaults && definition.defaults[type]) {
       return this.toColor(definition.defaults[type])?.toString();
     }
     return undefined;
-  }
-
-  register(...definitions: ColorDefinition[]): Disposable {
-    const result = new DisposableCollection(
-      ...definitions.map((definition) => this.doRegister(definition)),
-    );
-    this.fireDidChange();
-    return result;
-  }
-
-  protected doRegister(definition: ColorDefinition): Disposable {
-    this.definitionList.push({
-      id: definition.id,
-      defaults: definition.defaults,
-      description: definition.description,
-    });
-    return Disposable.NONE;
   }
 
   protected toColor(value: Color | undefined): string | VSColor.Color | undefined {
@@ -173,10 +119,10 @@ export class ColorRegistry {
       if (value[0] === '#') {
         return VSColor.Color.fromHex(value);
       }
-      return this.toColor(this.getCurrentColor(value));
+      return this.toColor(this.getCurrentDefinitionValue(value));
     }
     if ('kind' in value) {
-      const colorValue = this.getCurrentColor(value.v);
+      const colorValue = this.getCurrentDefinitionValue(value.v);
       if (colorValue) {
         const color = VSColor.Color.fromHex(colorValue);
         return color[value.kind](value.f);

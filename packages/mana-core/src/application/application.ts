@@ -56,10 +56,11 @@ const TIMER_WARNING_THRESHOLD = 100;
 
 @singleton()
 export class Application {
-  host?: HTMLElement;
+  protected _host?: HTMLElement;
   started = false;
 
-  protected onKeyDownEvent = new Emitter<KeyboardEvent>();
+  protected onKeyDownEmitter = new Emitter<KeyboardEvent>();
+  protected onHostChangedEmitter = new Emitter<HTMLElement | undefined>();
 
   protected unmountToDispose = new DisposableCollection();
 
@@ -68,8 +69,20 @@ export class Application {
   protected readonly stateService: ApplicationStateService;
   protected readonly debugService: DebugService;
 
+  get host(): HTMLElement | undefined {
+    return this._host;
+  }
+
+  set host(v: HTMLElement | undefined) {
+    this._host = v;
+    this.onHostChangedEmitter.fire(v);
+  }
+
   get onKeyDown() {
-    return this.onKeyDownEvent.event;
+    return this.onKeyDownEmitter.event;
+  }
+  get onHostChanged() {
+    return this.onHostChangedEmitter.event;
   }
 
   constructor(
@@ -137,7 +150,7 @@ export class Application {
 
   protected registerKeyDownListener(): Disposable {
     const fireKeyDown = (e: KeyboardEvent) => {
-      this.onKeyDownEvent.fire(e);
+      this.onKeyDownEmitter.fire(e);
     };
     document.addEventListener('keydown', fireKeyDown);
     return Disposable.create(() => {

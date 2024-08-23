@@ -4,7 +4,7 @@ import { VariableContribution } from './variable-protocol';
 import type { VariableRegistry } from './variable-registry';
 
 @singleton({ contrib: VariableContribution })
-export class DefaultVariableRegistry implements VariableContribution {
+export class DefaultVariableContribution implements VariableContribution {
   registerVariables(vars: VariableRegistry): void {
     vars.register(
       {
