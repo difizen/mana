@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-import useScroll from './useScroll';
-import { useWindowSize } from './useWindowSize';
+import useScroll from './useScroll.js';
+import { useWindowSize } from './useWindowSize.js';
 
 interface AnimateOption {
   /** 滚动的断点，一到了该断点开启动画 */

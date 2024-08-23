@@ -1,5 +1,5 @@
 import { Empty, Spin } from 'antd';
-import Paragraph from 'antd/es/typography/Paragraph';
+import Paragraph from 'antd/es/typography/Paragraph.js';
 import { Link } from 'dumi';
 import React from 'react';
 import './index.less';
