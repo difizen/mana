@@ -3,10 +3,8 @@ import DefaultLayout from 'dumi/theme-default/layouts/DocLayout';
 import React from 'react';
 
 import Banner from '../componets/banner/index.js';
-import { Roadmap } from '../componets/roadmap/index.js';
-import TechCard from '../componets/tech-card/index.js';
 import Footer from '../slots/Footer.js';
-import Header from '../slots/Header.js';
+import Header from '../slots/Header/index.js';
 import './DocLayout.less';
 
 const HomeLayout: React.FC = () => {
@@ -19,8 +17,6 @@ const HomeLayout: React.FC = () => {
       </Helmet>
       <Header />
       <Banner />
-      <TechCard />
-      <Roadmap />
       <Footer />
     </div>
   );
