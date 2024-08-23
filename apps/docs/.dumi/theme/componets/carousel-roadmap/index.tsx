@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import useAnimate from '../../hooks/useAnimate';
-import { useWindowSize } from '../../hooks/useWindowSize';
-import { Title } from '../title';
+import useAnimate from '../../hooks/useAnimate.js';
+import { useWindowSize } from '../../hooks/useWindowSize.js';
+import { Title } from '../title/index.js';
 import './index.less';
 
 interface IProps {

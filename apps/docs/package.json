@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "description": "Document site for mana",
+  "type": "module",
   "scripts": {
     "start": "dumi dev",
     "analyze": "ANALYZE=1 dumi build",
@@ -17,15 +18,16 @@
   "engines": {
     "node": ">=16.20.0"
   },
-  "packageManager": "pnpm@8.4.0",
+  "packageManager": "pnpm@9.7.1",
   "peerDependencies": {
     "react": "^18.2.0"
   },
   "dependencies": {
-    "@difizen/mana-app": "^0.1.20",
-    "@difizen/mana-react": "^0.1.20",
-    "@difizen/umi-plugin-mana": "workspace:*",
     "@ant-design/icons": "^5.1.0",
-    "antd": "^5.8.6"
+    "@difizen/mana-app": "workspace:*",
+    "@difizen/mana-react": "workspace:*",
+    "@difizen/umi-plugin-mana": "workspace:*",
+    "antd": "^5.8.6",
+    "octokit": "^3"
   }
 }

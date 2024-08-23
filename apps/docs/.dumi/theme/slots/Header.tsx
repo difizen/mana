@@ -1,9 +1,27 @@
+import { GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
+import { Button, Space } from 'antd';
 import { Link, useLocation, useNavData, useSiteData } from 'dumi';
-import React from 'react';
+import { Octokit } from 'octokit';
+import React, { useEffect, useState } from 'react';
 
-import SearchBar from '../componets/search-bar';
+import SearchBar from '../componets/search-bar/index.js';
 import useScroll from '../hooks/useScroll.js';
 import './Header.less';
+
+const octokit = new Octokit({});
+
+const getRepoStars = async () => {
+  try {
+    const { data } = await octokit.rest.repos.get({
+      owner: 'difizen',
+      repo: 'mana',
+    });
+    const stars = data.stargazers_count;
+    return stars;
+  } catch (error) {
+    return undefined;
+  }
+};
 
 const NavBar: React.FC = () => {
   const nav = useNavData();
@@ -38,6 +56,16 @@ const NavBar: React.FC = () => {
 const Header: React.FC = () => {
   const scroll = useScroll();
   const { themeConfig } = useSiteData();
+  const [stars, setStars] = useState<number | undefined>(undefined);
+  const [theme, setTheme] = useState<string>('light');
+
+  useEffect(() => {
+    getRepoStars()
+      .then((currentStars) => {
+        return setStars(currentStars);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <nav
@@ -69,40 +97,29 @@ const Header: React.FC = () => {
 
       <div className="difizen-dumi-header-right">
         <SearchBar />
-        {/* TODO 目前fork和stars是写死的，等后续采用接口 */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <a
-            href="https://github.com/difizen/libro"
-            target="_blank"
-            rel="noreferrer"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <div className="difizen-dumi-header-right-github-btn">
-              <span className="difizen-dumi-header-right-github-btn-hint">Forks</span>
-              <div style={{ color: 'rgb(66 78 102 / 100%)' }}>
-                {themeConfig['githubInfo']?.forks || 0}
+          <Space>
+            {/* <Button
+              type="text"
+              onClick={() => {
+                setTheme(theme === 'light' ? 'dark' : 'light');
+              }}
+              icon={theme === 'light' ? <SunOutlined /> : <MoonOutlined />}
+            ></Button> */}
+            <Button
+              type="link"
+              target="_blank"
+              rel="noreferrer"
+              href="https://github.com/difizen/mana"
+              className="difizen-dumi-header-right-github-btn"
+              icon={<GithubOutlined />}
+            >
+              <div className="difizen-dumi-header-right-github-star">
+                <span className="difizen-dumi-header-right-github-btn-hint">Stars</span>
+                <div style={{ color: 'rgb(66 78 102 / 100%)' }}>{stars || 0}</div>
               </div>
-            </div>
-          </a>
-          <a
-            href="https://github.com/difizen/libro"
-            target="_blank"
-            rel="noreferrer"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <div className="difizen-dumi-header-right-github-btn">
-              <span className="difizen-dumi-header-right-github-btn-hint">Stars</span>
-              <div style={{ color: 'rgb(66 78 102 / 100%)' }}>
-                {themeConfig['githubInfo']?.stars || 0}
-              </div>
-            </div>
-          </a>
-          <a target="_blank" href={themeConfig['githubInfo']?.url} rel="noreferrer">
-            <img
-              className="difizen-dumi-header-right-github-logo"
-              src="https://mdn.alipayobjects.com/huamei_usjdcg/afts/img/A*Ybx5RKAUMbUAAAAAAAAAAAAADo6HAQ/original"
-            />
-          </a>
+            </Button>
+          </Space>
         </div>
       </div>
     </nav>

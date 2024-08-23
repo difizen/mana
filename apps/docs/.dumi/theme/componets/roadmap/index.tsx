@@ -2,7 +2,7 @@ import { useSiteData } from 'dumi';
 import React from 'react';
 import './index.less';
 
-import CarouselRoadMap from '../carousel-roadmap';
+import CarouselRoadMap from '../carousel-roadmap/index.js';
 
 const rollContent = [
   {
