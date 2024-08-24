@@ -70,7 +70,7 @@ const Header: React.FC = () => {
           <div className="difizen-dumi-header-logo">
             {themeConfig.logo && (
               <Link to={themeConfig['link']}>
-                <img className="difizen-dumi-header-logo-img" src={'./icon.svg'} />
+                <img className="difizen-dumi-header-logo-img" src={themeConfig.logo} />
                 {themeConfig.name}
               </Link>
             )}
