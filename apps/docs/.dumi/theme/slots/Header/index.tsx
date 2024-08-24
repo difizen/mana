@@ -1,5 +1,6 @@
 import { GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
+import { ThemeService, useInject } from '@difizen/mana-app';
 import { Button } from 'antd';
 import { useRouteMeta, Link, usePrefersColor, useSiteData } from 'dumi';
 import type { SocialTypes } from 'dumi/dist/client/theme-api/types.js';
@@ -7,46 +8,42 @@ import HeaderExtra from 'dumi/theme/slots/HeaderExtra';
 import Navbar from 'dumi/theme/slots/Navbar';
 import SearchBar from 'dumi/theme/slots/SearchBar';
 import SocialIcon from 'dumi/theme/slots/SocialIcon';
-import { Octokit } from 'octokit';
 import React, { useEffect, useMemo, useState } from 'react';
+
+import { Github } from '../../modules/github.js';
 
 import './default.less';
 import './index.less';
-
-const octokit = new Octokit({});
-
-const getRepoStars = async () => {
-  try {
-    const { data } = await octokit.rest.repos.get({
-      owner: 'difizen',
-      repo: 'mana',
-    });
-    const stars = data.stargazers_count;
-    return stars;
-  } catch (error) {
-    return undefined;
-  }
-};
 
 const Header: React.FC = () => {
   const { frontmatter } = useRouteMeta();
   const [showMenu, setShowMenu] = useState(false);
   const { themeConfig } = useSiteData();
   const [stars, setStars] = useState<number | undefined>(undefined);
-  const [theme, setTheme] = useState<string>('light');
+  const github = useInject<Github>(Github);
+  const theme = useInject<ThemeService>(ThemeService);
+  const currentTheme = theme.getCurrentTheme();
 
   const {
     prefersColor: { default: defaultColor },
+    gitRepo,
   } = themeConfig;
   const [, prefersColor = defaultColor, setPrefersColor] = usePrefersColor();
 
   useEffect(() => {
-    getRepoStars()
-      .then((currentStars) => {
+    if (prefersColor !== currentTheme.type) {
+      setPrefersColor(currentTheme.type);
+    }
+  }, [currentTheme.type, prefersColor, setPrefersColor]);
+
+  useEffect(() => {
+    github
+      .getRepoStars(gitRepo.owner, gitRepo.name)
+      .then((currentStars: number) => {
         return setStars(currentStars);
       })
       .catch(console.error);
-  }, []);
+  }, [gitRepo.name, gitRepo.owner, github]);
 
   const socialIcons = useMemo(
     () =>
@@ -73,7 +70,7 @@ const Header: React.FC = () => {
           <div className="difizen-dumi-header-logo">
             {themeConfig.logo && (
               <Link to={themeConfig['link']}>
-                <img className="difizen-dumi-header-logo-img" src={themeConfig.logo} />
+                <img className="difizen-dumi-header-logo-img" src={'./icon.svg'} />
                 {themeConfig.name}
               </Link>
             )}
@@ -88,7 +85,7 @@ const Header: React.FC = () => {
                 type="text"
                 onClick={() => {
                   const target = prefersColor === 'light' ? 'dark' : 'light';
-                  setPrefersColor(target);
+                  theme.setCurrentTheme(target);
                 }}
                 icon={prefersColor === 'light' ? <SunOutlined /> : <MoonOutlined />}
               ></Button>

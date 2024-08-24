@@ -26,23 +26,26 @@ export default defineConfig({
       ],
     },
     footer: `Open-source MIT Licensed | Copyright © 2023-present`,
-    groupQR:
-      'https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*-rvsQo9SnEkAAAAAAAAAAAAADjOxAQ/original',
+    prefersColor: { default: 'light' },
     links: [
       {
-        title: '资源',
+        title: '相关资源',
         itemList: [
           {
             name: 'Difizen',
             link: 'https://github.com/difizen',
           },
           {
-            name: 'mana',
+            name: 'Difizen｜libro',
+            link: 'https://github.com/difizen/libro',
+          },
+          {
+            name: 'Difizen｜mana',
             link: 'https://github.com/difizen/mana',
           },
           {
-            name: 'libro',
-            link: 'https://github.com/difizen/libro',
+            name: 'Difizen｜magent',
+            link: 'https://github.com/difizen/magent',
           },
         ],
       },
@@ -80,10 +83,15 @@ export default defineConfig({
           'https://gw.alipayobjects.com/zos/bmw-prod/881dc458-f20b-407b-947a-95104b5ec82b/k79dm8ih_w144_h144.png',
       },
     ],
+    qrcodes: [
+      {
+        name: '钉钉',
+        qrcode: 'ding-qrcode.png',
+      },
+    ],
+    gitRepo: { owner: 'difizen', name: 'mana' },
   },
-  favicons: [
-    'https://gw-office.alipayobjects.com/bmw-prod/0e2a3424-71b6-40e4-bb34-364aec782200.ico',
-  ],
+  favicons: ['./icon.svg'],
   plugins: ['@difizen/umi-plugin-mana', './dumi-plugin-alias'],
   mana: {
     decorator: true,
