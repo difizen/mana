@@ -1,5 +1,15 @@
 # @difizen/mana-react
 
+## 0.1.21
+
+### Patch Changes
+
+- 007af7f: Dark mode support for menu.
+- 32133c3: Add notification feature.
+- Updated dependencies [007af7f]
+- Updated dependencies [32133c3]
+  - @difizen/mana-common@0.1.21
+
 ## 0.1.20
 
 ### Patch Changes
