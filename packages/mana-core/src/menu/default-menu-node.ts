@@ -5,7 +5,7 @@ import { getOrigin, prop } from '@difizen/mana-observable';
 import { inject, transient } from '@difizen/mana-syringe';
 
 import { CommandRegistry } from '../command/command-registry';
-import { renderNode } from '../view';
+import { renderNode } from '../view/utils';
 
 import { CommandMenuNode, ExecutableMenuNode, MenuSymbol } from './menu-protocol';
 import type { MenuItem, MenuPath, ActionMenuNode, MenuNode } from './menu-protocol';

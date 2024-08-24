@@ -1,5 +1,5 @@
-import { BaseView } from './default-view.js';
-import type { StatefulView } from './view-protocol.js';
+import { BaseView } from './default-view';
+import type { StatefulView } from './view-protocol';
 
 export abstract class BaseStatefulView extends BaseView implements StatefulView {
   constructor() {

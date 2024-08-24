@@ -16,7 +16,7 @@ module.exports = {
     '/docs/',
     '/scripts/mock/',
   ],
-  collectCoverageFrom: ['**/*/src/**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: ['packages/**/*/src/**/*.{js,jsx,ts,tsx}'],
   moduleDirectories: ['node_modules', 'lib', 'es', 'dist'],
   moduleNameMapper: {
     '\\.(less|css)$': 'jest-less-loader',
