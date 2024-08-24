@@ -15,9 +15,10 @@ export type TableQueryParams = {
 
 export type TableParams<
   FormValues extends Record<string, any> | undefined = undefined,
-> = FormValues extends Record<string, any>
-  ? [TableQueryParams, FormValues?]
-  : [TableQueryParams];
+> =
+  FormValues extends Record<string, any>
+    ? [TableQueryParams, FormValues?]
+    : [TableQueryParams];
 
 export type Pagination = {
   current: number;

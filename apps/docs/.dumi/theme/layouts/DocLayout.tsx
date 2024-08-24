@@ -1,9 +1,11 @@
+import { ManaComponents } from '@difizen/mana-app';
 import { Helmet, useLocation, useSiteData } from 'dumi';
 import DefaultLayout from 'dumi/theme-default/layouts/DocLayout';
 import React from 'react';
 
 import Banner from '../componets/banner/index.js';
-import Footer from '../slots/Footer.js';
+import { DumiPreset } from '../modules/module.js';
+import Footer from '../slots/Footer/index.js';
 import Header from '../slots/Header/index.js';
 import './DocLayout.less';
 
@@ -26,7 +28,7 @@ const DocLayout = () => {
   const { pathname } = useLocation();
 
   return (
-    <>
+    <ManaComponents.Application modules={[DumiPreset]} renderChildren>
       {pathname === '/' ? (
         <HomeLayout />
       ) : (
@@ -34,7 +36,7 @@ const DocLayout = () => {
           <DefaultLayout />
         </div>
       )}
-    </>
+    </ManaComponents.Application>
   );
 };
 

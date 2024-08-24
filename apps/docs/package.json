@@ -28,6 +28,7 @@
     "@difizen/mana-react": "workspace:*",
     "@difizen/umi-plugin-mana": "workspace:*",
     "antd": "^5.8.6",
+    "dumi": "^2.2.13",
     "octokit": "^3"
   }
 }
