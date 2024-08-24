@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.0",
-    "@difizen/mana-common": "workspace:*",
+    "@difizen/mana-common": "^0.1.20",
     "classnames": "^2.3.2",
     "rc-dropdown": "^3.2.0",
     "rc-motion": "^2.9.2",

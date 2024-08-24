@@ -24,9 +24,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.0",
-    "@difizen/mana-app": "workspace:*",
-    "@difizen/mana-react": "workspace:*",
-    "@difizen/umi-plugin-mana": "workspace:*",
+    "@difizen/mana-app": "^0.1.20",
+    "@difizen/mana-react": "^0.1.20",
+    "@difizen/umi-plugin-mana": "^0.1.20",
     "antd": "^5.8.6",
     "dumi": "^2.2.13",
     "octokit": "^3"
