@@ -5,7 +5,7 @@ export default defineConfig({
     hd: { rules: [] },
     name: 'mana',
     link: '/',
-    logo: 'https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*u1e3T5UkoAgAAAAAAAAAAAAADjOxAQ/original',
+    logo: 'mana.svg',
     nav: [
       { title: '介绍', link: '/introduction' },
       { title: '教程', link: '/tutorial' },
@@ -91,7 +91,7 @@ export default defineConfig({
     ],
     gitRepo: { owner: 'difizen', name: 'mana' },
   },
-  favicons: ['./icon.svg'],
+  favicons: ['./mana.svg'],
   plugins: ['@difizen/umi-plugin-mana', './dumi-plugin-alias'],
   mana: {
     decorator: true,
