@@ -42,8 +42,8 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@difizen/mana-common": "workspace:*",
-    "@difizen/mana-syringe": "workspace:*",
+    "@difizen/mana-common": "^0.1.20",
+    "@difizen/mana-syringe": "^0.1.20",
     "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
