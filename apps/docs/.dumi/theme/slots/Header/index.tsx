@@ -39,7 +39,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     github
       .getRepoStars(gitRepo.owner, gitRepo.name)
-      .then((currentStars: number) => {
+      .then((currentStars: number | undefined) => {
         return setStars(currentStars);
       })
       .catch(console.error);
