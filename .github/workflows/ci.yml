@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['16']
+        node-version: ['20']
         python-version: ['3.8']
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
