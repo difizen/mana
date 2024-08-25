@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.22
+
+### Patch Changes
+
+- ec0b517: Fix core module compatibility
+
 ## 0.1.21
 
 ### Patch Changes

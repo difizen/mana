@@ -1,5 +1,13 @@
 # @difizen/mana-react
 
+## 0.1.22
+
+### Patch Changes
+
+- ec0b517: Fix core module compatibility
+- Updated dependencies [ec0b517]
+  - @difizen/mana-common@0.1.22
+
 ## 0.1.21
 
 ### Patch Changes
