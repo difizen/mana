@@ -1,5 +1,15 @@
 # @difizen/mana-docs
 
+## 0.1.22
+
+### Patch Changes
+
+- ec0b517: Fix core module compatibility
+- Updated dependencies [ec0b517]
+  - @difizen/umi-plugin-mana@0.1.22
+  - @difizen/mana-react@0.1.22
+  - @difizen/mana-app@0.1.22
+
 ## 0.1.21
 
 ### Patch Changes
