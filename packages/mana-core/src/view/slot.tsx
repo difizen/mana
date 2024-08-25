@@ -1,9 +1,8 @@
 import type { Newable } from '@difizen/mana-common';
 import { useInject, getOrigin } from '@difizen/mana-observable';
 import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { memo } from 'react';
-
-import { useMount, useUnmount } from '../utils/hooks';
 
 import { SlotViewManager } from './slot-view-manager';
 import { ViewInstance } from './view-protocol';
@@ -43,30 +42,24 @@ const SlotRender = memo(
   },
 );
 
-const useSlotView = (
-  name: string,
-  slotView?: Newable<View>,
-): [View | undefined, SlotViewManager] => {
+export const Slot: React.FC<Props> = (props: Props) => {
+  const { name, children, viewProps, slotView } = props;
   const slotViewManager = useInject(SlotViewManager);
+  slotViewManager.slotRendering(name);
+  const areaView = slotViewManager.slotViewMap.get(name);
+  const containerView = useInject<SlotView>(ViewInstance);
+
+  useEffect(() => {
+    slotViewManager.getOrCreateSlotView(name, slotView);
+    slotViewManager.addSlotToView(name, getOrigin(containerView));
+    return () => {
+      slotViewManager.removeSlotFromView(name, getOrigin(containerView));
+    };
+  }, [name, containerView, slotViewManager, slotView]);
   if (slotView) {
     slotViewManager.setComponentSlotPreference(name, { slot: name, view: slotView });
   }
-  slotViewManager.slotRendering(name);
-  const containerView = useInject<SlotView>(ViewInstance);
-  const areaView = slotViewManager.slotViewMap.get(name);
-  useMount(() => {
-    slotViewManager.getOrCreateSlotView(name, slotView);
-    slotViewManager.addSlotToView(name, getOrigin(containerView));
-  });
-  useUnmount(() => {
-    slotViewManager.removeSlotFromView(name, getOrigin(containerView));
-  });
-  return [areaView, slotViewManager];
-};
 
-export const Slot: React.FC<Props> = (props: Props) => {
-  const { name, children, viewProps, slotView } = props;
-  const [areaView] = useSlotView(name, slotView);
   return (
     <SlotRender view={areaView} viewProps={viewProps}>
       {children}
