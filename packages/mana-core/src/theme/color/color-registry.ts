@@ -1,3 +1,5 @@
+import { get } from 'http';
+
 import type { Disposable } from '@difizen/mana-common';
 import { DisposableCollection, Emitter } from '@difizen/mana-common';
 import { singleton, inject } from '@difizen/mana-syringe';
@@ -96,6 +98,10 @@ export class ColorRegistry extends BaseVariableRegistry {
 
   getColors() {
     return this.getDefinitionIds();
+  }
+
+  getCurrentColor(id: string) {
+    return this.getCurrentDefinitionValue(id);
   }
 
   override getCurrentDefinitionValue(id: string): string | undefined {
