@@ -1,12 +1,8 @@
-import { get } from 'http';
-
 import type { Disposable } from '@difizen/mana-common';
-import { DisposableCollection, Emitter } from '@difizen/mana-common';
-import { singleton, inject } from '@difizen/mana-syringe';
+import { singleton } from '@difizen/mana-syringe';
 
 import { BaseVariableRegistry } from '../base-variable-registry';
-import type { CssVariable, VariableDefinition } from '../protocol';
-import { ThemeService } from '../theme-service';
+import type { VariableDefinition } from '../protocol';
 
 import * as VSColor from './color';
 
