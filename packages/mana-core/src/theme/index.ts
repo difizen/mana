@@ -14,6 +14,7 @@ import { ThemeService } from './theme-service';
 export * from './basic';
 export * from './color';
 export * from './theme-service';
+export * from './protocol';
 
 export const ThemeModule = ManaModule.create().register({
   token: ThemeService,
