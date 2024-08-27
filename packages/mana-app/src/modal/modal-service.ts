@@ -89,12 +89,14 @@ export class ModalService {
     });
   }
 
-  hasModal(modal: ModalItem<any>): boolean {
-    return this.modals.has(modal.id);
+  hasModal(modal: ModalItem<any> | string): boolean {
+    const modalId = typeof modal === 'string' ? modal : modal.id;
+    return this.modals.has(modalId);
   }
 
-  getModal<T>(modal: ModalItem<T>) {
-    return this.modals.get(modal.id);
+  getModal<T>(modal: ModalItem<T> | string) {
+    const modalId = typeof modal === 'string' ? modal : modal.id;
+    return this.modals.get(modalId);
   }
 
   registerModal(modal: ModalItem) {
@@ -126,15 +128,18 @@ export class ModalService {
     return viewInstance;
   }
 
-  openModal = <T>(modal: ModalItem<T>, data?: T) => {
-    if (this.hasModal(modal)) {
-      const modalView = this.getOrCreateModalView(modal);
+  openModal = <T>(modal: { id: string } | string, data?: T) => {
+    const modalId = typeof modal === 'string' ? modal : modal.id;
+    const exist = this.getModal(modalId);
+    if (exist) {
+      const modalView = this.getOrCreateModalView(exist);
       modalView.open(data);
     }
   };
 
-  closeModal = (modal: ModalItem<any>) => {
-    this.modalViewList.find((item) => item.modalItem.id === modal.id)?.close();
+  closeModal = (modal: { id: string } | string) => {
+    const modalId = typeof modal === 'string' ? modal : modal.id;
+    this.modalViewList.find((item) => item.modalItem.id === modalId)?.close();
   };
 
   closeAllModal = () => {
