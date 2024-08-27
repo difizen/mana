@@ -29,7 +29,7 @@ export class LocalStorageService implements StorageService {
   setData<T>(key: string, data?: T): MaybePromise<void> {
     if (data !== undefined) {
       try {
-        const value = typeof data === 'string' ? data : JSON.stringify(data);
+        const value = JSON.stringify(data);
         this.storage[this.prefix(key)] = value;
       } catch (e) {
         this.onDiskQuotaExceededEmitter.fire();
