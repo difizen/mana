@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.24
+
+### Patch Changes
+
+- [#56](https://github.com/difizen/mana/pull/56) [`02f92a6`](https://github.com/difizen/mana/commit/02f92a6da23fc653e52c0192c3547ed956a44a22) Thanks [@BroKun](https://github.com/BroKun)! - Support custom css variable prefix
+
 ## 0.1.23
 
 ### Patch Changes
