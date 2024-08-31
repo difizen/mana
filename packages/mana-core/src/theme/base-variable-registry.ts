@@ -1,6 +1,7 @@
 import { DisposableCollection, Disposable, Emitter } from '@difizen/mana-common';
 import { singleton, inject } from '@difizen/mana-syringe';
 
+import { DefaultVariablePrefix } from './protocol';
 import type { CssVariable, VariableDefinition } from './protocol';
 import { ThemeService } from './theme-service';
 
@@ -56,8 +57,16 @@ export class BaseVariableRegistry {
     return { name, value };
   }
 
-  toCssVariableName(id: string, prefix = 'mana'): string {
-    return `--${prefix}-${id.replace(/\./g, '-')}`;
+  toCssVariableName(id: string, prefix?: string): string {
+    const def = this.definitionMap.get(id);
+    let currentPrefix = prefix;
+    if (!currentPrefix) {
+      currentPrefix = def?.prefix || DefaultVariablePrefix;
+    }
+    if (currentPrefix) {
+      return `--${currentPrefix}-${id.replace(/\./g, '-')}`;
+    }
+    return `--${id.replace(/\./g, '-')}`;
   }
 
   getCurrentDefinitionValue(id: string): string | undefined {
@@ -84,6 +93,7 @@ export class BaseVariableRegistry {
   protected doRegister(definition: VariableDefinition): Disposable {
     this.definitionMap.set(definition.id, {
       id: definition.id,
+      prefix: definition.prefix,
       defaults: definition.defaults,
       description: definition.description,
     });

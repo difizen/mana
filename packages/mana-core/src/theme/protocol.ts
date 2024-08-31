@@ -4,6 +4,7 @@ export type CssVariable = {
 };
 
 export interface VariableDefinition<T = any> {
+  prefix?: string;
   id: string;
   defaults?:
     | {
@@ -14,3 +15,5 @@ export interface VariableDefinition<T = any> {
     | undefined;
   description: string;
 }
+
+export const DefaultVariablePrefix = 'mana';
