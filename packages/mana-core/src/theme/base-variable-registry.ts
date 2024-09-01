@@ -61,7 +61,7 @@ export class BaseVariableRegistry {
     const def = this.definitionMap.get(id);
     let currentPrefix = prefix;
     if (!currentPrefix) {
-      currentPrefix = def?.prefix || DefaultVariablePrefix;
+      currentPrefix = def?.prefix === undefined ? DefaultVariablePrefix : def?.prefix;
     }
     if (currentPrefix) {
       return `--${currentPrefix}-${id.replace(/\./g, '-')}`;
