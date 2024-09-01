@@ -1,5 +1,14 @@
 # @difizen/mana-syringe
 
+## 0.1.25
+
+### Patch Changes
+
+- [#58](https://github.com/difizen/mana/pull/58) [`df976cb`](https://github.com/difizen/mana/commit/df976cba6bcf49b979dc001ffe68b4e0953522ff) Thanks [@BroKun](https://github.com/BroKun)! - Theme support empty prefix
+
+- Updated dependencies [[`df976cb`](https://github.com/difizen/mana/commit/df976cba6bcf49b979dc001ffe68b4e0953522ff)]:
+  - @difizen/mana-common@0.1.25
+
 ## 0.1.24
 
 ### Patch Changes
