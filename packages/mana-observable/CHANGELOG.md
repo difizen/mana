@@ -1,5 +1,15 @@
 # @difizen/mana-observable
 
+## 0.1.26
+
+### Patch Changes
+
+- [#60](https://github.com/difizen/mana/pull/60) [`a23732f`](https://github.com/difizen/mana/commit/a23732f365a76f719ac59f2c87de3920f70b1dd7) Thanks [@zhanba](https://github.com/zhanba)! - fix: support query parse in uri
+
+- Updated dependencies [[`a23732f`](https://github.com/difizen/mana/commit/a23732f365a76f719ac59f2c87de3920f70b1dd7)]:
+  - @difizen/mana-common@0.1.26
+  - @difizen/mana-syringe@0.1.26
+
 ## 0.1.25
 
 ### Patch Changes
