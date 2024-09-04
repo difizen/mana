@@ -74,7 +74,7 @@ const writeRoutePage = (api: IApi, route: UmiRoute): void => {
 export default (api: IApi) => {
   let cacheRouteMap: Routemap = {};
   // Add provider wrapper with rootContainer
-  api.addRuntimePlugin(() => '../plugin-umiPluginMana/runtime');
+  api.addRuntimePlugin(() => '../plugin-mana/runtime');
 
   api.onGenerateFiles(async () => {
     try {
