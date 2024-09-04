@@ -181,4 +181,28 @@ export class URI {
     }
     return !!Path.relative(left, right);
   }
+
+  getParsedQuery(): { [key: string]: string } {
+    const queryString = this.query;
+    const query: Record<string, string> = {};
+    const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split(
+      '&',
+    );
+    for (let i = 0; i < pairs.length; i++) {
+      const pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+  }
+
+  static stringifyQuery(query: { [key: string]: any }): string {
+    const values: string[] = [];
+    Object.keys(query).forEach((key) => {
+      const value = encodeURIComponent(query[key]);
+      if (value !== undefined) {
+        values.push(encodeURIComponent(key) + '=' + value);
+      }
+    });
+    return values.join('&');
+  }
 }

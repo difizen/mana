@@ -29,6 +29,23 @@ describe('URI', () => {
         'file:///a/b/c/example.png?KeyId=asgxdjasbcxjsc',
     );
     assert(
+      new URI('file:///a/b/c/example.png?KeyId=asgxdjasbcxjsc', {
+        simpleMode: false,
+      }).query === 'KeyId=asgxdjasbcxjsc',
+    );
+    assert(
+      new URI('file:///a/b/c/example.png?KeyId=asgxdjasbcxjsc', {
+        simpleMode: false,
+      }).getParsedQuery()['KeyId'] === 'asgxdjasbcxjsc',
+    );
+    assert(
+      new URI('file:///a/b/c/example.png?KeyId=asgxdjasbcxjsc').toString() ===
+        URI.withQuery(
+          new URI('file:///a/b/c/example.png'),
+          URI.stringifyQuery({ KeyId: 'asgxdjasbcxjsc' }),
+        ).toString(),
+    );
+    assert(
       VscodeURI.parse('file:///a/b/c/example.png?KeyId=asgxdjasbcxjsc', false, {
         simpleMode: false,
       }).toString() ===
