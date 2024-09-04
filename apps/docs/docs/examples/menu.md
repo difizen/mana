@@ -1,7 +1,6 @@
 ---
 title: 菜单
 order: 8
-toc: menu
 nav:
   title: 示例
   order: 3

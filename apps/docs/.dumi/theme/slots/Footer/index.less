@@ -92,4 +92,21 @@
       border-top: 1px solid #bdc0c4;
     }
   }
+
+  &-logo {
+    a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #000;
+
+      @{dark-selector} & {
+        color: #fff;
+      }
+    }
+
+    .difizen-dumi-header-logo-img {
+      margin-right: 0;
+    }
+  }
 }

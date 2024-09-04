@@ -22,3 +22,5 @@ pnpm-lock.yaml
 tinyColor.less
 
 .changeset
+
+tailwind.out.css

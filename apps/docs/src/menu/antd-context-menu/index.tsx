@@ -10,10 +10,10 @@ import {
   MenuRender,
 } from '@difizen/mana-app';
 import { Menu, Dropdown } from 'antd';
+import type { ItemType } from 'antd/es/menu/interface.js';
 import type { MenuProps } from 'antd/lib/menu';
-import type { ItemType } from 'antd/lib/menu/hooks/useItems';
 
-import { Menus, Model } from './menu';
+import { Menus, Model } from './menu.js';
 
 export const BaseModule = ManaModule.create().register(Menus, Model);
 

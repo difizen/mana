@@ -8,7 +8,6 @@ export default defineConfig({
     logo: '/mana.svg',
     nav: [
       { title: '介绍', link: '/introduction' },
-      { title: '教程', link: '/tutorial' },
       { title: '示例', link: '/examples' },
     ],
     banner: {

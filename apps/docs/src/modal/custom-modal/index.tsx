@@ -8,9 +8,9 @@ import {
   Syringe,
 } from '@difizen/mana-app';
 
-import { ModalContainerView } from './modal-container-view';
-import { DemoModalContribution } from './modal-contribution';
-import { MyModalService } from './my-modal-service';
+import { ModalContainerView } from './modal-container-view.js';
+import { DemoModalContribution } from './modal-contribution.js';
+import { MyModalService } from './my-modal-service.js';
 
 const BaseModule = ManaModule.create().register(
   ModalContainerView,

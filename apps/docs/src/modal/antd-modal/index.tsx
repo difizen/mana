@@ -6,8 +6,8 @@ import {
   ManaAppPreset,
 } from '@difizen/mana-app';
 
-import { ModalContainerView } from './modal-container-view';
-import { DemoModalContribution } from './modal-contribution';
+import { ModalContainerView } from './modal-container-view.js';
+import { DemoModalContribution } from './modal-contribution.js';
 
 const BaseModule = ManaModule.create().register(
   ModalContainerView,

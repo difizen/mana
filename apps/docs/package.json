@@ -27,8 +27,9 @@
     "@difizen/mana-app": "^0.1.26",
     "@difizen/mana-react": "^0.1.26",
     "@difizen/umi-plugin-mana": "^0.1.26",
+    "@difizen/mana-l10n": "^0.1.26",
     "antd": "^5.8.6",
-    "dumi": "^2.2.13",
-    "octokit": "^3"
+    "octokit": "^3",
+    "react-copy-to-clipboard": "^5.1.0"
   }
 }
