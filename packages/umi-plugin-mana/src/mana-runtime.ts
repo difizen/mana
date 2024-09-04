@@ -75,6 +75,7 @@ export default (api: IApi) => {
   let cacheRouteMap: Routemap = {};
   // Add provider wrapper with rootContainer
   api.addRuntimePlugin(() => '../plugin-mana/runtime');
+  api.addRuntimePluginKey(() => ['mana']);
 
   api.onGenerateFiles(async () => {
     try {
