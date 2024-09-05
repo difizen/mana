@@ -41,12 +41,12 @@ const Banner: React.FC = () => {
                 <div className="circle-third"></div>
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-primary mb-6 drop-shadow-md">
-                libro
+                mana
               </h1>
               <p className="text-xl sm:text-2xl text-muted-foreground mb-8">
-                灵活定制、轻松集成的 Notebook 产品方案
+                一个模块化的可扩展前端应用框架，为工作台产品设计
               </p>
-              <Link to={'/quickstart'}>
+              <Link to={'/introduction'}>
                 <Button type="primary" size="large" className="start-btn">
                   Start now
                 </Button>
