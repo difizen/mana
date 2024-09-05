@@ -1,5 +1,11 @@
 # @difizen/mana-l10n
 
+## 0.1.27
+
+### Patch Changes
+
+- [#62](https://github.com/difizen/mana/pull/62) [`812915f`](https://github.com/difizen/mana/commit/812915f4681c44982cefa5800d6f11ec27a81a20) Thanks [@sunshinesmilelk](https://github.com/sunshinesmilelk)! - fix(umi-plugin): update mana runtime plugin dir name
+
 ## 0.1.26
 
 ### Patch Changes
