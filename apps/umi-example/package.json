@@ -5,16 +5,15 @@
   "scripts": {
     "dev": "umi dev",
     "build": "umi build",
-    "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "npm run dev"
   },
   "dependencies": {
-    "umi": "^4.3.20",
-    "@difizen/mana-app": "workspace:^0.1.26"
+    "@difizen/umi-plugin-mana": "^0.1.27",
+    "@difizen/mana-app": "^0.1.27",
+    "umi": "^4.3.20"
   },
   "devDependencies": {
-    "@difizen/umi-plugin-mana": "workspace:^0.1.26",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
     "typescript": "^5.0.3"

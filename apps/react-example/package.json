@@ -11,14 +11,6 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src/"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.23.2",
-    "@babel/plugin-transform-class-properties": "^7.22.5",
-    "@babel/plugin-transform-flow-strip-types": "^7.22.5",
-    "@babel/plugin-transform-private-methods": "^7.22.5",
-    "@babel/plugin-transform-private-property-in-object": "^7.22.11",
-    "@babel/preset-env": "^7.23.2",
-    "@babel/preset-react": "^7.22.15",
-    "@babel/preset-typescript": "^7.23.2",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.8",
     "@types/node": "^18.11.5",
@@ -52,7 +44,8 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@difizen/mana-app": "workspace:^0.1.26",
+    "@difizen/mana-app": "^0.1.27",
+    "@difizen/babel-preset-mana": "^0.1.27",
     "babel-loader": "^9.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
