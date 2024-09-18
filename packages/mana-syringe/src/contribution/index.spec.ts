@@ -3,11 +3,12 @@
 import 'reflect-metadata';
 import assert from 'assert';
 
-import { Contribution, contrib, Module } from '..';
 import { GlobalContainer } from '../container';
 import { register } from '../container';
+import { Contribution, contrib } from '../contribution/index';
 import { Syringe } from '../core';
 import { inject, singleton } from '../decorator';
+import { Module } from '../module/index';
 
 import { DefaultContributionProvider } from './contribution-provider';
 

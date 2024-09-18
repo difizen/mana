@@ -1,5 +1,6 @@
 import type { Syringe } from '../core';
 import { inject, named } from '../decorator';
+
 import { Provider } from './contribution-protocol';
 
 export const contrib =
@@ -7,7 +8,7 @@ export const contrib =
   (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     target: any,
-    targetKey: string,
+    targetKey: any,
     index?: number | undefined,
   ) => {
     named(token)(target, targetKey, index);
