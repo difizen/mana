@@ -31,8 +31,8 @@ export class BrowserKeyboardLayoutProvider
 
   @inject(LocalStorageService)
   protected readonly storageService: LocalStorageService;
-  constructor(@inject(LocalStorageService) storageService: LocalStorageService) {
-    this.storageService = storageService;
+  constructor() {
+    // this.storageService = storageService;
     this.layoutDatas = [
       this.getLayoutData('en-US-pc', en_US_pc),
       this.getLayoutData('en-US-mac', en_US_mac),
