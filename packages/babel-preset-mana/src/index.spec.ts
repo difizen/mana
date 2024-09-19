@@ -1,26 +1,10 @@
 import assert from 'assert';
 
-import { pageContent } from './mana-runtime';
+import preset from './index';
 
-describe('umi-plugin-mana', () => {
-  it('#page content', async () => {
-    assert(
-      pageContent('my-slot') ===
-        `(async () => {
-const { Slot } = await import('@difizen/mana-app');
-const { Outlet } = await import('umi');
-
-const Page = ({ children, ...props }) => {
-  return (
-  <Slot name="my-slot" viewProps={props}>
-    <Outlet />
-  </Slot>
-  );
-};
-
-return Page
-})()
-`,
-    );
+describe('babel-preset-mana', () => {
+  it('#preset', async () => {
+    const info = preset();
+    assert(info.plugins.includes('babel-plugin-parameter-decorator'));
   });
 });
