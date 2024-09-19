@@ -11,6 +11,8 @@ pnpm-lock.yaml
 # generated code
 **/.dumi/tmp
 **/.dumi/tmp-production
+**/.umi
+**/.umi-production
 **/.docusaurus
 
 # protobuf
