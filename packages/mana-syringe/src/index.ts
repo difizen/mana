@@ -4,3 +4,4 @@ export * from './module';
 export * from './contribution';
 export * from './core';
 export * from './side-option';
+export * from './features/auto-factory';
