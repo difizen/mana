@@ -70,18 +70,20 @@ export type ViewProps = {
   renderNodeRow: (row: NodeRow) => React.ReactNode;
 };
 export interface TreeViewRowProps {
+  rowKey: string;
   index?: number | undefined;
   parent: MeasuredCellParent;
   style?: React.CSSProperties | undefined;
   row?: NodeRow;
   cache: CellMeasurerCache;
-  key: string;
 }
 export const TreeViewRow = (props: TreeViewRowProps) => {
   const treeView = useInject<TreeView>(ViewInstance);
   const treeNodeComponents = useInject<TreeNodeComponents>(TreeNodeComponents);
   const { TreeNode: TreeNodeComponent, TreeIdent } = treeNodeComponents;
-  const { row, index, parent, style, cache, key } = props;
+  const { row, index, parent, style, cache, ...others } = props;
+  const rowKey = props.rowKey || (others as any).key || index;
+
   if (!row) {
     return null;
   }
@@ -90,20 +92,27 @@ export const TreeViewRow = (props: TreeViewRowProps) => {
     <CellMeasurer
       cache={cache}
       columnIndex={0}
-      key={key}
+      key={rowKey}
       parent={parent}
       rowIndex={index}
     >
-      <div
-        onContextMenu={(event) => {
-          treeView.handleContextMenuEvent(event, treeView, node);
-        }}
-        key={key}
-        style={style}
-      >
-        <TreeIdent node={node} nodeProps={{ depth }} />
-        <TreeNodeComponent node={node} nodeProps={{ depth }} />
-      </div>
+      {({ registerChild }) => (
+        <div
+          onContextMenu={(event) => {
+            treeView.handleContextMenuEvent(event, treeView, node);
+          }}
+          key={rowKey}
+          style={style}
+          ref={(element): void => {
+            if (element && registerChild) {
+              registerChild(element);
+            }
+          }}
+        >
+          <TreeIdent node={node} nodeProps={{ depth }} />
+          <TreeNodeComponent node={node} nodeProps={{ depth }} />
+        </div>
+      )}
     </CellMeasurer>
   );
 };
@@ -153,14 +162,23 @@ export function TreeViewContent() {
           height={treeView.offsetHeight || 100}
           rowCount={rows.length}
           rowHeight={cache.rowHeight}
-          rowRenderer={(rowProps) => (
-            <TreeRow {...rowProps} cache={cache} row={rows[rowProps.index]} />
-          )}
+          rowRenderer={(rowProps) => {
+            const { key, ...treeRowProps } = rowProps;
+            return (
+              <TreeRow
+                key={key}
+                rowKey={key}
+                {...treeRowProps}
+                cache={cache}
+                row={rows[treeRowProps.index]}
+              />
+            );
+          }}
           scrollToIndex={treeView.scrollToRow}
           onScroll={treeView.handleScroll.bind(treeView)}
           tabIndex={-1}
           style={{
-            overflow: 'auto',
+            overflowY: 'auto',
           }}
         />
       </div>
