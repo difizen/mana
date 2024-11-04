@@ -116,7 +116,9 @@ if (typeof navigator === 'object' && !isElectronRenderer) {
     navigator.maxTouchPoints > 0;
   _isLinux = _userAgent.indexOf('Linux') >= 0;
   _isWeb = true;
-  _locale = navigator.language;
+  _locale = ((navigator as any).languages as string)
+    ? ((navigator as any).languages[0] as string)
+    : navigator.language || ((navigator as any).userLanguage as string);
   _language = _locale;
   _isIE = _userAgent.indexOf('Trident') >= 0;
   _isEdge = _userAgent.indexOf('Edge/') >= 0;
