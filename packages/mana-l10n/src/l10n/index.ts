@@ -4,6 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { locale } from './platform';
 /**
  * forked from vscode l10n
  */
@@ -34,6 +35,15 @@ export enum L10nLang {
   enUS = 'en-US',
 }
 
+function getDefaultlang() {
+  const localeValue = localStorage.getItem('locale') || locale;
+  const localeStr = localeValue.toLowerCase();
+  if (localeStr === 'zh' || localeStr.startsWith('zh-')) {
+    return L10nLang.zhCN;
+  }
+  return L10nLang.enUS;
+}
+
 export class Localization {
   static create(name: string) {
     return new Localization(name);
@@ -45,7 +55,7 @@ export class Localization {
 
   protected bundles: Map<L10nLang, l10nJsonFormat> = new Map();
 
-  protected lang = L10nLang.zhCN;
+  protected lang = getDefaultlang();
 
   protected deps: Localization[] = [];
 
@@ -117,6 +127,7 @@ export class Localization {
   }
 
   changeLang(lang: L10nLang) {
+    localStorage.setItem('locale', lang);
     const bundle = this.bundles.get(lang);
     this.lang = lang;
     this.bundle = bundle;
