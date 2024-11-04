@@ -24,15 +24,15 @@ export class ContentModel {
 const ContentView = () => {
   const model = useInject(ContentModel);
   return (
-    <Tabs activeKey={model.active} onChange={model.setActive}>
-      {TabsConf.map((item) => {
-        return (
-          <Tabs.TabPane tab={item.name} key={item.name}>
-            Tab Content: {item.name}
-          </Tabs.TabPane>
-        );
-      })}
-    </Tabs>
+    <Tabs
+      activeKey={model.active}
+      onChange={model.setActive}
+      items={TabsConf.map((item) => ({
+        key: item.name,
+        label: item.name,
+        children: <>Tab Content: {item.name}</>,
+      }))}
+    ></Tabs>
   );
 };
 
