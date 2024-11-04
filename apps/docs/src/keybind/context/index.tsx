@@ -20,7 +20,7 @@ const MyCommandRender = () => {
       </div>
       <Divider />
       <Checkbox
-        value={context.shiftMode.get()}
+        checked={context.shiftMode.get()}
         onChange={(e) => {
           context.shiftMode.set(e.target.checked);
         }}
@@ -28,7 +28,7 @@ const MyCommandRender = () => {
         shift mode
       </Checkbox>
       <Checkbox
-        value={context.ctrlcmdMode.get()}
+        checked={context.ctrlcmdMode.get()}
         onChange={(e) => {
           context.ctrlcmdMode.set(e.target.checked);
         }}
