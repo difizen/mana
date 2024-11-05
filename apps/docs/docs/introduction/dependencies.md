@@ -1,64 +1,60 @@
 ---
-title: 依赖关系管理
+title: Dependency management
 order: 9
 
 nav:
   title: Introduction
 ---
 
-前端的工程正在越来越复杂，从 Gmail 成为工程典范，到 Office online 再到人手 WebIDE，我们在工程中关注的东西也越来越宏观，从闭包、数据流再到分层、模块、微前端。传统软件工程中的很多概念在前端一次次被实践和创新。掌握方法不如掌握原理，理解原理不如理解思想，今天想跟大家聊一下的是最基础的概念，我们从依赖概念开始，去看一看前端的工程实践。
+Frontend development is becoming increasingly complex, from Gmail as an engineering model to Office online and now WebIDE for everyone. Our focus in engineering has become more macroscopic, evolving from closures and data flow to layering, modularization, and micro-frontends. Many concepts from traditional software engineering are repeatedly practiced and innovated in the frontend. Mastering methods is less important than mastering principles, and understanding principles is less important than understanding ideas. Today, I want to discuss the most basic concepts, starting with the concept of dependency, to explore frontend engineering practices.
 
-# 前言
+# Preface
 
-为什么会有工程，因为代码越来越多，项目越来越大，我们把应对这种情况的方法都归为工程方法。为什么代码多项目大会成为问题，为什么需要应对这种情况？因为参与工程的是人，人脑的[短期记忆](https://zh.wikipedia.org/wiki/%E7%9F%AD%E6%9C%9F%E8%AE%B0%E5%BF%86)只能支持 7 个左右的对象，所以当一个系统的信息量变大的时候，我们就需要一些方法来有效的处理这些信息，所以对工程方法发思考，实际上是对人的认知规律的思考。如果大家读过《Coders at Work》，可能会发现这些大佬对于工程方法多半是不在意的，在人的思维能够支持的空间内，工程方法并不重要。
-对于一般人面对一堆杂乱的信息，我们会无从下手；面对一些有规律的、整齐的信息时，我们就能高效检索。我们本来就是靠总结规律，推理演绎来认识世界，同样的信息，在不同的组织方式下，我们会有不同的接受程度，而能够让我们高效接收的信息，往往呈现一些符合认知规律的特点，比如分类、分层。这些结构帮助我们能够从不同的角度对信息做出判断，形成习惯，带有预期，从而更好的掌握他们，使用他们。
-人脑是有限的，而工程方法让我们的大脑有效的应对信息量的问题，这也是为什么扩展性成为永恒的主题。不论是数据流的控制还是模块化、微前端化，都是为了便于参与工程的人理解设计思路，从而降低维护成本，对抗遗忘规律。当我们的脑力不再耗费在信息的整理上时，我们也就能更加深入一个领域，去探索他的深度，让推理的链条变得更长。
+Why do we have engineering? Because there is more code, and projects are getting larger, we categorize strategies to cope with these situations as engineering methods. Why do more code and larger projects become a problem, and why do we need to address this? Because humans are involved in engineering, and the [short-term memory](https://en.wikipedia.org/wiki/Short-term_memory) of the human brain can only handle about seven objects. Therefore, when the information volume of a system increases, we need methods to effectively manage this information. Thus, thinking about engineering methods is essentially thinking about human cognitive patterns. If you have read "Coders at Work," you might find that these experts often do not care much about engineering methods. Within the cognitive space that human thinking can support, engineering methods are not important. For most people, when faced with a pile of disordered information, we are at a loss; but when faced with organized and regular information, we can retrieve it efficiently. We naturally rely on summarizing rules and deductive reasoning to understand the world. The same information, organized in different ways, leads to different levels of acceptance. Information that we can efficiently receive often exhibits characteristics that align with cognitive patterns, such as classification and layering. These structures help us judge information from different perspectives, form habits, and carry expectations, thereby better mastering and using them. The human brain is limited, and engineering methods enable our brains to effectively handle the issue of information volume, which is why extensibility is an eternal theme. Whether it's data flow control or modularization and micro-frontends, they all aim to help people involved in engineering understand design ideas, reduce maintenance costs, and combat the forgetting curve. When our mental energy is no longer spent organizing information, we can delve deeper into a field, explore its depths, and extend our chains of reasoning.
 
-# 依赖的实质
+# The Essence of Dependency
 
-程序的运行是靠执行一条条语句来完成的，我们将多条语句聚合成方法，然后方法之间再产生调用，这个过程里依赖就产生了，调用一个方法也就依赖了一个方法。实际上，一条条执行的语句也是有依赖的，他们的执行顺序本身就是他们的依赖条件。现代的软件体系里，我们一般把`调用`看过依赖产生的根源，从这个角度看，依赖是不可避免的，除非代码不参与执行，否则他一定会产生依赖关系。
-通过调用产生的依赖，一般会体现在代码里，我们使用的语言一般会有明确的依赖声明语句，比如`import`，但实际的程序里，调用一个程序并不尽然要通过这种语言及工程工具约定的形式，往大了讲我们会说前端代码是依赖后端接口的，但是我们无法`import`后端接口，因为语言和工程体系并不互通，所以我们通过文本化的`http protocol`来调用；往小了讲，当我们在使用`redux`等数据流方案时，调用方法也要通过文本约定的`action`来完成，这些依赖并没有体现在代码里，也不对打包产生影响，却实实在在的影响了使用方的代码，让我们在写代码的时候，需要通过查阅 api 文档，或者查看类型定义来完成调用，这也是一种依赖。
+The operation of a program relies on executing statements one by one. We aggregate multiple statements into methods, and then methods call each other, resulting in dependencies. Calling a method means depending on it. In fact, the execution order of these statements is also a dependency condition. In modern software systems, we generally consider `calls` as the root of dependency generation. From this perspective, dependencies are unavoidable unless the code is not executed, in which case it will inevitably form dependency relationships. Dependencies generated through calls usually manifest in the code. The languages we use generally have explicit dependency declaration statements, such as `import`. However, in actual programs, calling a program does not necessarily have to follow the formal language and engineering tool conventions. Broadly speaking, we might say frontend code depends on backend interfaces, but we cannot `import` backend interfaces because languages and engineering systems are not interoperable. So, we call through the textual `http protocol`. On a smaller scale, when using data flow solutions like `redux`, calling methods also requires textual agreements like `action`. These dependencies are not reflected in the code and do not affect packaging, but they have a real impact on the code of the user, requiring us to consult API documentation or view type definitions to complete the call, which is also a form of dependency.
 
 ```typescript
 import func
-fetch('/func)
+fetch('/func')
 store.dispatch({type:'func'})
 ```
 
-我们关注的依赖并不是代码里的具体写法，而是实际意义上的心智依赖，一个存在多个执行步骤的程序必定会在内部生成依赖关系，因为他们之间存在着约定，这种约定有时候会被具象化的定义出来，简单的则会暂存在头脑中，这些约定就是依赖的实质。
+The dependencies we focus on are not the specific code syntax but the mental dependencies in a practical sense. Programs with multiple execution steps will inevitably generate internal dependencies due to existing agreements. These agreements may sometimes be explicitly defined, while simpler ones might be temporarily stored in the mind. These agreements are the essence of dependencies.
 
-# 依赖的形式
+# Forms of Dependency
 
-## 最简单的依赖
+## The Simplest Dependency
 
-最简单的依赖关系就是 A 依赖 B，当我们从一个文件中引入另一个文件的方法，就产生了这样的依赖关系。问题是什么样的场景下我们会去建立这样的依赖关系。
+The simplest dependency relationship is A depends on B. When we import a method from one file into another, we create this kind of dependency. The question is, under what circumstances do we establish such a dependency?
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*gVb0QI9FMUcAAAAAAAAAAAAADjOxAQ/original)
 
-### 提取公共
+### Extracting Commonality
 
-最原始的场景是，当一个程序的步骤变多，我们将其中重复的部分独立起来，成为可以被`调用`的过程，这个过程里形成了依赖，这个时候的依赖关系，就是 A 依赖 B 形式。
+The most primitive scenario is when a program's steps increase, we separate the repeated parts into an independent process that can be `called`. In this process, dependency is formed, and the dependency relationship at this time is the form of A depends on B.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*eispSob6cMgAAAAAAAAAAAAADjOxAQ/original)
 
-这是一个非常常见的过程，常见到我们几乎不需要思考就会去做，很多时候我们这样去处理的内在驱动里就是 [DRY 原则](https://zh.wikipedia.org/wiki/%E4%B8%80%E6%AC%A1%E4%B8%94%E4%BB%85%E4%B8%80%E6%AC%A1)。这种依赖的建立，也实际上简化了程序的信息量，让我们更容易读懂程序，这个过程实际上就是在提取公共部分。
+This is a very common process, so common that we almost do it without thinking. Often, the internal drive for handling it this way is the [DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). Establishing this kind of dependency also simplifies the program's information volume, making it easier for us to understand the program. This process is essentially about extracting common parts.
 
-### 分解局部
+### Decomposing Parts
 
-也有些场景下，我们虽然会建立这种依赖关系，却并不出于提取公共，比如把页面里的弹窗分离到一个独立的组件里。这些操作的实质又是在做什么呢？我们看上图形成 A 和 B 两个部分的代码，实际上他们并不是对等的，依赖的产生是单向的，在这里 B 实际是 A 的局部，他们跟 A 关系始终是一个总体和局部的关系。所以这种关系还会出现在我们分解局部的过程里，这在代码里比提取公共部分还要常见。
+In some scenarios, we establish such a dependency relationship not to extract commonality but, for example, to separate a popup in a page into an independent component. What is the essence of these operations? Looking at the code forming parts A and B in the above figure, they are not equivalent. The generated dependency is unidirectional. Here, B is actually a part of A. The relationship is always one of whole and part. Therefore, this relationship also appears in our process of decomposing parts, which is more common in code than extracting commonality.
 
-页面到组件的过程，一般就是分解局部和提取公共的过程。下图中`Item`是提取了公共，其他的是分解了局部。
+The process from page to component is generally one of decomposing parts and extracting commonality. In the figure below, `Item` is the extracted commonality, while others are decomposed parts.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*JVu-Trzxy6AAAAAAAAAAAAAADjOxAQ/original)
 
-## 依赖与控制
+## Dependency and Control
 
-当一个依赖关系是靠着分解局部来建立的，那应该意味着被分解出来的局部，代替了这个局部原有的所有细节，而通过提取公共应当是恰好这个局部被反复使用。这个过程里，整体应该控制局部，再有局部去控制更小粒度的局部，从而达到思维方式上的层层递进。
-但我们实际的代码并不是这样，例如在页面分解到组件的过程中，我们经常会产生`layout`这样一个概念，上图有可能被分解为如下形式
+When a dependency relationship is established by decomposing parts, it should mean that the decomposed part replaces all the original details of that part. Extracting commonality should be when that part is used repeatedly. In this process, the whole should control the part, and then the part controls even smaller parts, thereby achieving a step-by-step thinking method. But our actual code is not like this. For example, in the process of breaking down a page into components, we often generate a concept like `layout`. The diagram above might be decomposed into the following form:
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*kYamRrUhDRwAAAAAAAAAAAAADjOxAQ/original)
 
-所有的布局细节都被`layout`屏蔽，但是`App`直接依赖了展示在 layout 中的细节——它直接管理的`Content`的内容`Item`。我想对应的代码大家一定也不陌生
+All layout details are masked by `layout`, but `App` directly depends on the details displayed within the layout—it directly manages the content of `Content`, which is `Item`. I'm sure the corresponding code is familiar to everyone:
 
 ```typescript
 const App = () => {
@@ -72,70 +68,66 @@ const App = () => {
 };
 ```
 
-对于`Layout`而言，本来从整体局部的结构上，处于被自己控制层次内的`Item`变成了从上下文中获得的`Children`，我们在设计上，将属于`Layout`的这部分依赖，交给了上层控制，这样的操作获得了什么呢？`Layout`更高的复用性，这是一种处于中间层的复用性。
+For `Layout`, from the overall-part structure, the `Item` that should have been controlled by it becomes `Children` obtained from the context. In our design, we handed over this part of the dependency that belongs to `Layout` to upper-level control. What does this operation achieve? Greater reusability of `Layout`, which is a kind of intermediate-level reusability.
 
-这并不是一种很少见的设计，我们在组件上暴露的各种 Prop，尤其是组件类型的 Prop；我们设计的函数的参数，尤其是函数类型的参数；我们设计的 Class 中的属性，尤其是 Class 类型的属性。推动我们产生这样设计的原因，是我们需要提取一个依赖关系中处于中间层次的单元，这些可以被上层控制的形式的设计，往往就是为了追求更高的灵活度和复用性。而这种设计的本质，就是[控制反转](https://zh.wikipedia.org/wiki/%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC)。
+This is not an uncommon design. Various Props exposed on components, especially component-type Props; parameters designed for functions, especially function-type parameters; attributes designed in Classes, especially Class-type attributes. The reason driving us to design this way is the need to extract a unit in the dependency relationship that is at an intermediate level. These forms of design, which can be controlled by the upper layer, are often in pursuit of greater flexibility and reusability. And the essence of this design is [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control).
 
-Wiki 上对于控制反转的定义相对狭义，主要是在面向对象的体系内，对于对象的创建这件事情的反转，我觉得这里的推广是适用的，局部通过控制反转的方式，交出了更多的控制权，从而获得更高的灵活度和复用性，也让我们可以分解和复用处于中间层次的依赖。
+The definition of Inversion of Control on Wiki is relatively narrow, mainly focusing on the reversal of object creation within the object-oriented system. I think the generalization here is applicable. By inverting controls, parts hand over more control rights to gain greater flexibility and reusability, allowing us to decompose and reuse dependencies that are at intermediate levels.
 
-### 控制反转时的依赖
+### Dependency During Inversion of Control
 
-这个时候，我们从更加细微的视角来看他们形成的依赖关系，就会发现，局部在交出控制权的同时一定会对这部分的提出自己的约束，组件的 children 只是恰好跟框架的定义重合所以被省略了，但是当我们将组件通过 prop 传递，或者这种反转在 function 或者 class 中发生时，这种约束往往是显性的，他们最终也将形成如下的依赖结构。在实际运行时，B 所以来的约定会成为实体，所以 B 是逻辑结构中的中间层。
+At this time, if we look at the dependency relationship formed from a more detailed perspective, we will find that while parts are handing over control rights, they will certainly impose their constraints. The children of a component are just coincidentally omitted due to the framework's definition, but when we pass components through props, or when this inversion occurs in a function or class, these constraints are often explicit, and they will eventually form the following dependency structure. At runtime, the agreement B relies on will become an entity, so B is the intermediate layer in the logical structure.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*lQ8HQ4XpoL4AAAAAAAAAAAAADjOxAQ/original)
 
-如果熟悉 [SOLID](<https://zh.wikipedia.org/wiki/SOLID_(%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1)>) 原则的话，我们会发现，对于依赖反转原则“高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口”，我们满足了后半句。
+If you're familiar with the [SOLID](https://en.wikipedia.org/wiki/SOLID) principles, you'll find that for the Dependency Inversion Principle "High-level modules should not depend on low-level modules. Both should depend on abstractions," we satisfy the latter part.
 
-## 依赖与扩展性
+## Dependency and Extensibility
 
-假设这样一个场景，我们页面需要的 layout 不再是单一的，而是有多个，在不同的路由下做不同的展示，我们该如何设计？
+Suppose a scenario where the layout needed by our page is no longer singular but multiple, showing differently under different routes. How should we design it?
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*37s2QqfeyucAAAAAAAAAAAAADjOxAQ/original)
 
-最简单的我们可以有如上图的依赖结构，将所有可能的 layout 全部作为 App 的依赖出现，然后在 App 内根据路由等上下文信息，做出判断决定使用哪个 layout。但是这里我们可以明显的发现其扩展性的问题，也就是当我需要增加一种 layout 时，需要既增加 layout 的代码，也修改 App 的代码，如果熟悉 [SOLID](<https://zh.wikipedia.org/wiki/SOLID_(%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1)>) 原则的话，这就违反了[开闭原则](https://zh.wikipedia.org/wiki/%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99)。那么如何才能让 layout 的扩展变得容易，让 App 不再跟随 layout 变化呢？
-我们需要将 App 内关于 layout 处理的逻辑分离出来，然后你就会发现，分离出来的逻辑实际上只跟 interface 以及上下文有关。实际上，我们只要将 interface 实体化，让他在提供约束的同时，能够收集这些约束的实现即可。
+The simplest way is to have the dependency structure as shown above, where all possible layouts appear as dependencies of the App, and then the App decides which layout to use based on context information such as routes. However, we can clearly see the issue of extensibility here, meaning when I need to add a layout, I need to add both the layout code and modify the App code. If you're familiar with the [SOLID](https://en.wikipedia.org/wiki/SOLID) principles, this violates the [Open/Closed Principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle). So how can we make layout extension easier and prevent the App from changing with layout changes? We need to separate the logic about layout handling within the App, and then you will find that the separated logic is actually only related to interfaces and context. Actually, we just need to materialize the interface, allowing it to provide constraints while collecting implementations of these constraints.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*e5FRRKHXtOYAAAAAAAAAAAAADjOxAQ/original)
 
-具体的实现可以是，提供一个`manager`作为注册中心，各个 `layout` 将自己的信息注册到 `manager`中，然后 `App` 只依赖 `manager` 就可以拿到当前需要用的 Layout。我们再对照一下 umi 中路由的实现，你就会发现 umi 是将 layout 跟路由对应的信息先写成配置，然后被 umi 中的 manager 读取，然后生效在 App 中，由于框架对工程结构的约定，umi 省略了手动将 Layout 注册的代码，实际上，这也是各种不同的扩展实现的核心差异，如何收集符合约束的抽象实现。
+The specific implementation can provide a `manager` as a registration center, where each `layout` registers its information into the `manager`, and then the `App` only relies on the `manager` to get the Layout needed for the current use. If you compare it with the implementation of routing in umi, you will find that umi writes the information corresponding to the layout and routing into a configuration, which is then read by the manager in umi and applied in the App. Due to the framework's conventions on engineering structure, umi omits the code for manually registering Layouts. In fact, this is the core difference between various implementations of different extensions, in how they collect abstract implementations that meet constraints.
 
-除了注册式、配置式以外，我们还可以使用依赖注入容器等方式做采集，写法各不相同，但是都为了完成同样的事情。在这个时候，我们也终于可以写出一个常见的，满足扩展性的依赖关系
+In addition to registration and configuration methods, we can also use dependency injection containers and other ways to collect them. The writing methods vary, but they all aim to accomplish the same thing. At this point, we can finally write a common dependency relationship that satisfies extensibility.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*aD5_RbM22KgAAAAAAAAAAAAADjOxAQ/original)
 
-大部分情况下，我们的代码就是对前面几种依赖形式的组合，像乐高一样把整个项目越堆越大，其中一般依赖形式，和一定程度控制反转，是代码编写过程中，相对无意识就会使用，因为他们的驱动力来自于解决当前的问题，而通过控制完成完成扩展性设计，则往往需要有意识的设计，因为他解决的问题是面向未来的维护，而当前的代码并没有减少，甚至还要增加。
+In most cases, our code is a combination of the previous forms of dependency, stacking the entire project like Lego blocks. General dependency forms, and a certain degree of inversion of control, are relatively unconscious in the code-writing process because their driver comes from solving current problems. In contrast, completing extensibility designs through control often requires conscious design because the problem it solves is about future maintenance, and the current code does not decrease and may even increase.
 
-# 耦合、内聚
+# Coupling and Cohesion
 
-实际上[耦合性](<https://zh.wikipedia.org/wiki/%E8%80%A6%E5%90%88%E6%80%A7_(%E8%A8%88%E7%AE%97%E6%A9%9F%E7%A7%91%E5%AD%B8)>)的概念与依赖是息息相关的，是指一程序中，模块及模块之间信息或参数依赖的程度。所以有依赖就会有耦合，但是这里要注意，耦合是一个主谓对等的概念，而依赖是有方向的，所以很多时候，我们说 A 耦合 B ，不如 A 依赖 B 来得精确。
-耦合有多种表现形式，耦合程度由高到低分别是内容耦合、公共耦合、控制耦合、标记耦合、数据耦合、非直接耦合，我们前面提到的一些依赖产生的方式，往往也会匹配到一种耦合形式上，如提取公共，往往对应着公共耦合。
-耦合性往往是评价模块间关系的，所以我们追求的低耦合，实际上是让模块间的依赖尽量少，而这里的少又是实质上的，而不是形式上的，他应该是指的暴露出来的约定的描述能力，而不是约定的个数，所以当两个模块间的产生依赖时，我们应该让这种联系变简单，当它是类型约束的时候，也应该是最简单的类型约束，这也就对应到了 SOLID 中的[接口隔离原则](https://zh.wikipedia.org/wiki/%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB%E5%8E%9F%E5%88%99)。
+In fact, the concept of [coupling](<https://en.wikipedia.org/wiki/Coupling_(computer_programming)>) is closely related to dependency, referring to the degree of information or parameter dependency between modules in a program. So wherever there is dependency, there is coupling. However, it is important to note that coupling is a subject-verb equal concept, whereas dependency is directional. So often, saying A couples B is less precise than saying A depends on B. Coupling has multiple forms of expression, with coupling levels ranging from high to low being content coupling, common coupling, control coupling, stamp coupling, data coupling, and non-direct coupling. The ways dependencies are generated that we've mentioned often match one form of coupling, such as extracting commonality, which often corresponds to common coupling. Coupling is often an evaluation of the relationship between modules, so what we pursue is low coupling, which actually means minimizing inter-module dependencies. Here, "minimizing" is substantive, not formal. It refers to the descriptive capability of the exposed contract, not the number of contracts. Therefore, when dependencies arise between two modules, we should make this connection simple. When it is a type constraint, it should also be the simplest type constraint, which corresponds to the [Interface Segregation Principle](https://en.wikipedia.org/wiki/Interface_segregation_principle) in SOLID.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*Yx4DS7jom3QAAAAAAAAAAAAADjOxAQ/original)
 
-在模块的尺度上，我们可以进一步的讨论内聚，高内聚和低耦合是伴生的，实际上一个程序总有紧耦合和松耦合的部分，当我们把紧耦合的部分都收缩在一起成为模块时，这些模块相互间的依赖就变少了，低耦合就出现了，这个时候，我们分割出来的模块，就是高内聚的。
-内聚也有多种表现形式，内聚程度由低到高分别是偶然内聚、逻辑内聚、时间性内聚、程序内聚、联系内聚/信息内聚/通信内聚、依序内聚/顺序内聚、功能内聚。内聚是耦合的另一面，这里不再学究的介绍不同的内聚形式，因为有些我也不是很认可...
+At the module level, we can further discuss cohesion. High cohesion and low coupling go hand in hand. In fact, a program always has tightly coupled and loosely coupled parts. When we compress tightly coupled parts together to form a module, dependencies between these modules decrease, and low coupling appears. At this time, the modules we have divided out are highly cohesive. Cohesion also has many forms of expression, with levels of cohesion ranging from low to high being accidental cohesion, logical cohesion, temporal cohesion, procedural cohesion, communicational cohesion, sequential cohesion, and functional cohesion. Cohesion is the other side of coupling, and I won't delve into the scholarly introduction of different cohesion forms here, as I don't agree with some of them...
 
-# 前端常见场景
+# Common Frontend Scenarios
 
-## 路由
+## Routing
 
-其实在前面的例子里，我们已经举了路由的例子，这里再发散一下，对于路由而言，他要操作的不仅仅是`layout`的动态性，而是`layout``content`的组合，甚至还有嵌套。
+In fact, we have already given a routing example in the previous example. Let's expand on it. For routing, it needs to handle not just the dynamism of `layout` but the combination of `layout``content`, and even nesting.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*nrCTRKGvaWcAAAAAAAAAAAAADjOxAQ/original)
 
-如果看代码的话，我们可能并没有显式的在页面中引用什么，但实际上，这是框架帮我们完成了，而我们编写页面级别的组件时，也不免的会用到来自 Route 定义的 Prop，这实际上依然是一种依赖。
+If you look at the code, we may not explicitly quote anything on the page. But in reality, the framework completes it for us, and when we write page-level components, we inevitably use Props from the Route definition, which is actually still a form of dependency.
 
-## 无状态
+## Stateless
 
-自从函数式大行其道，无状态也就越来越受欢迎了，我们为什么会喜欢无状态？一个无状态的函数，可以保证在被不同的依赖方调用时，有着稳定的表现。从依赖的角度看，一个被依赖项是无状态的，那么当这个依赖被抽取公共的时候，他形成公共耦合的副作用就很小，实际的例子如工具函数，我们不会因为提取工具函数而产生负担，但是如果我们提取的公共依赖是有状态的，那他在运行时的表现就会有很多的不确定性，这种不确定性是我们所不喜欢的，也是公共耦合的风险所在。
+Since the rise of functional programming, statelessness has become increasingly popular. Why do we like statelessness? A stateless function can guarantee stable performance when called by different dependents. From a dependency perspective, if a dependency is stateless, it will have a small side effect when extracted as a common dependency, and practical examples like utility functions won't burden us with extraction. However, if we extract a common dependency that is stateful, its runtime performance will have many uncertainties. These uncertainties are what we dislike and are the risks of common coupling.
 
-## 事件
+## Events
 
-事件模型其实也是一种依赖管理的常见手段。例如在实现链各个互相绑定的模块时，因为依赖方向只能有一个，假设 A 依赖 B，那么为了让 B 可以影响到 A，就可以 B 中实现事件。这里实际上可以认为 A/B 都依赖了事件的抽象定义，只是这个定义被合并在了 B 中。
+The event model is also a common means of managing dependencies. For example, when implementing modules bound to each other in a chain, because dependency direction can only be one way, assuming A depends on B, an event can be implemented in B to allow B to affect A. Here, it can actually be considered that A/B both depend on the abstract definition of the event, only that this definition is merged into B.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*mzadQZ0moWkAAAAAAAAAAAAADjOxAQ/original)
 
-# 总结
+# Summary
 
-依赖是必然的，在代码中实体不变的情况下，我们可以通过不同的依赖关系形式来组织他们，而调整这些依赖关系的目的，应该是为了让这些实体聚合成不同的模块，达到模块内的高内聚和模块间的低耦合，从而提高接触工程的人信息接收的效率，更好的维护和扩展工程。
+Dependencies are inevitable. In the case of unchanged code entities, we can organize them through different forms of dependency relationships. The purpose of adjusting these dependency relationships should be to aggregate these entities into different modules, achieving high cohesion within modules and low coupling between modules, thereby enhancing the efficiency of information reception by those involved in engineering and better maintaining and extending the engineering project.

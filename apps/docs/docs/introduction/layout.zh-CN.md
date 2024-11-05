@@ -1,5 +1,5 @@
 ---
-title: 布局与组件设计
+title: 布局与视图系统
 order: 2
 nav:
   title: 介绍

@@ -1,20 +1,21 @@
 ---
-title: 命令
-order: 7
+title: Commands
+order: 1
+
 nav:
   title: Example
   order: 3
 ---
 
-# 命令
+# Commands
 
-命令系统是非常基础的一个系统，其本身支持对可调用方法的管理器，我们通过统一的命令注册，来解决快捷键、菜单、工具栏、命令面板等不同 UI 入口的统一响应问题，也给插件得外部系统更浅的内部方法调用入口。
+The command system is a very fundamental system that supports a manager for callable methods. By standardizing command registration, we address the unified response across different UI entry points such as shortcuts, menus, toolbars, and command panels. This also provides a simpler internal method invocation entry point for external systems of plugins.
 
-## 简单使用
+## Simple Usage
 
 <code src="../../src/command/simple"></code>
 
-用户可以 `CommandRegistry` 完成命令的注册和消费，我们也提供了 `CommandContribution` 扩展点。
+Users can complete the registration and consumption of commands using `CommandRegistry`. We also provide the `CommandContribution` extension point.
 
 ```typescript
 export type CommandContribution = {
@@ -22,7 +23,7 @@ export type CommandContribution = {
 };
 ```
 
-我们在 `CommandRegistry` 上提供两种注册命令的形式
+We offer two methods of registering commands on the `CommandRegistry`
 
 ```typescript
 registerCommand(command: Command, handler?: CommandHandler): Disposable

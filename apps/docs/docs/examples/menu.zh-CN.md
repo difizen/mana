@@ -1,20 +1,20 @@
 ---
-title: Menus
+title: 菜单
 order: 8
 nav:
   order: 3
 ---
 
-# Menus
+# 菜单
 
-## Menu Bar
+## 菜单栏
 
 <code src="../../src/menu/menubar"></code>
 
-## Context Menu
+## 右键菜单
 
 <code src="../../src/menu/context-menu"></code>
 
-## Antd Menu
+## antd 菜单
 
 <code src="../../src/menu/antd-context-menu"></code>

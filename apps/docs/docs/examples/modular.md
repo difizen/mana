@@ -1,18 +1,18 @@
 ---
-title: 模块
+title: Module
 order: 20
 nav:
   order: 3
 ---
 
-# 模块示例
+# Module Example
 
-简单的模块示例，包含布局和内容两个模块，内容模块的 view 展示在中部和顶部，并共享数据状态。
+A simple module example that includes two modules: layout and content. The views of the content module are displayed in the center and top, and they share data state.
 
 <code src="../../src/modular-basic"></code>
 
-# 动态模块
+# Dynamic Module
 
-我们可以动态加载模块以后，再使用其中的 view。
+We can dynamically load modules and then use the views within them.
 
 <code src="../../src/modular-dynamic"></code>
