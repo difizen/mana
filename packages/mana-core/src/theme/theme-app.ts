@@ -28,7 +28,7 @@ export class ThemeApplication implements ApplicationContribution {
 
   onStart(application: Application): void {
     this.application = application;
-    this.application.onHostChanged(this.update);
+    this.application.onHostChanged(() => this.update());
     for (const contribution of this.variableContributions.getContributions()) {
       contribution.registerVariables(this.variables);
     }

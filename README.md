@@ -2,36 +2,46 @@
 
 [![codecov](https://codecov.io/gh/difizen/mana/graph/badge.svg?token=VGJDF8511R)](https://codecov.io/gh/difizen/mana)
 
-模块化可扩展前端框架
+A modular and extensible front-end framework designed for workbench products.
 
-- 如果你打算开发 IDE 型的生产力工具
-- 如果你的项目需要丰富的场景定制能力
-- 如果你正在寻找彻底模块化的前端工程方案
+**English** · [简体中文](./README.zh-CN.md)
 
-请尝试 mana 🌟🌟🌟
+## Features
 
-### 官网
+- Complete module isolation, state management, and dependency inversion solutions, making it a truly suitable framework for large-scale engineering
+- Integration with the react ecosystem, with innovative page view management and state tracking capabilities, perfectly combining frontend projects with a modular structure
+- Built-in modules such as themes, commands, shortcuts, toolbars, configurations, internationalization, etc., to help you quickly start your project
 
-💡 请访问 https://mana.difizen.net/
+## Applicable Scenarios
 
-### 提交issue
+- If you intend to develop IDE-style productivity tool products
+- If you are looking for a thoroughly modular, architecturally advanced frontend engineering solution to solve team collaboration and long-term maintenance issues
+- If your project requires rich scene customization capabilities, allowing downstream producers to do kernel-level customization and develop a module ecosystem
 
-😊 我们建议您使用[github issue](https://github.com/difizen/mana/issues) 提交您的疑问, 我们通常会在2日内回复。
+Please try mana 🌟🌟🌟
 
-### 贡献代码
+### Official Website
 
-🤝 请查阅 [CONTRIBUTING.md](./CONTRIBUTING.md)
+💡 Please visit https://mana.difizen.net/
 
-### 贡献者
+### Submit Issues
 
-💪 感谢所有的贡献者
+😊 We recommend using [github issue](https://github.com/difizen/mana/issues) to submit your questions, and we usually respond within two days.
+
+### Contribute Code
+
+🤝 Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+### Contributors
+
+💪 Thanks to all the contributors
 
 <a href="https://github.com/difizen/mana/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=difizen/mana" alt="List of Contributors"/>
 </a>
 
-### 联系我们
+### Contact Us
 
-🤗 加入我们的钉钉答疑群与我们联系。
+🤗 Join our DingTalk Q&A group to contact us.
 
 <img src="./apps/docs/public/ding-qrcode.png" width="30%">

@@ -43,7 +43,7 @@ const Header: React.FC = () => {
           ? urlPath.replace(`/${urlLang}`, '')
           : `/${currentLang}${urlPath}`;
       history.push({
-        pathname: newUrl,
+        pathname: newUrl ? newUrl : '/',
       });
     }
   }, []);
@@ -103,15 +103,14 @@ const Header: React.FC = () => {
               onClick={() => {
                 const urlPath = window.location.pathname;
                 const currentLang = l10n.getLang();
-                const baseUrlPath = urlPath.startsWith(`/${currentLang}`)
+                let baseUrlPath = urlPath.startsWith(`/${currentLang}`)
                   ? urlPath.replace(`/${currentLang}`, '')
                   : urlPath;
+                baseUrlPath = baseUrlPath ? baseUrlPath : '/';
                 const targetLang =
                   currentLang === L10nLang.zhCN ? L10nLang.enUS : L10nLang.zhCN;
 
-                l10n.changeLang(
-                  currentLang === L10nLang.zhCN ? L10nLang.enUS : L10nLang.zhCN,
-                );
+                l10n.changeLang(targetLang);
 
                 history.push({
                   pathname:

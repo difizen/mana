@@ -5,5 +5,6 @@
   "Community": "社区",
   "feedback issues": "反馈问题",
   "release notes": "发布日志",
-  "A modular and scalable front-end application framework designed for workbench products.": "一个模块化的可扩展前端应用框架，为工作台产品设计。"
+  "A modular and extensible front-end framework": "一个模块化的可扩展前端应用框架",
+  "Designed for workbench products": "为工作台产品设计"
 }
