@@ -1,9 +1,8 @@
 ---
 title: 布局与组件设计
 order: 2
-
 nav:
-  title: Introduction
+  title: 介绍
 ---
 
 # 前言

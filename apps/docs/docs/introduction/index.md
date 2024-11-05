@@ -1,124 +1,125 @@
 ---
-title: mana 简介
-order: 1
 nav:
-  title: 介绍
+  title: Introduction
+
+title: Mana Introduction
+order: 1
 ---
 
-# 1. 为什么做 mana
+# Mana Introduction
 
-随着网页端生产力工具型产品（以下我们称为 IDE 式产品）的发展，我们意识到 IDE 式工作台应用是有共性的，它们都是为了创造价值，关注使用效率，追求沉浸式体验，产品形态上存在一些相似，但实际的融合并不容易。
+## 1. Why Mana
 
-- 技术栈问题：传统 IDE 的技术体系与当前的主流前端技术存在比较大的隔阂，不论是 vscode 还是 notebook 体系，都相对封闭。
-- 缺少复用规范：在核心模块（画布、编辑器）上都支持了扩展，但是对扩展性的定义方式不同，复用方式也不同（组件、插件、模块），尤其是 IDE 式工作台很多时候复用的能力来自逻辑而不是组件（如命令模式、快捷键）。
-- 缺少最佳实践：IDE 产品上的共性部分（菜单、布局保存）有多种实践，但由于不是核心模块，在建设初期关注较少，导致融合困难。
+With the development of web-based productivity tools (hereafter referred to as IDE-style products), we realized that IDE-style workstation applications share commonalities. They are all designed to create value, focus on efficiency, and pursue an immersive experience. While there are some similarities in product form, actual integration is not easy.
 
-大型的前端应用中也有一些问题长期困扰我们：
+- Technology stack issues: There is a significant gap between the technical systems of traditional IDEs and current mainstream front-end technologies. Both vscode and notebook systems are relatively closed.
+- Lack of reuse standards: Core modules (canvas, editor) support extensions, but the way extensibility is defined varies, as do the reuse methods (components, plugins, modules). Especially in IDE-style workstations, the ability to reuse often comes from logic rather than components (e.g., command mode, shortcuts).
+- Lack of best practices: There are various practices for common parts of IDE products (menus, layout saving), but since they are not core modules, they receive less attention in the early stages of development, leading to integration difficulties.
 
-- 大组件难复用：业务组件天然存在复用的需求，但是封装大而灵活的组件并不容易，一个组件适应的场景越多，往往就越复杂，使用起来也不再简单，复用效果大打折扣。
-- 大应用难维护：新加和删除功能往往需要改动多处代码，而且不免牵扯其他部分的逻辑，牵一发而动全身，新同学无法快速上手。
+Large front-end applications also face long-standing problems:
 
-客观上，一些现有的 IDE 的技术方案是对定制比较友好的，也是经过验证的可行路线，不同技术体系的碰撞，让我们看到了解决应用建设问题的可能，所以我们萌生了这样的想法：
+- Large components are hard to reuse: Business components naturally require reuse, but packaging large and flexible components is not easy. The more scenarios a component can adapt to, the more complex it becomes, making it less straightforward to use and diminishing the reuse effect.
+- Large applications are hard to maintain: Adding and removing features often requires changes to multiple pieces of code, involving other parts of the logic, causing a ripple effect. Newcomers cannot quickly get up to speed.
 
-- 把大家最熟悉的 react 技术栈和 IDE 建设的思路结合起来，解决对 IDE 的开发兼容和 IDE 式工作台能力复用的问题。
-- 统一不同技术领域下扩展能力的定义方式和复用方式，IDE 式工作台共性的部分内置最佳实践。
+Objectively, some existing IDE technology solutions are relatively friendly to customization and are verified feasible routes. The collision of different technical systems allows us to see the possibility of solving application construction problems, leading us to this idea:
 
-这个想法最后落地的就是 mana。
+- Combine the most familiar React technology stack with IDE construction ideas to address compatibility in IDE development and reuse capabilities of IDE-style workstations.
+- Standardize the definitions and reuse methods of extension capabilities across different technical fields, with built-in best practices for common parts of IDE-style workstations.
 
-# 2. 定义问题
+This idea eventually materialized as Mana.
 
-## 2.1 代码难以长期维护
+## 2. Problem Definition
 
-很多情况下我们不知道一个可以长期维护，有好的扩展性的应用该如何建设。现有的中台应用研发实践，在体量越来越大，内容越来越复杂时，容易遇到如下几个问题：
+### 2.1 Code Difficult to Maintain Long-Term
 
-### 错误的依赖关系
+In many cases, we do not know how to build an application that is maintainable in the long term and has good extensibility. Existing mid-platform application development practices, as they grow larger and more complex, tend to encounter the following issues:
 
-为什么大组件会出现难复用和难维护的问题？我们认为根源在于传统的研发模式下我们没有正确的处理依赖关系。
+#### 2.1.1 Incorrect Dependency Relationships
 
-- 大组件整体依赖小功能
+Why do large components become difficult to reuse and maintain? We believe the root lies in the fact that under traditional development models, we have not correctly handled dependency relationships.
 
-组件越大细节就越多，这些细节一旦需要配置和动态性，就需要把在局部产生的配置上移到全局里透出 prop，而父组件一旦尝试去控制和理解子组件定义的这些细节，也就实际上形成了一种全局对局部的依赖。
+- Large components depend entirely on small functions
 
-- 父组件依赖子组件
+  The larger the component, the more details it has. Once these details require configuration and dynamics, configurations generated locally must be moved up to the global scope and exposed as props. When the parent component attempts to control and understand these details defined by child components, it essentially forms a global-to-local dependency.
 
-从这个角度继续看，JSX 语法也总是以全局依赖局部的形式出现，大的组件要引入各种可能用到的子组件，并且因为子组件向上暴露的配置，而在整体中出现一些与局部耦合的逻辑，父组件的全局性又会导致来自不同部分的逻辑出现在一处，这些逻辑往往就是维护的灾难。
-这种全局依赖局部的形式，本质上是需要一个上帝视角的，用户必须站在上帝视角，去关系每一处细节，这种处理方式一旦到达一定的体量，就会理解困难，再加上一定时间过后遗忘规律的影响，就会难以维护。
+- Parent components depend on child components
 
-### 不合理的代码组织
+  Continuing from this perspective, JSX syntax always appears in a form of global dependency on local components. Large components need to introduce various possible subcomponents, and due to configurations exposed by subcomponents, some logic coupled with local components appears in the overall structure. The global nature of parent components causes logic from different parts of the application to converge, often resulting in maintenance disasters. This form of global dependency on local components essentially requires a god's-eye view, where users must consider every detail. Once it reaches a certain scale, it becomes difficult to understand, and with the passage of time, the forgetting curve makes it difficult to maintain.
 
-在一般的中台应用中，虽然整体是单页应用的表现形式，但是功能与功能之间的联系并不强，这也是微前端模式能够大行其道的原因。但是在生产力工作台应用中，页面的每个部分联系非常紧密，这个时候继续以 UI 视角来组织代码，就会产生很多问题。
+#### 2.1.2 Unreasonable Code Organization
 
-- 局部概念泄露
+In general mid-platform applications, although they appear as single-page applications, the connection between functions is not strong. This is also why the micro-frontend model is popular. However, in productivity workstation applications, each part of the page is closely connected. Continuing to organize code from the UI perspective in such cases creates numerous problems.
 
-当同一功能的不同部分显示在显示在页面多处时，他们会基于 UI 被分别组织在不同的位置，这样就需要将服务于他们的状态、hooks 等内容，提升到全局，或者至少可以暴露在他们可以共同访问的位置。但他们本质上是局部使用的。这些内容的过度暴露，就会造成全局概念的混乱。
+- Leakage of Local Concepts
 
-- 不利于分工
+  When different parts of the same function are displayed in multiple places on the page, they are organized in different locations based on the UI. This requires the state, hooks, and other content serving them to be elevated to a global level or at least exposed to a location they can all access. However, they are essentially used locally. The excessive exposure of these contents leads to global concept confusion.
 
-在大型应用中，我们实际上无法以 UI 位置的视角进行分工，因为每一个位置都有多种业务背景的概念出现，但是如果继续以 UI 位置的视角做代码组织，就会造成不同分工的同学维护同一份代码的问题。
+- Not Conducive to Division of Labor
 
-### 状态缺少分层
+  In large-scale applications, we cannot perform division of labor from the perspective of UI location because every location has concepts from multiple business backgrounds. However, if we continue to organize code from the UI location perspective, it will cause different teams to maintain the same code, creating maintenance issues.
 
-我们一般只有组件内的局部状态和全局状态两类状态，这没有办法很好的满足业务定制的需求，因为业务定制往往是局部生效的，而且不同的业务定制之间还可能互斥，我们希望这种定制既不会污染全局，也不会互相影响。
+#### 2.1.3 Lack of State Layering
 
-## 2.2 好的实践难以复制
+We generally have only two types of states: local state within components and global state. This does not adequately meet business customization needs because business customization is often effective locally, and different business customizations may conflict with each other. We hope such customizations will neither pollute the global state nor affect each other.
 
-有时候当我们看到一个高级的 IDE 式工作台特性，如命令面板、动态快捷键、主题、可保存布局等等，但是我们无法快速的引入他们：
+### 2.2 Good Practices Are Hard to Replicate
 
-- 来自不同的技术栈，无法简单复用。如 vscode 可保存布局的抽象无法服务 react 组件。
-- 一些实践需要基于规范，而且越多人遵守越好。如命令面板组件很简单，但是大家都遵守它，才能把它用起来，变得好用。
+Sometimes, when we see advanced IDE-style workstation features, such as command panels, dynamic shortcuts, themes, and savable layouts, we cannot quickly incorporate them:
 
-# 3. 如何解决
+- They come from different technology stacks and cannot be easily reused. For instance, the abstraction of savable layouts in vscode cannot serve React components.
+- Some practices need to be based on standards, and the more people follow them, the better. For example, the command panel component is straightforward, but everyone must adhere to it for it to be used effectively.
 
-## 3.1 写出可维护的代码
+## 3. How to Solve
 
-mana 通过给出模块化代码组织、明确的扩展点定义、分层的数据域、动态的视图系统，来帮助用户写出可维护的代码。模块化相比起组件模式，将 UI 和逻辑内聚在一起，加上明确的扩展点定义，将隐式的接口依赖转变为显式的 Token 关系，帮助用户整理好代码，形成合理的模块依赖关系。数据域和动态视图系统帮助用户解决业务定制难题，可以对原代码无侵入的做到业务定制效果。
+### 3.1 Write Maintainable Code
 
-### 模块化
+Mana helps users write maintainable code by providing modular code organization, clear extension point definitions, layered data domains, and a dynamic view system. Compared to the component model, modularization cohesively integrates UI and logic, and with clear extension point definitions, it turns implicit interface dependencies into explicit token relationships, helping users organize code and form reasonable module dependencies. Data domains and the dynamic view system help users solve business customization challenges, allowing business customization without intruding on the original code.
 
-代码应当基于领域模块组织，这就意味着我们需要把为同一个功能服务的不同组件、状态、逻辑组织在一起，他们必须有统一的组织形式，以及对外暴露的规范。这部分我们借鉴了 IoC 容器的实践，要求模块内的每个元素都有一个对应的 token，作为内部的标识。
+#### 3.1.1 Modularization
+
+Code should be organized based on domain modules, meaning different components, states, and logic serving the same function should be organized together. They must have a unified organizational form and external exposure standards. In this part, we borrow practices from IoC containers, requiring each element within a module to have a corresponding token as an internal identifier.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*xHO1RoYR-6kAAAAAAAAAAAAADjOxAQ/original)
 
 ```typescript
-// 模块隐层细节
+// Module details
 export default Module.create().register(CompoA, CompoB, StateA, StateB);
 export CompA;
 ```
 
 ```typescript
-// 模块任意组合
+// Module arbitrary combination
 <Application modules={[layoutModule, BusModule, CommandModule]} />
 ```
 
-### 扩展点
+#### 3.1.2 Extension Points
 
-为了避免组件配置从整体到局部层层传递的问题，我们将不同层次暴露出来的实体，都以Token的形式暴露在同一个平面上，IoC 的实践为我们提供了可以借鉴的设计思路，我们将这样的处理方式与 React 体系下的上下文能力结合起来，可以根据约定在上下文范围内替换和配置任意层次的内容。
-在此基础上，我们引入了扩展点的概念来解决一对多的扩展模式.
+To avoid the problem of component configuration being passed layer by layer from global to local, we expose entities at different levels all on the same plane in the form of tokens. IoC practices provide a design idea we can learn from. We combine this approach with React's context capabilities, allowing any level of content to be replaced and configured within a context range based on conventions. On this basis, we introduce the concept of extension points to solve the one-to-many extension model.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*gVmhS7GuA7gAAAAAAAAAAAAADjOxAQ/original)
 
-消费扩展点的时候，决定将其对应的多个实现通过竞争、选取、遍历等方式使用，有效的解决了整体中出现耦合于局部的代码的问题。
+When consuming extension points, multiple implementations can be used through competition, selection, iteration, etc., effectively solving the problem of code coupled with local components appearing in the overall structure.
 
-### 数据域
+#### 3.1.3 Data Domain
 
-模块化和扩展点让我们可以将多个模块组合起来，也可以在新模块中对原有模块的表现做出修改，这方便了业务的定制。在此的基础上，我们增加了数据域的概念来进一步的满足多样的定制需求。让业务定制既可以在局部生效，定制之间又互不影响。
+Modularization and extension points allow us to combine multiple modules and modify the behavior of original modules in new modules, facilitating business customization. On this basis, we add the concept of data domains to further meet diverse customization needs, allowing business customizations to be effective locally and not affect each other.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*oDUVT6ds59AAAAAAAAAAAAAADjOxAQ/original)
 
-mana 的数据域本身依赖ReactContext在组件中生效，也可以独立管理。基于对数据域的管理，我们可以有效的隔离不同定制互相影响，可以将不同的实现方便整合在一起，这对于多变的模块非常有效，如树形组件定制，toolbar 定制等。
+The data domain in Mana relies on React Context to be effective within components and can also be managed independently. By managing data domains, we can effectively isolate the impacts of different customizations, allowing different implementations to be easily integrated, which is very effective for modules that change frequently, such as tree component customization, toolbar customization, etc.
 
-### 视图系统
+#### 3.1.4 View System
 
-在一个由基础模块拼装的系统里，我们希望拼装起来的模块带有默认的视图组织形式，也就是默认的产品形态；又希望使用方能够灵活的修改产品形态，重新组合视图为新产品服务。为此我们设计了新的视图系统，让我们能够默认获得这些灵活定制的能力。
+In a system assembled from basic modules, we want the assembled modules to have a default view organization form, i.e., a default product form; we also want users to be able to flexibly modify the product form and reorganize views to serve new products. To this end, we designed a new view system that allows us to default to these flexible customization capabilities.
 
-- view：独立使用的视图单元，可以被灵活配置显示在各种位置。
-- slot：插槽，用来定义页面中可以被配置的位置。
-- slotView：一种特殊的 view，用来管一个位置的多个视图。
+- View: An independent view unit that can be flexibly configured to display in various positions.
+- Slot: A slot used to define configurable positions on the page.
+- SlotView: A special kind of view for managing multiple views in one position.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*Em-BSqXI9P0AAAAAAAAAAAAADjOxAQ/original)
 
 ```typescript
-// 使用 slot 做布局
+// Use slot for layout
 <div>
   <slot name="header" />
   <div>
@@ -126,78 +127,80 @@ mana 的数据域本身依赖ReactContext在组件中生效，也可以独立管
     <slot name="main" />
   </div>
 </div>
-// 使用 slotview 做布局管理
+// Use slotview for layout management
 createSlotPreference(
   { slot:'header', view: FlexView },
   { slot:'left', view: SideTab },
   { slot:'main', view: CardTab },
 )
-// 将视图放在对应位置
+// Place views in corresponding positions
 createViewPreference(
   { slot:'left', view: FileTree },
   { slot:'main', view: Editor },
 )
+
 ```
 
-## 3.2 可组合的 IDE 式工作台能力
+### 3.2 Composable IDE-Style Workstation Capabilities
 
-mana 收集了很多 IDE 式工作台建设中的成熟模块，帮助 IDE 式工作台快速启动。
+Mana collects many mature modules from IDE-style workstation development to help IDE-style workstations start quickly.
 
-- 命令：IDE 中常见的执行 API 暴露形式，过统一的调用规范，支持 UI、按键、插件等不同方式，可以基于命令的元信息制作命令面板等组件。
-- 工具栏、菜单：通过统一的 enable、visible、active 逻辑，帮助命令支持在 UI 中的表现，解决集中式配置难以维护的问题。
-- 配置：为模块提供统一的配置暴露和使用规范，方便整合全局、局部配置项，基于统一的配置元信息，可以制作配置面板等配套组件。
-- 快捷键：内置对不同键盘的支持，统一不同系统的键位映射，提供与焦点和上下文关联的动态快捷键能力，基于统一的快捷键元信息，可以制作可配置快捷键面板、快捷键命中提示等组件。
-- 主题：定义基础的主题元信息，提供内置的颜色处理能力，允许以 css 变量、css in js 等形式消费，帮助其他模块响应主题状态。
-- 布局保存：提供了完成布局保存需要遵循的基础接口，如果应用希望完成布局自动保存的能力，可以通过遵循这些接口来实现。
+- Command: A common execution API exposure form in IDEs that, through a unified calling standard, supports different methods such as UI, keys, plugins, etc., and can create command panels and other components based on command metadata.
+- Toolbar, Menu: Through unified enable, visible, and active logic, help commands support performance in the UI, solving the problem that centralized configuration is difficult to maintain.
+- Configuration: Provide a unified configuration exposure and usage standard for modules, facilitating the integration of global and local configuration items, and can create configuration panels and other supporting components based on unified configuration metadata.
+- Shortcuts: Built-in support for different keyboards, unifying key mappings across different systems, providing dynamic shortcut capabilities associated with focus and context, and can create configurable shortcut panels, shortcut hit prompts, and other components based on unified shortcut metadata.
+- Theme: Define basic theme metadata, provide built-in color processing capabilities, allow consumption in the form of CSS variables, CSS in JS, etc., and help other modules respond to theme states.
+- Layout Saving: Provide basic interfaces that need to be followed to achieve automatic layout saving capabilities. If an application wants to achieve automatic layout saving capabilities, it can implement them by following these interfaces.
 
-这些基础模块，重要程度往往低于 IDE 式工作台的核心工作能力模块，所以在不同的 IDE 式工作台建设过程中在这些支持模块上各不相同，技术选型上也会浪费很多时间。在 mana 中，这些能力都给出了标准方案，在其他模块的建设中，我们也会引入并遵循这些规范。
+These basic modules are often less important than the core work capability modules of IDE-style workstations, so in different IDE-style workstation development processes, these support modules vary, and a lot of time is wasted on technical selection. In Mana, these capabilities are provided with standard solutions, and in the construction of other modules, we will also introduce and follow these standards.
 
-- 🌰 cofine 编辑器遵守 mana 的主题和配置能力，当一个 mana 应用在引入 cofine 的时候，就很方便可以将 cofine 的配置项集成到引用配置里。
-- 🌰 libro notebook 完全基于 mana 基础模块制作，开发节奏进入的非常快。
+- 🌰 The Cofine editor complies with Mana's theme and configuration capabilities, making it easy to integrate Cofine's configuration items into the reference configuration when a Mana application introduces Cofine.
+- 🌰 Libro notebook is completely based on Mana's basic modules, allowing for a very fast development pace.
 
-mana 的模块是可组合的，对于应用而言，组合越多的能力，工作会越聚焦，整体会越好用。
+Mana's modules are composable. For applications, the more capabilities combined, the more focused the work will be, and the more user-friendly the overall system will become.
 
-## 3.3 定义自己的业务抽象
+### 3.3 Define Your Business Abstractions
 
-有了前面两者，业务应用遵循相同的开发方案，根据自己的实际业务需求，整理出自己业务中实际使用的基础模块，可以用模块依赖关系，代替组件、全局的二元关系，方便业务上的逻辑分层。
-业务也可以提炼自己的领域模型和业务上的可扩展抽象，作为业务建设的基石，这对于业务系统整体的维护性和扩展性有非常大的帮助。
+With the previous two, business applications follow the same development plan and organize the basic modules actually used in their business according to their actual business needs. They can replace component and global binary relationships with module dependency relationships, facilitating logical layering in business. Businesses can also extract their domain models and extensible abstractions in business as the cornerstone of business development, which is very helpful for the overall maintainability and scalability of business systems.
 
-# 4. 系统优势
+## 4. System Advantages
 
-我们也在实践中总结了整个体系使用的一些优势。
+We have also summarized some advantages of using the entire system in practice.
 
-## 4.1 装配模式
+### 4.1 Assembly Model
 
-我们常用的组件模式是非常成功的，它就像乐高一样，由于每个元件都有着相同的接口，所以搭建的时候非常的自由，这带来了巨大的灵活性，但是当体量变得非常大时，使用乐高的小组件完成搭建，就会变得非常繁琐困难，系统也会变得脆弱。
-在构建大型应用时，我们希望引入的是“装配模式”，它的特点如下：
+The commonly used component model is very successful, like building with Lego blocks. Since each piece has the same interface, assembling them is very free, which brings tremendous flexibility. However, when the scale becomes very large, assembling small Lego components becomes very tedious and difficult, and the system becomes fragile.
 
-- 防呆接口：每个模块都对外暴露了不同的Token，对于系统而言，他们就像一个个防呆接口，一个模块对外暴露的接口是有限的，但是在对接时我们不需要再考虑他们的拼接方式，这些特异化的接口仅能以接口定义者期望的方式运行。
-- 自动装配：由于每个模块都是防呆的，我们就可以做到自动装配，组合模块的过程就是把模块列举出来。
+When building large applications, we want to introduce an "assembly model," characterized as follows:
+
+- Foolproof Interface: Each module exposes different tokens externally. For the system, they are like foolproof interfaces. The interfaces exposed by a module are limited, but when interfacing, we don't need to consider their assembly methods anymore. These specialized interfaces can only operate in the way the interface definer expects.
+- Automatic Assembly: Since each module is foolproof, we can achieve automatic assembly. The process of combining modules is merely listing them.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*1l7hT6zqrCMAAAAAAAAAAAAADjOxAQ/original)
 
-## 4.2 增量开发
+### 4.2 Incremental Development
 
-mana 体系下的模块，具有强大的二次开发能力，我们可以使用新增代码的方式来需改基础模块的表现，不仅可以添加功能，还可以删除和修改功能，即增量开发模式。
+Modules in the Mana system have strong secondary development capabilities, allowing us to modify the behavior of basic modules using additional code, not only adding features but also removing and modifying them, i.e., incremental development mode.
 
-- 开发效率高：配合上数据域的管理，可以非常快速的完成新能力的开发，同时不用担心对外部的影响。
-- 推动上游更新：由于下游模块可以方便的二次开发上游模块能力，在上游模块不满足使用场景时，我们可以在自己的模块内先实现，然后成熟后反馈给上游。
-  一个实践中的例子是，在 libro notebook 建设中，多个产品都引入了 libro 核心模块，然后通过增量开发的形式开发自己的 cell 和文件读写服务。 在一个产品力可能要面对读取实际文件和数据库里的假文件等不同读写方式，然后我们在这个基础上还要继续封装成可以被 openSumi 集成的模块，这些定制势必会造成核心包的臃肿。但是当前 Libro 核心包几乎没有扩充过定义， 新模式的增加对原有链路不造成任何影响。
+- High Development Efficiency: With the management of data domains, new capabilities can be developed quickly without worrying about external impacts.
+- Promote Upstream Updates: Since downstream modules can easily perform secondary development on upstream module capabilities, when upstream modules do not meet usage scenarios, we can first implement them in our modules and then feedback to the upstream after they mature.
+
+A practical example is in the construction of Libro notebook, where multiple products have introduced Libro's core modules, and then developed their cells and file read/write services in an incremental development form. In a productivity context, you might have to deal with different read/write methods, such as reading actual files and fake files in databases, and then we need to continue packaging it into modules that can be integrated into openSumi. These customizations inevitably lead to a bloat in core packages. But currently, the Libro core package has hardly expanded its definitions, and the addition of new modes does not affect the original chain in any way.
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*CZxfTKBI7mYAAAAAAAAAAAAADjOxAQ/original)
 
-## 4.3 领域抽象
+### 4.3 Domain Abstraction
 
-基于业务能力的模块化，往往在实践中与应用的领域模型匹配在一起。其中的扩展点定义，让我们对一个系统具备哪些横向扩展能力有了一个整体的了解。这让我们比以往任何时候都关注领域模型和抽象接口，前端后端领域模型的对照和差异，也让前后端在整体设计上更加容易理解对方提供的能力（隐私计算平台案例）。对于业务而言，核心模型的稳定性远大于 UI 的稳定性，让我们的应用建设有了稳定的支柱。
+Based on business capability modularization, it is often matched with the domain model of the application in practice. The extension point definitions allow us to have a comprehensive understanding of what horizontal extension capabilities a system has. This makes us more focused on domain models and abstract interfaces than ever before. The contrast and differences in domain models between front-end and back-end also make it easier for the front-end and back-end to understand each other's capabilities in overall design (privacy computing platform case). For businesses, the stability of core models far exceeds that of UI stability, providing a stable pillar for application construction.
 
-# 5. 系统设计
+## 5. System Design
 
 ![](https://mdn.alipayobjects.com/huamei_hdnzbp/afts/img/A*PVXyQ51zfOYAAAAAAAAAAAAADjOxAQ/original)
 
-mana 可以分为通用层、规范层、实践层三层：
+Mana can be divided into three layers: General Layer, Specification Layer, and Practice Layer:
 
-- 通用层：主要包含依赖注入容器和响应式状态管理两部分，是 mana 里面可以独立使用的基础工具模块。
-  - 依赖注入容器：mana 需要一个能够管理 token，并可以完成注册、替换、收集等功能的容器，当前选型主要跟 mana 建设早期需要兼容 IDE 模块有关，我们在此基础上增加了动态模块，声明式使用方式等。
-  - 响应式状态：mana 的数据变更和消费方比较复杂，一方面需要数据系统可以独立于 UI 使用，另一方面扩展点等抽象定义中包含行为抽象，能够在执行过程中收集对数据的消费依赖，是这部分优化的基础。我们比较早就选定了以响应式状态管理为基础。
-- 规范层：mana 通过规范层给出用户什么是模块，什么是扩展点，什么是视图，以及约束用户编写方式。这部分是 mana 解决应用建设问题的关键。
-- 实践层：内置了 IDE 式工作台常用的多种模块，为产品建设提供最佳实践。
+- General Layer: Mainly includes dependency injection container and reactive state management, which are basic tool modules in Mana that can be used independently.
+  - Dependency Injection Container: Mana requires a container that can manage tokens and perform registration, replacement, collection, etc. The current selection is mainly related to the need to be compatible with IDE modules in the early stages of Mana construction. On this basis, we have added dynamic modules, declarative usage methods, etc.
+  - Reactive State: Mana's data changes and consumers are relatively complex. On one hand, the data system needs to be used independently of the UI, and on the other hand, abstract definitions of extension points include behavior abstractions, which are the basis for optimizing this part. We decided early on to base it on reactive state management.
+- Specification Layer: Mana provides users with what constitutes a module, what constitutes an extension point, and what constitutes a view, and constrains users' writing methods. This part is key to Mana solving application construction problems.
+- Practice Layer: Built-in various commonly used modules for IDE-style workstations, providing best practices for product development.

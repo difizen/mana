@@ -2,7 +2,6 @@
 title: 快捷键
 order: 7
 nav:
-  title: 示例
   order: 3
 ---
 

@@ -1,3 +1,4 @@
+import { l10n } from '@difizen/mana-l10n';
 import { useSiteData, Link } from 'dumi';
 import React from 'react';
 import './index.less';
@@ -27,11 +28,11 @@ const Footer: React.FC = () => {
         </div>
         {(themeConfig['links'] || []).map((datum: DatumType) => (
           <div className="difizen-dumi-footer-text-group" key={datum.title}>
-            <div className="difizen-dumi-footer-title">{datum.title}</div>
+            <div className="difizen-dumi-footer-title">{l10n.t(datum.title)}</div>
             {datum.itemList.map((item) => (
               <div className="difizen-dumi-footer-item" key={item.name}>
                 <a href={item.link} target="_blank" rel="noreferrer">
-                  {item.name}
+                  {l10n.t(item.name)}
                 </a>
               </div>
             ))}
@@ -40,7 +41,7 @@ const Footer: React.FC = () => {
 
         <div className="difizen-dumi-footer-text-group"></div>
         <div className="difizen-dumi-footer-text-group">
-          <div className="difizen-dumi-footer-title">联系我们</div>
+          <div className="difizen-dumi-footer-title">{l10n.t('Contact Us')}</div>
           {qrcodes.map((item: { name: string; qrcode: string }) => (
             <div className="difizen-dumi-footer-image-group" key={item.name}>
               <img className="difizen-dumi-footer-img" src={item.qrcode} />
