@@ -1,9 +1,8 @@
 ---
 title: 状态管理设计
 order: 2
-
 nav:
-  title: Introduction
+  title: 介绍
 ---
 
 # 我们需要的状态管理

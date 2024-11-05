@@ -2,7 +2,7 @@
 title: 命令
 order: 7
 nav:
-  title: Example
+  title: 示例
   order: 3
 ---
 

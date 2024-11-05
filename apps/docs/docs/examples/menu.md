@@ -2,7 +2,6 @@
 title: 菜单
 order: 8
 nav:
-  title: 示例
   order: 3
 ---
 

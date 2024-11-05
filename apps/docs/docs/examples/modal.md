@@ -3,7 +3,6 @@ title: 对话框
 order: 8
 toc: modal
 nav:
-  title: 示例
   order: 3
 ---
 

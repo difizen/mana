@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './index.less';
 import '../../tailwind.out.css';
+import { l10n } from '@difizen/mana-l10n';
 
 const Banner: React.FC = () => {
   const [animate, setAnimate] = useState({
@@ -22,8 +23,6 @@ const Banner: React.FC = () => {
   if (!themeConfig.banner) {
     return null;
   }
-
-  const bottons = themeConfig.banner.botton || [];
 
   return (
     <div className="difizen-dumi-banner">
@@ -44,7 +43,9 @@ const Banner: React.FC = () => {
                 mana
               </h1>
               <p className="text-xl sm:text-2xl text-muted-foreground mb-8">
-                一个模块化的可扩展前端应用框架，为工作台产品设计
+                {l10n.t(
+                  'A modular and scalable front-end application framework designed for workbench products.',
+                )}
               </p>
               <Link to={'/introduction'}>
                 <Button type="primary" size="large" className="start-btn">
@@ -54,7 +55,7 @@ const Banner: React.FC = () => {
               <CopyToClipboard
                 text="npm install @difizen/mana-app"
                 onCopy={() => {
-                  message.success('已复制');
+                  message.success(l10n.t('Copied'));
                 }}
               >
                 <Button size="large" className="install-btn">

@@ -2,7 +2,6 @@
 title: 模块
 order: 20
 nav:
-  title: 示例
   order: 3
 ---
 
