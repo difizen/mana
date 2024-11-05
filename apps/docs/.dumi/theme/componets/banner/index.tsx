@@ -1,10 +1,10 @@
+import { l10n } from '@difizen/mana-l10n';
 import { Button, message } from 'antd';
 import { Link, useSiteData } from 'dumi';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './index.less';
 import '../../tailwind.out.css';
-import { l10n } from '@difizen/mana-l10n';
 
 const Banner: React.FC = () => {
   const [animate, setAnimate] = useState({
@@ -19,10 +19,6 @@ const Banner: React.FC = () => {
       imgTranslate: ` translateY(-14px)`,
     });
   }, []);
-
-  if (!themeConfig.banner) {
-    return null;
-  }
 
   return (
     <div className="difizen-dumi-banner">
@@ -43,9 +39,7 @@ const Banner: React.FC = () => {
                 mana
               </h1>
               <p className="text-xl sm:text-2xl text-muted-foreground mb-8">
-                {l10n.t(
-                  'A modular and scalable front-end application framework designed for workbench products.',
-                )}
+                {l10n.t('A modular and extensible front-end framework')}
               </p>
               <Link to={'/introduction'}>
                 <Button type="primary" size="large" className="start-btn">
