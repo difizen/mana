@@ -66,7 +66,7 @@ export class ThemeApplication implements ApplicationContribution {
       this.toUpdate.push(Disposable.create(() => host.classList.remove(themeClass)));
     }
   }
-  protected update(): void {
+  protected update = (): void => {
     this.toUpdate.dispose();
     this.toUpdate = new DisposableCollection();
     this.setThemeClassName();
@@ -76,5 +76,5 @@ export class ThemeApplication implements ApplicationContribution {
     ]) {
       this.setCssVariable(cv);
     }
-  }
+  };
 }
