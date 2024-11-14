@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "0.1.27",
   "name": "@difizen/mana-umi-example",
   "author": "brokun <brokun0128@gmail.com>",
   "scripts": {
