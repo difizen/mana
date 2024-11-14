@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-core",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "sideEffects": false,
   "description": "",
   "keywords": [
@@ -45,9 +45,9 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@difizen/mana-common": "^0.1.28",
-    "@difizen/mana-observable": "^0.1.28",
-    "@difizen/mana-syringe": "^0.1.28",
+    "@difizen/mana-common": "^0.1.30",
+    "@difizen/mana-observable": "^0.1.30",
+    "@difizen/mana-syringe": "^0.1.30",
     "ajv": "^8.12.0",
     "debug": "^4.3.1",
     "resize-observer-polyfill": "^1.5.1",

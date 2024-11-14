@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-app",
-  "version": "0.1.28",
+  "version": "0.1.30",
   "sideEffects": false,
   "description": "",
   "keywords": [
@@ -45,12 +45,12 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.0",
-    "@difizen/mana-common": "^0.1.28",
-    "@difizen/mana-core": "^0.1.29",
-    "@difizen/mana-observable": "^0.1.28",
-    "@difizen/mana-react": "^0.1.28",
-    "@difizen/mana-syringe": "^0.1.28",
-    "@difizen/mana-l10n": "^0.1.28",
+    "@difizen/mana-common": "^0.1.30",
+    "@difizen/mana-core": "^0.1.30",
+    "@difizen/mana-observable": "^0.1.30",
+    "@difizen/mana-react": "^0.1.30",
+    "@difizen/mana-syringe": "^0.1.30",
+    "@difizen/mana-l10n": "^0.1.30",
     "@types/lodash.debounce": "4.0.3",
     "@types/react-virtualized": "^9.21.22",
     "classnames": "^2.3.2",
