@@ -1,5 +1,11 @@
 # @difizen/mana-core
 
+## 0.1.29
+
+### Patch Changes
+
+- [#74](https://github.com/difizen/mana/pull/74) [`b7498f8`](https://github.com/difizen/mana/commit/b7498f8085bb223b7100677b47db38057a8ab9b9) Thanks [@BroKun](https://github.com/BroKun)! - fix(core): the `update` method of the theme is defined using an arrow function.
+
 ## 0.1.28
 
 ### Patch Changes
