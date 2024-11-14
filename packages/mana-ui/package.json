@@ -43,7 +43,7 @@
   "dependencies": {
     "@difizen/mana-common": "^0.1.28",
     "@difizen/mana-syringe": "^0.1.28",
-    "@difizen/mana-core": "^0.1.28",
+    "@difizen/mana-core": "^0.1.29",
     "@difizen/mana-observable": "^0.1.28",
     "@difizen/mana-react": "^0.1.28",
     "@difizen/mana-app": "^0.1.28",
