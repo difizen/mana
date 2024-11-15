@@ -1,5 +1,19 @@
 # @difizen/mana-ui
 
+## 0.1.31
+
+### Patch Changes
+
+- [#79](https://github.com/difizen/mana/pull/79) [`0365365`](https://github.com/difizen/mana/commit/03653659a7400430493903e33f44dc2f048576df) Thanks [@lulusir](https://github.com/lulusir)! - fix: localStorage is not defined.
+
+- Updated dependencies [[`0365365`](https://github.com/difizen/mana/commit/03653659a7400430493903e33f44dc2f048576df)]:
+  - @difizen/mana-observable@0.1.31
+  - @difizen/mana-syringe@0.1.31
+  - @difizen/mana-common@0.1.31
+  - @difizen/mana-react@0.1.31
+  - @difizen/mana-core@0.1.31
+  - @difizen/mana-app@0.1.31
+
 ## 0.1.30
 
 ### Patch Changes

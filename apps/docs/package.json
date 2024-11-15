@@ -1,6 +1,6 @@
 {
   "name": "@difizen/mana-docs",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "private": true,
   "license": "MIT",
   "description": "Document site for mana",
@@ -24,10 +24,10 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.0",
-    "@difizen/mana-app": "^0.1.30",
-    "@difizen/mana-react": "^0.1.30",
-    "@difizen/umi-plugin-mana": "^0.1.30",
-    "@difizen/mana-l10n": "^0.1.30",
+    "@difizen/mana-app": "^0.1.31",
+    "@difizen/mana-react": "^0.1.31",
+    "@difizen/umi-plugin-mana": "^0.1.31",
+    "@difizen/mana-l10n": "^0.1.31",
     "antd": "^5.8.6",
     "octokit": "^3",
     "react-copy-to-clipboard": "^5.1.0"
