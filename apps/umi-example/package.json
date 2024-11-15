@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "0.1.30",
+  "version": "0.1.31",
   "name": "@difizen/mana-umi-example",
   "author": "brokun <brokun0128@gmail.com>",
   "scripts": {
@@ -10,8 +10,8 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "@difizen/umi-plugin-mana": "^0.1.30",
-    "@difizen/mana-app": "^0.1.30",
+    "@difizen/umi-plugin-mana": "^0.1.31",
+    "@difizen/mana-app": "^0.1.31",
     "umi": "^4.3.20"
   },
   "devDependencies": {

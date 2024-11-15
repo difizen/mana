@@ -1,5 +1,11 @@
 # @difizen/umi-plugin-mana
 
+## 0.1.31
+
+### Patch Changes
+
+- [#79](https://github.com/difizen/mana/pull/79) [`0365365`](https://github.com/difizen/mana/commit/03653659a7400430493903e33f44dc2f048576df) Thanks [@lulusir](https://github.com/lulusir)! - fix: localStorage is not defined.
+
 ## 0.1.30
 
 ### Patch Changes
