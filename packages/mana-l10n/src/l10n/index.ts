@@ -36,7 +36,7 @@ export enum L10nLang {
 }
 
 function getDefaultlang() {
-  const localeValue = localStorage.getItem('locale') || locale;
+  const localeValue = localStorage?.getItem('locale') || locale;
   const localeStr = localeValue.toLowerCase();
   if (localeStr === 'zh' || localeStr.startsWith('zh-')) {
     return L10nLang.zhCN;
