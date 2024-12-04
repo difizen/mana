@@ -4,6 +4,7 @@ import { langBundles, l10n, L10nLang } from '@difizen/mana-l10n';
 
 import { AntdMenuModule } from './antd-menu/index.js';
 import { CommandPalette } from './command-palette/index.js';
+import { ConfigurtionMenuModule } from './setting-editor/index.js';
 import { ContentModule } from './content/index.js';
 import { FileModule } from './file/index.js';
 import styles from './index.module.less';
@@ -26,6 +27,7 @@ export default function App(): JSX.Element {
           WorkbenchModule,
           AntdMenuModule,
           ContentModule,
+          ConfigurtionMenuModule,
           LogoModule,
           UerModule,
           CommandPalette,

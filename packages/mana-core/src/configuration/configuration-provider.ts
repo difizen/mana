@@ -21,6 +21,20 @@ export interface ConfigurationProvider {
   set: <T>(node: ConfigurationNode<T>, value: T) => MaybePromise<void>;
 
   remove: <T>(node: ConfigurationNode<T>) => MaybePromise<void>;
+
+  /**
+   * 开启缓存，默认false
+   * 对本地同步调用不用开启
+   * 对远端异步调用建议开启，防止请求过多
+   */
+  enableCache?: boolean;
+
+  /**
+   * 提前批量获取配置作为缓存, enableCache打开后会在应用初始化调用
+   * @param nodes
+   * @returns
+   */
+  prefetch?: (nodes: ConfigurationNode<any>[]) => MaybePromise<any[]>;
 }
 
 @singleton({ contrib: [ConfigurationProvider] })

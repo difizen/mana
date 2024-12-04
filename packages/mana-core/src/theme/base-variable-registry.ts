@@ -1,8 +1,18 @@
-import { DisposableCollection, Disposable, Emitter } from '@difizen/mana-common';
+import {
+  DisposableCollection,
+  Disposable,
+  Emitter,
+  objects,
+  isPromiseLike,
+} from '@difizen/mana-common';
 import { singleton, inject } from '@difizen/mana-syringe';
+
+import { localStorageService } from '../common';
+import type { StorageService } from '../common';
 
 import { DefaultVariablePrefix } from './protocol';
 import type { CssVariable, VariableDefinition } from './protocol';
+import type { ExtraTokens } from './theme-service';
 import { ThemeService } from './theme-service';
 
 /**
@@ -16,6 +26,8 @@ export class BaseVariableRegistry {
     return [...this.definitionMap.values()];
   }
   protected definitionMap: Map<string, VariableDefinition> = new Map();
+
+  protected storageService: StorageService = localStorageService;
 
   protected readonly onDidChangeEmitter = new Emitter<void>();
 
@@ -49,11 +61,15 @@ export class BaseVariableRegistry {
   }
 
   toCurrentCssVariable(id: string): CssVariable | undefined {
+    const name = this.toCssVariableName(id);
+    const maybeValue = this.storageService.getData<string>(name);
+    if (!isPromiseLike(maybeValue) && maybeValue) {
+      return { name, value: maybeValue };
+    }
     const value = this.getCurrentDefinitionValue(id);
     if (!value) {
       return undefined;
     }
-    const name = this.toCssVariableName(id);
     return { name, value };
   }
 
@@ -80,6 +96,18 @@ export class BaseVariableRegistry {
       return definition.defaults[type];
     }
     return undefined;
+  }
+
+  setCurrentDefinitionValue(
+    name: string,
+    value: string,
+    tokens: ExtraTokens = {},
+  ): void {
+    objects.mixin(objects.deepClone(name), {
+      extraTokens: { ...tokens },
+    });
+    this.storageService.setData(name, value);
+    this.fireDidChange();
   }
 
   register(...definitions: VariableDefinition[]): Disposable {

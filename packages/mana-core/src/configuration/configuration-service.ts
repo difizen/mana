@@ -3,32 +3,25 @@ import { getOrigin } from '@difizen/mana-observable';
 import type { Contribution } from '@difizen/mana-syringe';
 import { contrib, inject, singleton } from '@difizen/mana-syringe';
 
+import { ApplicationContribution } from '../application';
+
+import { ConfigurationCache } from './configuration-cache';
 import type { ConfigurationNode } from './configuration-protocol';
 import { ConfigurationProvider } from './configuration-provider';
 import { ConfigurationRegistry } from './configuration-registry';
 import type { ConfigurationStorage } from './configuration-storage';
-import { DefaultConfigurationStorage } from './configuration-storage';
 import { SchemaValidator } from './validation';
 
-@singleton()
-export class ConfigurationService {
+@singleton({ contrib: [ApplicationContribution] })
+export class ConfigurationService implements ApplicationContribution {
+  @contrib(ConfigurationProvider)
   protected providers: Contribution.Provider<ConfigurationProvider>;
 
+  @inject(ConfigurationRegistry)
   protected readonly configurationRegistry: ConfigurationRegistry;
 
-  protected readonly schemaValidator: SchemaValidator;
-
-  constructor(
-    @contrib(ConfigurationProvider)
-    providers: Contribution.Provider<ConfigurationProvider>,
-    @inject(ConfigurationRegistry)
-    configurationRegistry: ConfigurationRegistry,
-    @inject(SchemaValidator) schemaValidator: SchemaValidator,
-  ) {
-    this.providers = providers;
-    this.configurationRegistry = configurationRegistry;
-    this.schemaValidator = schemaValidator;
-  }
+  @inject(SchemaValidator) protected readonly schemaValidator: SchemaValidator;
+  @inject(ConfigurationCache) protected readonly configurationCache: ConfigurationCache;
 
   protected readonly onConfigurationValueChangeEmitter = new Emitter<{
     key: string;
@@ -36,40 +29,91 @@ export class ConfigurationService {
   }>();
   readonly onConfigurationValueChange = this.onConfigurationValueChangeEmitter.event;
 
-  async has<T>(node: ConfigurationNode<T>): Promise<boolean> {
-    let result = false;
-    const scopeArray = this.configurationRegistry.getStorages();
-    for (const scope of scopeArray.sort((a, b) => b.priority - a.priority)) {
-      const provider = this.getConfigurationProviderByStorage(scope);
-      if (!provider) {
-        continue;
-      }
-      const hasValue = await provider.has(node);
-      if (hasValue) {
-        result = true;
-        break;
-      }
-    }
-    return result;
+  protected storageMap = new Map<ConfigurationStorage, ConfigurationProvider>();
+
+  async onWillStart() {
+    await this.prefetch();
   }
 
-  async get<T>(node: ConfigurationNode<T>, defaultValue?: T): Promise<T> {
+  async prefetch() {
+    const storageArray = this.configurationRegistry.getStorages();
+    for (const storage of storageArray.sort((a, b) => b.priority - a.priority)) {
+      const provider = this.getConfigurationProviderByStorage(storage);
+      if (!provider || provider.enableCache !== true || !provider.prefetch) {
+        continue;
+      }
+      const nodes = this.configurationRegistry.getConfigurationsByStorage(storage);
+
+      if (!nodes) {
+        continue;
+      }
+
+      try {
+        const cacheValues = await provider.prefetch(nodes);
+        nodes.forEach((item, index) => {
+          this.configurationCache.set(provider, item, cacheValues[index]);
+        });
+      } catch (error) {
+        console.error('prefetch config failed', error);
+      }
+    }
+  }
+
+  async has<T>(
+    node: ConfigurationNode<T>,
+    options?: { useCache?: boolean },
+  ): Promise<boolean> {
+    const useCache = options?.useCache ?? true;
+    const storage = this.configurationRegistry.getStorage(node);
+    const provider = this.getConfigurationProviderByStorage(storage);
+    if (!provider) {
+      return false;
+    }
+
+    if (provider.enableCache && useCache) {
+      const hasCache = this.configurationCache.has(provider, node);
+      if (hasCache) {
+        return true;
+      }
+    }
+
+    const hasValue = await provider.has(node);
+    if (hasValue) {
+      return true;
+    }
+    return false;
+  }
+
+  async get<T>(
+    node: ConfigurationNode<T>,
+    defaultValue?: T,
+    options?: { useCache?: boolean },
+  ): Promise<T> {
     let result: T = defaultValue ?? node.defaultValue;
-    const scopeArray = this.configurationRegistry.getStorages();
-    for (const scope of scopeArray.sort((a, b) => b.priority - a.priority)) {
-      const provider = this.getConfigurationProviderByStorage(scope);
-      if (!provider) {
-        continue;
-      }
+    const useCache = options?.useCache ?? true;
+    const storage = this.configurationRegistry.getStorage(node);
+    const provider = this.getConfigurationProviderByStorage(storage);
+    if (!provider) {
+      return result;
+    }
 
-      const hasValue = await provider.has(node);
-
-      if (!hasValue) {
-        continue;
+    if (provider.enableCache && useCache) {
+      const hasCache = this.configurationCache.has(provider, node);
+      if (hasCache) {
+        result = this.configurationCache.get(provider, node);
+        return result;
       }
-      const val = await provider.get<T>(node);
-      result = val;
-      break;
+    }
+
+    const hasValue = await provider.has(node);
+
+    if (!hasValue) {
+      return result;
+    }
+    const val = await provider.get<T>(node);
+    result = val;
+    if (provider.enableCache) {
+      this.configurationCache.set(provider, node, val);
     }
     return result;
   }
@@ -78,50 +122,57 @@ export class ConfigurationService {
    *
    * @param node 配置
    * @param value 配置的值
-   * @param storage 指定配置的值存储的scope。默认为配置的scope，
-   * @param validate
+   * @param options
    * @returns
    */
   async set<T>(
     node: ConfigurationNode<T>,
     value: T,
-    storage?: ConfigurationStorage,
-    validate?: boolean,
+    options?: { useCache?: boolean; validate?: boolean },
   ) {
-    if (validate !== false && !this.schemaValidator.validateNode(node, value)) {
+    if (
+      options?.validate !== false &&
+      !this.schemaValidator.validateNode(node, value)
+    ) {
       return;
     }
-
-    const setStorage = storage ?? node.storage ?? DefaultConfigurationStorage;
+    const useCache = options?.useCache ?? true;
+    const setStorage = this.configurationRegistry.getStorage(node);
     this.configurationRegistry.addStorage(setStorage);
     const provider = this.getConfigurationProviderByStorage(setStorage);
     if (!provider) {
       return;
+    }
+    if (provider.enableCache && useCache) {
+      this.configurationCache.set(provider, node, value);
     }
     await provider.set(node, value);
     this.onConfigurationValueChangeEmitter.fire({ key: node.id, value });
   }
 
   async remove<T>(node: ConfigurationNode<T>) {
-    const scopeArray = this.configurationRegistry.getStorages();
-    for (const scope of scopeArray.sort((a, b) => b.priority - a.priority)) {
-      const provider = this.getConfigurationProviderByStorage(scope);
-      if (!provider) {
-        continue;
-      }
-      if (!provider.has(node)) {
-        continue;
-      }
-      provider.remove(node);
+    const storage = this.configurationRegistry.getStorage(node);
+    const provider = this.getConfigurationProviderByStorage(storage);
+    if (!provider) {
+      return;
     }
+    if (!provider.has(node)) {
+      return;
+    }
+    this.configurationCache.remove(provider, node);
+    provider.remove(node);
   }
 
   protected getConfigurationProviderByStorage(
-    scope: ConfigurationStorage,
+    storage: ConfigurationStorage,
   ): ConfigurationProvider | undefined {
+    if (this.storageMap.has(storage)) {
+      return this.storageMap.get(storage);
+    }
+
     const contribs = this.providers
       .getContributions()
-      .map((item) => ({ ...item, priority: item.canHandle(getOrigin(scope)) }))
+      .map((item) => ({ ...item, priority: item.canHandle(getOrigin(storage)) }))
       .filter((item) => item.priority !== false);
     if (contribs.length === 0) {
       return undefined;
@@ -133,6 +184,7 @@ export class ConfigurationService {
         maxPriorityProvider = provider;
       }
     }
+    this.storageMap.set(storage, maxPriorityProvider);
     return maxPriorityProvider;
   }
 }
