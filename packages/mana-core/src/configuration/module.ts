@@ -1,5 +1,6 @@
 import { ManaModule } from '../module';
 
+import { ConfigurationCache } from './configuration-cache';
 import {
   ConfigurationProvider,
   DefaultConfigurationProvider,
@@ -29,4 +30,5 @@ export const ConfigurationModule = ManaModule.create()
     ConfigurationRegistry,
     ConfigurationRenderRegistry,
     SchemaValidator,
+    ConfigurationCache,
   );

@@ -7,3 +7,4 @@ export * from './configuration-storage';
 export * from './configuration-protocol';
 export * from './hooks';
 export * from './validation';
+export * from './configuration-cache';

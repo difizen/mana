@@ -67,7 +67,7 @@ export class ConfigurationRegistry implements ApplicationContribution {
     }
   }
 
-  protected getStorage(configuration: ConfigurationNode<any>) {
+  getStorage(configuration: ConfigurationNode<any>) {
     return configuration.storage ?? this.defaultStorage;
   }
 
@@ -148,6 +148,14 @@ export class ConfigurationRegistry implements ApplicationContribution {
     return this.configurationNodes.filter((node) => {
       const nodeStorage = node.storage ?? DefaultConfigurationStorage;
       return nodeStorage === storage;
+    });
+  }
+
+  getConfigurationsByStorage(
+    storage: ConfigurationStorage,
+  ): ConfigurationNode<unknown>[] | undefined {
+    return this.configurationNodes.filter((node) => {
+      return this.getStorage(node) === storage;
     });
   }
 
