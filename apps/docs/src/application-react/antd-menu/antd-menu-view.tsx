@@ -20,9 +20,8 @@ export const ManaMenubarComponent = forwardRef(function ManaMenubarComponent(
 });
 
 @singleton()
-@view('AntdMenuView')
+@view({ id: 'AntdMenuView', component: ManaMenubarComponent })
 export class AntdMenuView extends BaseView {
-  override view = ManaMenubarComponent;
   @prop()
   count = 0;
   constructor() {

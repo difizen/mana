@@ -26,6 +26,7 @@ const ViewComponentRender = (props: ViewRenderProps) => {
     <Component {...props}>{children}</Component>
   );
 };
+
 export const ViewRender = memo(function ViewRender(props: ViewRenderProps) {
   const { view, shadow } = props;
   if (isWrapperViewComponent(view.view) && !shadow) {

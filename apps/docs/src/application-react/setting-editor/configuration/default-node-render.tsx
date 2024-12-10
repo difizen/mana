@@ -1,6 +1,6 @@
 import type { RenderProps } from '@difizen/mana-core';
 import { Checkbox, DatePicker, Input, InputNumber, Select, Switch } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 
 const { Option } = Select;
@@ -58,7 +58,7 @@ export const DefaultDatePicker: React.FC<RenderProps<string>> = ({
   onChange,
 }) => (
   <DatePicker
-    value={moment(value, dateFormat)}
+    value={dayjs(value, dateFormat)}
     onChange={(date, dateString) => onChange(dateString)}
   />
 );
