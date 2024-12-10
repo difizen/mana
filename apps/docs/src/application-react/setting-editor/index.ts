@@ -2,7 +2,11 @@ import { createViewPreference, ManaModule } from '@difizen/mana-app';
 
 import { WorkbenchLayoutArea } from '../workbench/layout/workbench-layout.js';
 
-import { SettingEditorModule, SettingEditorView } from './configuration/index.js';
+import {
+  SettingEditorModule,
+  SettingEditorView,
+} from '@difizen/mana-configuration-panel';
+
 import { DefaultConfigurationContribution } from './default-configuration-contribution.js';
 
 export const ConfigurtionMenuModule = ManaModule.create()
