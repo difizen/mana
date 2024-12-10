@@ -1,11 +1,12 @@
 import { ObservableContext, useInject } from '@difizen/mana-observable';
 import type { Syringe } from '@difizen/mana-syringe';
 import * as React from 'react';
+import { Suspense } from 'react';
 
 import { useMount, useUnmount } from '../utils/hooks';
 
 import { useViewSize } from './hooks';
-import { isForwardRefComponent } from './utils';
+import { isForwardRefComponent, isLazyComponent } from './utils';
 import type { View } from './view-protocol';
 import type { ViewComponent } from './view-protocol';
 import { OriginViewComponent } from './view-protocol';
@@ -53,8 +54,50 @@ export const ViewContainer = React.forwardRef<HTMLDivElement, ViewContainerProps
     );
   },
 );
+
+export const LazyWrapper = (
+  ViewComponent:
+    | React.FC
+    | React.ForwardRefExoticComponent<any>
+    | React.LazyExoticComponent<React.FC | React.ForwardRefExoticComponent<any>>,
+) => {
+  const LazyWrapperRender: WrapperViewComponent = ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+  }) => {
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    if (isLazyComponent(ViewComponent)) {
+      return (
+        <Suspense fallback={<></>}>
+          <ViewContainer
+            ref={containerRef}
+            component={ViewComponent}
+            viewComponentProps={props}
+          >
+            {children}
+          </ViewContainer>
+        </Suspense>
+      );
+    }
+    return (
+      <ViewContainer
+        ref={containerRef}
+        component={ViewComponent}
+        viewComponentProps={props}
+      >
+        {children}
+      </ViewContainer>
+    );
+  };
+  return LazyWrapperRender;
+};
 export const ViewWrapper = (
-  ViewComponent: React.FC | React.ForwardRefExoticComponent<any>,
+  ViewComponent:
+    | React.FC
+    | React.ForwardRefExoticComponent<any>
+    | React.LazyExoticComponent<React.FC | React.ForwardRefExoticComponent<any>>,
   container: Syringe.Container,
 ) => {
   const ViewWrapperRender: WrapperViewComponent = ({
@@ -63,16 +106,10 @@ export const ViewWrapper = (
   }: {
     children: React.ReactNode;
   }) => {
-    const containerRef = React.useRef<HTMLDivElement>(null);
+    const ChildComponent = LazyWrapper(ViewComponent);
     return (
       <ObservableContext.Provider value={{ getContainer: () => container }}>
-        <ViewContainer
-          ref={containerRef}
-          component={ViewComponent}
-          viewComponentProps={props}
-        >
-          {children}
-        </ViewContainer>
+        <ChildComponent {...props}>{children}</ChildComponent>
       </ObservableContext.Provider>
     );
   };

@@ -14,6 +14,11 @@ export const isForwardRefComponent = (
     component.render !== undefined
   );
 };
+
+// 判断是否是懒加载组件的函数
+export const isLazyComponent = (component: any) => {
+  return component && component.$$typeof === Symbol.for('react.lazy');
+};
 /**
  * hack
  * @param component react component
