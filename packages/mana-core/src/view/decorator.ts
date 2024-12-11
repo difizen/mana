@@ -1,5 +1,3 @@
-import { isPromise } from 'util/types';
-
 import type { Newable } from '@difizen/mana-common';
 import type { Syringe } from '@difizen/mana-syringe';
 import { registerSideOption } from '@difizen/mana-syringe';
