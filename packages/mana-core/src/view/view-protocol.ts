@@ -114,6 +114,7 @@ export const ViewOption = Symbol('ViewOption');
 export const ViewInstance = Symbol('ViewInstance');
 
 export const ViewDefineToken = Symbol('ViewDefineToken');
+export const ViewComponentToken = Symbol('ViewComponentToken');
 
 export interface ViewFactory {
   /**

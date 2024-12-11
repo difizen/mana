@@ -1,14 +1,15 @@
 import type { Newable } from '@difizen/mana-common';
 import type { Syringe } from '@difizen/mana-syringe';
 import { registerSideOption } from '@difizen/mana-syringe';
+import type { ComponentType } from 'react';
 
 import type { ManaModule } from '../module';
 import { ManaContext } from '../module';
 
 import { isWrapperViewComponent, ViewWrapper } from './view-container';
 import { ViewManager } from './view-manager';
-import type { SlotPreference, ViewPreference } from './view-protocol';
-import type { View } from './view-protocol';
+import type { View, SlotPreference, ViewPreference } from './view-protocol';
+import { ViewComponentToken } from './view-protocol';
 import { OriginViewComponent, ViewComponent } from './view-protocol';
 import { SlotPreferenceContribution } from './view-protocol';
 import {
@@ -32,8 +33,28 @@ export interface ViewDecoratorOption {
   registry?: Syringe.Registry;
 }
 
-export function view<T extends View>(factoryId: string, viewModule?: ManaModule) {
+interface ViewMeta {
+  id: string;
+  component: ComponentType;
+}
+
+export function view<T extends View>(meta: ViewMeta): (target: Newable<T>) => void;
+export function view<T extends View>(
+  factoryId: string,
+  viewModule?: ManaModule,
+): (target: Newable<T>) => void;
+export function view<T extends View>(
+  metaOrFactoryId: string | ViewMeta,
+  viewModule?: ManaModule,
+) {
   return (target: Newable<T>): void => {
+    let factoryId: string;
+    if (typeof metaOrFactoryId === 'string') {
+      factoryId = metaOrFactoryId;
+    } else {
+      factoryId = metaOrFactoryId.id;
+      Reflect.defineMetadata(ViewComponentToken, metaOrFactoryId.component, target);
+    }
     Reflect.defineMetadata(ViewDefineToken, factoryId, target);
     registerSideOption(
       {
@@ -51,10 +72,17 @@ export function view<T extends View>(factoryId: string, viewModule?: ManaModule)
             container.register({ token: ViewOption, useValue: viewOption });
             const current = container.get<View>(target);
             container.register({ token: ViewInstance, useValue: current });
+
+            const constructor = current.constructor as any;
+            const metaComponent = Reflect.getMetadata(ViewComponentToken, constructor);
+            const maybeComponent = metaComponent || (current.view as any);
+            const component = maybeComponent;
+            // if (isPromise(maybeComponent)) {
+            //   component = await maybeComponent;
+            // }
             container.register({
               token: OriginViewComponent,
               useDynamic: () => {
-                const component = current.view as any;
                 if (isWrapperViewComponent(component)) {
                   return component[OriginViewComponent];
                 } else {
@@ -62,11 +90,10 @@ export function view<T extends View>(factoryId: string, viewModule?: ManaModule)
                 }
               },
             });
-            const viewComponent = ViewWrapper(current.view, container);
+            const viewComponent = ViewWrapper(component, container);
             container.register({
               token: ViewComponent,
               useDynamic: () => {
-                const component = current.view as any;
                 if (isWrapperViewComponent(component)) {
                   return component;
                 } else {
