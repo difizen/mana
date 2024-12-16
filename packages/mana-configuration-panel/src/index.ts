@@ -1,7 +1,5 @@
-import { ManaModule } from '@difizen/mana-app';
-
-import { SettingEditorModule } from './configuration';
-
-export * from './configuration';
-
-export const ManaPreset = ManaModule.create().dependOn(SettingEditorModule);
+export * from './configuration-panel-view.js';
+export * from './configuration-render-contribution.js';
+export * from './default-node-render.js';
+export * from './setting-editor-view.js';
+export * from './module';
