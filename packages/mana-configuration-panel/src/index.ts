@@ -1,4 +1,4 @@
-import { ManaModule } from '@difizen/mana-core';
+import { ManaModule } from '@difizen/mana-app';
 
 import { SettingEditorModule } from './configuration';
 

@@ -71,7 +71,7 @@ export const DefaultConfigurationViewComponent: React.FC = () => {
     <Form
       {...layout}
       form={form}
-      className={`ai-infra-configuration-siteCard ${viewInstance.className}`}
+      className={`mana-configuration-panel-container ${viewInstance.className}`}
     >
       {configs?.map((config) => {
         return <ConfigurationNodeRender node={config} key={config.id} />;
