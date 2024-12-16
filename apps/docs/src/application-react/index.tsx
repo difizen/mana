@@ -4,11 +4,11 @@ import { langBundles, l10n, L10nLang } from '@difizen/mana-l10n';
 
 import { AntdMenuModule } from './antd-menu/index.js';
 import { CommandPalette } from './command-palette/index.js';
-import { ConfigurtionMenuModule } from './setting-editor/index.js';
 import { ContentModule } from './content/index.js';
 import { FileModule } from './file/index.js';
 import styles from './index.module.less';
 import { LogoModule } from './logo/index.js';
+import { ConfigurtionMenuModule } from './setting-editor/index.js';
 import { ThemeSwitcherModule } from './theme-switcher/index.js';
 import { UerModule } from './user/index.js';
 import { WorkbenchModule } from './workbench/index.js';

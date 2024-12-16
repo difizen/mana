@@ -1,4 +1,4 @@
-import type { RenderProps } from '@difizen/mana-core';
+import type { RenderProps } from '@difizen/mana-app';
 import { Checkbox, DatePicker, Input, InputNumber, Select, Switch } from 'antd';
 import moment from 'moment';
 import React from 'react';

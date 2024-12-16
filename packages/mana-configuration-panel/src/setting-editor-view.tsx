@@ -13,7 +13,7 @@ import {
 import { SplitPanel } from '@difizen/mana-react';
 import React from 'react';
 
-import { ConfigurationPanelView } from './index.js';
+import { ConfigurationPanelView } from './configuration-panel-view';
 
 export const SettingEditorComponent: React.FC = () => {
   const viewInstance = useInject<SettingEditorView>(ViewInstance);
