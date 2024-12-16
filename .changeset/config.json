@@ -7,5 +7,6 @@
   "commit": false,
   "fixed": [],
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [],
+  "useCalculatedVersion": true
 }
