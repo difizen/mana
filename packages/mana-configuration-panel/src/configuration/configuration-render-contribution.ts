@@ -1,6 +1,5 @@
-import { singleton } from '@difizen/mana-app';
-import type { ConfigurationRender } from '@difizen/mana-core';
-import { ConfigurationRenderContribution } from '@difizen/mana-core';
+import type { ConfigurationRender } from '@difizen/mana-app';
+import { singleton, ConfigurationRenderContribution } from '@difizen/mana-app';
 
 import {
   DefaultCheckbox,
