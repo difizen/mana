@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 describe('mana-configuration-panel', () => {
-  it('import', () => {
+  it('#import', () => {
     assert(true);
   });
 });
